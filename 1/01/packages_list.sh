@@ -88,10 +88,13 @@ yum install perl-devel -y
 # pyparsing                         noarch           1.5.6-9.el7            base    94 k
 # systemtap-sdt-devel               x86_64           3.1-5.el7_4            updates 71 k
 
+# чтобы сразу загрузиться в новое ядро после перезагрузки
+find /etc/default/grub -type f -print0 | xargs -0 sed -i 's/GRUB_DEFAULT=saved/#GRUB_DEFAULT=saved/g'
+
 # olddefconf ответит на все вопросы по умолчанию
 cp /boot/config-`uname -r` .config && make olddefconfig && make prepare && make && make modules_install && make install && grub2-mkconfig -o /boot/grub2/grub.cfg
 
-# manual reboot and select new kernel in virtbox
+# reboot
 # uname -a
 # Linux otuslinux 4.16.4 #1 SMP Wed Apr 25 10:36:56 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 

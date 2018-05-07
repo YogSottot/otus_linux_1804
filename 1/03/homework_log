@@ -1,0 +1,5 @@
+# После применения Vagrant-файла, получаем готовый LVM.
+# 
+
+
+lvcreate -L 8g -s -n home-snap /dev/VolGroup01/home && \

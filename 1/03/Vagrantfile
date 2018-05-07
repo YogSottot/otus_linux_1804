@@ -48,6 +48,7 @@ Vagrant.configure("2") do |config|
 
           box.vm.provider :virtualbox do |vb|
             	  vb.customize ["modifyvm", :id, "--memory", "1024"]
+#				  vb.customize ["modifyvm", :id, "--firmware", "efi"]
 		  vb.customize ["storagectl", :id, "--name", "SATA", "--add", "sata" ]
 
 		  boxconfig[:disks].each do |dname, dconf|
@@ -59,27 +60,43 @@ Vagrant.configure("2") do |config|
 		  end
           end
  	  box.vm.provision "shell", inline: <<-SHELL
-	      mkdir -p ~root/.ssh
-	      cp ~vagrant/.ssh/auth* ~root/.ssh 
-	      yum install -y mdadm smartmontools hdparm gdisk 
-	      mdadm --create --verbose /dev/md0 --level=1 --raid-devices=2 /dev/sd[b-c] && \
-	      mdadm --create --verbose /dev/md1 --level=1 --raid-devices=2 /dev/sd[d-e] && \
-	      mdadm --detail --scan >> /etc/mdadm.conf  && \
-	      sgdisk -og  /dev/md0  && \
-	      sgdisk  -n 1:0:1G -N 2 -t 1:fd00 -t 2:fd00 /dev/md0 && \
-	      mkfs.ext4 /dev/md0p1 && \
-	      mkdir -p /mnt/boot && \
-	      mount /dev/md0p1 /mnt/boot && \
-	      rsync -aAHX /boot/  /mnt/boot/ && \
-	      pvcreate /dev/md0p2 /dev/md1 && \
-	      vgcreate VolGroup01 /dev/md0p2  /dev/md1 && \
-	      lvcreate -L 2G VolGroup01 -n swap && \
-	      lvcreate -L 8G VolGroup01 -n root && \
-	      lvcreate -L 16G -m1 VolGroup01 -n var && \
-	      lvcreate -L 8G VolGroup01 -n home && \
-	      
-	      rsync -aAHX  --exclude='/dev' --exclude='/proc' --exclude='/sys' --exclude='/boot' --exclude='/var' / /mnt/root/ && \
-	      
+      mkdir -p ~root/.ssh
+      cp ~vagrant/.ssh/auth* ~root/.ssh 
+      yum install -y mdadm smartmontools hdparm gdisk 
+      
+      echo 'start=     2048, size=     4096, Id=83' |  sfdisk /dev/sdb && \
+      echo 'start=     6144, size=  1048576, Id=83, bootable' |  sfdisk /dev/sdb && \
+      echo 'start=  1054720, size= 61859840, Id=83' |  sfdisk /dev/sdb && \
+      pvcreate /dev/sdb3 /dev/sdc /dev/sdd && \
+      vgcreate VolGroup01 /dev/sdb3 /dev/sdc /dev/sdd && \
+      lvcreate -L 2g VolGroup01 -n swap && \
+      lvcreate -L 8g VolGroup01 -n root && \
+      lvcreate -L 16g -m1 VolGroup01 -n var && \
+      lvcreate -L 8g VolGroup01 -n home && \
+      mkfs.ext4 /dev/VolGroup01/home && \
+      mkfs.ext4 /dev/VolGroup01/root && \
+      mkfs.ext4 /dev/VolGroup01/var && \
+      mkswap /dev/VolGroup01/swap && \
+      mkdir -p /mnt/root && \
+      mount /dev/VolGroup01/root /mnt/root && \
+      rsync -aAHX  --exclude='/dev/**' --exclude='/proc/**' --exclude='/sys/**' --exclude='/boot/**' --exclude='/var/**' --exclude='/mnt/**' --exclude='/home/**' / /mnt/root/ && \
+      mount /dev/VolGroup01/home /mnt/root/home/ && \
+      rsync -aAHX  /home/ /mnt/root/home/ && \
+      mkdir -p /mnt/root/var && \
+      mount /dev/VolGroup01/var /mnt/root/var && \
+      rsync -aAHX  /var/ /mnt/root/var/ && \
+      mkfs.ext4 /dev/sdb2 && \
+      mount /dev/sdb2 /mnt/root/boot && \
+      rsync -aAHX /boot/  /mnt/root/boot/ && \
+      grub2-install  /dev/sdb && \      
+      echo /dev/sdb2 /boot ext4  rw,user,exec 0 0 >> /etc/fstab
+      echo /dev/mapper/VolGroup01-root / ext4  rw,user,exec 0 0 >> /etc/fstab
+      echo /dev/mapper/VolGroup01-home /home ext4  rw,user,exec 0 0 >> /etc/fstab
+      echo /dev/mapper/VolGroup01-swap swap swap defaults 0 0 >> /etc/fstab
+      
+      lvcreate -L 8g -s -n home-snap /dev/VolGroup01/home && \
+      
+      
   	  SHELL
 
       end

@@ -5,31 +5,6 @@ MACHINES = {
   :otuslinux => {
         :box_name => "centos/7",
         :ip_addr => '192.168.11.101',
-	:disks => {
-		:sata1 => {
-			:dfile => './sata1.vdi',
-			:size => 30720,
-			:port => 1
-		},
-		:sata2 => {
-                        :dfile => './sata2.vdi',
-                   :size => 30720, # Megabytes
-			:port => 2
-		},
-                :sata3 => {
-                        :dfile => './sata3.vdi',
-                           :size => 30720,
-                        :port => 3
-                },
-                :sata4 => {
-                        :dfile => './sata4.vdi',
-                           :size => 30720, # Megabytes
-                        :port => 4
-                }
-
-	}
-
-		
   },
 }
 
@@ -46,56 +21,66 @@ Vagrant.configure("2") do |config|
 
           box.vm.network "private_network", ip: boxconfig[:ip_addr]
 
-          box.vm.provider :virtualbox do |vb|
-            	  vb.customize ["modifyvm", :id, "--memory", "1024"]
-#				  vb.customize ["modifyvm", :id, "--firmware", "efi"]
-		  vb.customize ["storagectl", :id, "--name", "SATA", "--add", "sata" ]
-
-		  boxconfig[:disks].each do |dname, dconf|
-			  unless File.exist?(dconf[:dfile])
-				  vb.customize ['createhd', '--filename', dconf[:dfile], '--variant', 'Standard', '--size', dconf[:size]]
+		  # Add 4 additional 30GB drives
+		  box.vm.provider "virtualbox" do |vb|
+			  vb.customize ["modifyvm", :id, "--memory", "1024"]
+			  # Centos image doesn't come with a SATA Controller, adding it:
+			  unless File.exist?(File.expand_path("~/VirtualBox\ VMs/#{box.vm.hostname}-1.vdi"))
+				  puts "**** Adding SATA Controller; once the first disk is there asuming we don't need to do this *****"
+				  vb.customize ["storagectl", :id, "--name", "SATA Controller", "--add", "sata"]
+			  else
+				  puts "*** Skipping adding the SATA Controller ***"
 			  end
-			  vb.customize ['storageattach', :id,  '--storagectl', 'SATA', '--port', dconf[:port], '--device', 0, '--type', 'hdd', '--medium', dconf[:dfile]]
-
-		  end
-          end
+			end
+			box.vm.provider "virtualbox" do |vb|
+			unless File.exist?(File.expand_path("~/VirtualBox\ VMs/#{box.vm.hostname}-1.vdi"))
+				["1","2","3","4"].each do |disk|
+					diskname = File.expand_path("~/VirtualBox\ VMs/#{box.vm.hostname}-#{disk}.vdi")
+					vb.customize ['createhd', '--filename', diskname, '--variant', 'Standard', '--size', 30720]
+					vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', disk, '--device', 0, '--type', 'hdd', '--medium', diskname]
+				end
+			end
+		end
  	  box.vm.provision "shell", inline: <<-SHELL
-mkdir -p ~root/.ssh
-cp ~vagrant/.ssh/auth* ~root/.ssh 
-yum install -y mdadm smartmontools hdparm gdisk 
+mkdir -p ~root/.ssh && \
+cp ~vagrant/.ssh/auth* ~root/.ssh && \
+yum install -y mdadm smartmontools hdparm gdisk && \
+setenforce 0 && \
 echo -e 'o\nn\n\n\n\n+2M\nn\n\n\n\n+512M\nn\n\n\n\n\nw' | fdisk /dev/sdb  && \
 grub2-install  /dev/sdb && \
 pvcreate /dev/sdb3 /dev/sdc /dev/sdd && \
 vgcreate VolGroup01 /dev/sdb3 /dev/sdc /dev/sdd && \
-lvcreate -L 2g VolGroup01 -n swap && \
+lvcreate -L 512m VolGroup01 -n swap && \
 lvcreate -L 8g VolGroup01 -n root && \
-lvcreate -L 16g -m1 VolGroup01 -n var && \
-lvcreate -L 8g VolGroup01 -n home && \
+lvcreate -L 512m -m1 VolGroup01 -n var && \
+lvcreate -L 512m VolGroup01 -n home && \
 mkfs.ext4 /dev/VolGroup01/home && \
 mkfs.ext4 /dev/VolGroup01/root && \
 mkfs.ext4 /dev/VolGroup01/var && \
 mkswap /dev/VolGroup01/swap && \
 mkdir -p /mnt/root && \
 mount /dev/VolGroup01/root /mnt/root && \
-rsync -aAHX  --exclude='/dev/**' --exclude='/proc/**' --exclude='/sys/**' --exclude='/boot/**' --exclude='/var/**' --exclude='/mnt/**' --exclude='/home/**' / /mnt/root/ && \
-mount /dev/VolGroup01/home /mnt/root/home/ & \
-rsync -aAHX  /home/ /mnt/root/home/ & \
+rsync -aAHX  --exclude='/dev/**' --exclude='/proc/**' --exclude='/sys/**' --exclude='/boot/**' --exclude='/var/**' --exclude='/mnt/**' --exclude='/home/**' / /mnt/root/ ; \
+mount /dev/VolGroup01/home /mnt/root/home/ && \
+rsync -aAHX  /home/ /mnt/root/home/ ; \
 mount /dev/VolGroup01/var /mnt/root/var && \
-rsync -aAHX  /var/ /mnt/root/var/ & \
+rsync -aAHX  /var/ /mnt/root/var/ ; \
 mkfs.ext4 /dev/sdb2 && \
 mount /dev/sdb2 /mnt/root/boot && \
-rsync -aAHX /boot/  /mnt/root/boot/ & \
-mount -t proc /proc /mnt/root/proc && \
-mount --rbind /sys /mnt/root/sys && \
-mount --make-rslave /mnt/root/sys && \
-mount --rbind /dev /mnt/root/dev && \
-mount --make-rslave /mnt/root/dev && \
-chroot /mnt/root /bin/bash && \
-echo /dev/sdb2 /boot ext4  rw,user,exec 0 0 >> /etc/fstab && \
-echo /dev/mapper/VolGroup01-root / ext4  rw,user,exec 0 0 >> /etc/fstab && \
-echo /dev/mapper/VolGroup01-home /home ext4  rw,user,exec 0 0 >> /etc/fstab && \
-echo /dev/mapper/VolGroup01-swap swap swap defaults 0 0 >> /etc/fstab && \
-grub2-mkconfig -o /boot/grub2/grub.cfg     
+rsync -aAHX /boot/  /mnt/root/boot/ ; \
+mount -t proc /proc /mnt/root/proc ; \
+mount --rbind /sys /mnt/root/sys ; \
+mount --make-rslave /mnt/root/sys ; \
+mount --rbind /dev /mnt/root/dev ; \
+mount --make-rslave /mnt/root/dev ; \
+chroot /mnt/root /bin/bash -c "echo /dev/sdb2 /boot ext4  rw,user,exec 0 0 > /etc/fstab  ; \ 
+echo /dev/mapper/VolGroup01-root / ext4  rw,user,exec 0 0 >> /etc/fstab ; \
+echo /dev/mapper/VolGroup01-home /home ext4  rw,user,exec 0 0 >> /etc/fstab ; \
+echo /dev/mapper/VolGroup01-swap swap swap defaults 0 0 >> /etc/fstab ; \
+find /etc/default/grub -type f -print0 | xargs -0 sed -i 's/GRUB_CMDLINE_LINUX/#GRUB_CMDLINE_LINUX/g' ; \
+exho GRUB_CMDLINE_LINUX= >> /etc/default/grub ; \
+grub2-mkconfig -o /boot/grub2/grub.cfg"
+   
   	  SHELL
 
       end

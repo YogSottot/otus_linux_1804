@@ -77,6 +77,20 @@ grub2-mkconfig -o /boot/grub2/grub.cfg"
 Отключаю старый диск и загружаюсь.
 
 ```
-df -h
+cat /etc/fstab
+menuentry 'CentOS Linux (3.10.0-693.21.1.el7.x86_64) 7 (Core)' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-693.21.1.el7.x86_64-advanced-10914d08-60c1-4a32-86b7-c1a09b6cfd23' {
+        load_video
+        set gfxpayload=keep
+        insmod gzio
+        insmod lvm
+        insmod ext2
+        set root='lvmid/Kkw52F-7pIS-CrkP-tsfa-u2M3-aOeY-BiKLzu/SdlBZn-gzAb-kzI3-YCdX-gvCK-2hA0-0rI1hb'
+        if [ x$feature_platform_search_hint = xy ]; then
+          search --no-floppy --fs-uuid --set=root --hint='lvmid/Kkw52F-7pIS-CrkP-tsfa-u2M3-aOeY-BiKLzu/SdlBZn-gzAb-kzI3-YCdX-gvCK-2hA0-0rI1hb'  10914d08-60c1-4a32-86b7-c1a09b6cfd23
+        else
+          search --no-floppy --fs-uuid --set=root 10914d08-60c1-4a32-86b7-c1a09b6cfd23
+        fi
+        linux16 /boot/vmlinuz-3.10.0-693.21.1.el7.x86_64 root=/dev/mapper/VolGroup01-root ro no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 crashkernel=auto rd.lvm.lv=VolGroup01/root rd.lvm.lv=VolGroup01/var rd.lvm.lv=VolGroup01/home rd.lvm.lv=VolGroup01/swap selinux=0 
+        initrd16 /boot/initramfs-3.10.0-693.21.1.el7.x86_64.img
 
 ```

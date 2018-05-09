@@ -1,7 +1,7 @@
 ### Домашнее задание
 
 #### Работа с загрузчиком
-1. Попасть в систему без пароля несколькими способами
+##### 1. Попасть в систему без пароля несколькими способами
 
 * способ № 1
 
@@ -13,12 +13,15 @@
 * способ №2
 
 В меню grub нажать `e`, и дописать `init=/sysroot/bin/sh` в строку `linux16` на x86-64 BIOS-based системах, или строку `linuxefi` на UEFI системах, нажать `^x`
+
 ![sysroot](https://i.imgur.com/0FyaScQ.png)
 
 * способ № 3
 
 В меню grub нажать `e`, и дописать `rd.break enforcing=0` в строку `linux16` на x86-64 BIOS-based системах, или строку `linuxefi` на UEFI системах. , нажать `^x`
+
 ![sysroot](https://i.imgur.com/nQryyRN.png)
+
 Если используется selinux, после загрузки
 ```
 restorecon /etc/shadow
@@ -28,7 +31,7 @@ restorecon /etc/shadow
 
 Загузиться c live cd. Смонтировать нужную фс. Для смены пароля `chroot` и `passwd`
 
-2. Установить систему с LVM, после чего переименовать VG
+##### 2. Установить систему с LVM, после чего переименовать VG
 
 Установлена centos 7 minimal
 ```
@@ -67,7 +70,7 @@ dracut -f /boot/initramfs-`uname -r`.img `uname -r`
   swap gentoo -wi-ao----    1,00g                                                    
   var  gentoo -wi-ao----    2,00g  
 ```
-3. Добавить модуль в initrd
+##### 3. Добавить модуль в initrd
 ```
 yum install mdadm -y
 mkdir /usr/lib/dracut/modules.d/91local
@@ -86,7 +89,7 @@ install() {
 inst_hook pre-trigger 91 "$moddir/mount-local.sh"
 }
 
-cat  /usr/lib/dracut/modules.d/mount-local.sh
+cat  /usr/lib/dracut/modules.d/91local/mount-local.sh
 #!/bin/sh
 
 mount_local()

@@ -44,16 +44,14 @@ Vagrant.configure("2") do |config|
  	  box.vm.provision "shell", inline: <<-SHELL
 mkdir -p ~root/.ssh && \
 cp ~vagrant/.ssh/auth* ~root/.ssh && \
-yum install -y mdadm smartmontools hdparm gdisk && \
 setenforce 0 && \
-echo -e 'o\nn\n\n\n\n+2M\nn\n\n\n\n+512M\nn\n\n\n\n\nw' | fdisk /dev/sdb  && \
-grub2-install  /dev/sdb && \
-pvcreate /dev/sdb3 /dev/sdc /dev/sdd && \
-vgcreate VolGroup01 /dev/sdb3 /dev/sdc /dev/sdd && \
-lvcreate -L 512m VolGroup01 -n swap && \
+echo -e 'o\nn\n\n\n\n+2M\nn\n\n\n\n+512M\nn\n\n\n\n\na\n2\nw' | fdisk /dev/sdb  && \
+pvcreate /dev/sdb3 /dev/sdc /dev/sdd /dev/sde && \
+vgcreate VolGroup01 /dev/sdb3 /dev/sdc /dev/sdd /dev/sde && \
+lvcreate -L 1g VolGroup01 -n swap && \
 lvcreate -L 8g VolGroup01 -n root && \
-lvcreate -L 512m -m1 VolGroup01 -n var && \
-lvcreate -L 512m VolGroup01 -n home && \
+lvcreate -L 16g -m1 VolGroup01 -n var && \
+lvcreate -L 8g VolGroup01 -n home && \
 mkfs.ext4 /dev/VolGroup01/home && \
 mkfs.ext4 /dev/VolGroup01/root && \
 mkfs.ext4 /dev/VolGroup01/var && \
@@ -73,13 +71,7 @@ mount --rbind /sys /mnt/root/sys ; \
 mount --make-rslave /mnt/root/sys ; \
 mount --rbind /dev /mnt/root/dev ; \
 mount --make-rslave /mnt/root/dev ; \
-chroot /mnt/root /bin/bash -c "echo /dev/sdb2 /boot ext4  rw,user,exec 0 0 > /etc/fstab  ; \ 
-echo /dev/mapper/VolGroup01-root / ext4  rw,user,exec 0 0 >> /etc/fstab ; \
-echo /dev/mapper/VolGroup01-home /home ext4  rw,user,exec 0 0 >> /etc/fstab ; \
-echo /dev/mapper/VolGroup01-swap swap swap defaults 0 0 >> /etc/fstab ; \
-find /etc/default/grub -type f -print0 | xargs -0 sed -i 's/GRUB_CMDLINE_LINUX/#GRUB_CMDLINE_LINUX/g' ; \
-exho GRUB_CMDLINE_LINUX= >> /etc/default/grub ; \
-grub2-mkconfig -o /boot/grub2/grub.cfg"
+/bin/bash /vagrant/chroot.sh
    
   	  SHELL
 

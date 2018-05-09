@@ -89,7 +89,7 @@ install() {
 inst_hook pre-trigger 91 "$moddir/mount-local.sh"
 }
 
-cat  /usr/lib/dracut/modules.d/mount-local.sh
+cat  /usr/lib/dracut/modules.d/91local/mount-local.sh
 #!/bin/sh
 
 mount_local()

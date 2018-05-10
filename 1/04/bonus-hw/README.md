@@ -116,3 +116,107 @@ cat /etc/fstab
 /dev/mapper/VolGroup01-var /var ext4 defaults 0 0
 
 ```
+
+```
+fdisk -l
+
+Disk /dev/sdb: 32.2 GB, 32212254720 bytes, 62914560 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x00000000
+
+This doesn't look like a partition table
+Probably you selected the wrong device.
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1   ?           0           0           0   ee  GPT
+
+Disk /dev/sdc: 32.2 GB, 32212254720 bytes, 62914560 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x00000000
+
+This doesn't look like a partition table
+Probably you selected the wrong device.
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdc1   ?           0           0           0   ee  GPT
+
+Disk /dev/sda: 32.2 GB, 32212254720 bytes, 62914560 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x00000000
+
+This doesn't look like a partition table
+Probably you selected the wrong device.
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   ?           0           0           0   ee  GPT
+
+Disk /dev/sdd: 32.2 GB, 32212254720 bytes, 62914560 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x00000000
+
+This doesn't look like a partition table
+Probably you selected the wrong device.
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdd1   ?           0           0           0   ee  GPT
+
+Disk /dev/mapper/VolGroup01-root: 8589 MB, 8589934592 bytes, 16777216 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/VolGroup01-var_rmeta_0: 4 MB, 4194304 bytes, 8192 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/VolGroup01-var_rimage_0: 17.2 GB, 17179869184 bytes, 33554432 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/VolGroup01-var_rmeta_1: 4 MB, 4194304 bytes, 8192 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/VolGroup01-var_rimage_1: 17.2 GB, 17179869184 bytes, 33554432 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/VolGroup01-var: 17.2 GB, 17179869184 bytes, 33554432 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/VolGroup01-home: 8589 MB, 8589934592 bytes, 16777216 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/VolGroup01-swap: 1073 MB, 1073741824 bytes, 2097152 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+```

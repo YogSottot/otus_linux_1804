@@ -46,7 +46,7 @@ mkdir -p ~root/.ssh && \
 cp ~vagrant/.ssh/auth* ~root/.ssh && \
 setenforce 0 && \
 bash /vagrant/repo.sh
-pvcreate /dev/sdb /dev/sdc /dev/sdd /dev/sde && \
+pvcreate --bootloaderareasize 1m /dev/sdb /dev/sdc /dev/sdd /dev/sde && \
 vgcreate VolGroup01 /dev/sdb /dev/sdc /dev/sdd /dev/sde && \
 lvcreate -L 1g VolGroup01 -n swap && \
 lvcreate -L 8g VolGroup01 -n root && \

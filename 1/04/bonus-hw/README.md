@@ -30,7 +30,7 @@ pvcreate --bootloaderareasize 1m /dev/sdb /dev/sdc /dev/sdd /dev/sde && \
 vgcreate VolGroup01 /dev/sdb /dev/sdc /dev/sdd /dev/sde && \
 lvcreate -L 1g VolGroup01 -n swap && \
 lvcreate -L 8g VolGroup01 -n root && \
-lvcreate -L 16g VolGroup01 -n var && \
+lvcreate -L 16g -m1 VolGroup01 -n var && \
 lvcreate -L 8g VolGroup01 -n home && \
 ```
 создание fs

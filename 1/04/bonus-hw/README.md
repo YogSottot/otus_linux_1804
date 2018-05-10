@@ -75,6 +75,7 @@ grub2-mkconfig -o /boot/grub2/grub.cfg"
 ```
 
 Отключаю старый диск и загружаюсь.
+Загрузка прошла успешно.
 
 ```
 cat /etc/fstab
@@ -92,5 +93,26 @@ menuentry 'CentOS Linux (3.10.0-693.21.1.el7.x86_64) 7 (Core)' --class centos --
         fi
         linux16 /boot/vmlinuz-3.10.0-693.21.1.el7.x86_64 root=/dev/mapper/VolGroup01-root ro no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 crashkernel=auto rd.lvm.lv=VolGroup01/root rd.lvm.lv=VolGroup01/var rd.lvm.lv=VolGroup01/home rd.lvm.lv=VolGroup01/swap selinux=0 
         initrd16 /boot/initramfs-3.10.0-693.21.1.el7.x86_64.img
+
+```
+```
+df -hT
+Filesystem                  Type      Size  Used Avail Use% Mounted on
+/dev/mapper/VolGroup01-root ext4      7.8G  616M  6.8G   9% /
+devtmpfs                    devtmpfs  489M     0  489M   0% /dev
+tmpfs                       tmpfs     497M     0  497M   0% /dev/shm
+tmpfs                       tmpfs     497M  6.6M  490M   2% /run
+tmpfs                       tmpfs     497M     0  497M   0% /sys/fs/cgroup
+/dev/mapper/VolGroup01-home ext4      7.8G   37M  7.3G   1% /home
+/dev/mapper/VolGroup01-var  ext4       16G  172M   15G   2% /var
+tmpfs                       tmpfs     100M     0  100M   0% /run/user/1000
+
+```
+```
+cat /etc/fstab 
+/dev/mapper/VolGroup01-root / ext4 defaults 0 0
+/dev/mapper/VolGroup01-home /home ext4 defaults 0 0
+/dev/mapper/VolGroup01-swap swap swap defaults 0 0
+/dev/mapper/VolGroup01-var /var ext4 defaults 0 0
 
 ```

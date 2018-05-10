@@ -1,5 +1,5 @@
 #!/bin/bash
-chroot /mnt/root/ /bin/bash -c "echo /dev/mapper/VolGroup01-root / ext4  defaults 0 0 >> /etc/fstab ; \
+chroot /mnt/root/ /bin/bash -c "echo /dev/mapper/VolGroup01-root / ext4  defaults 0 0 > /etc/fstab ; \
 echo /dev/mapper/VolGroup01-home /home ext4  defaults 0 0 >> /etc/fstab ; \
 echo /dev/mapper/VolGroup01-swap swap swap defaults 0 0 >> /etc/fstab ; \
 echo /dev/mapper/VolGroup01-var /var ext4  defaults 0 0 >> /etc/fstab ; \

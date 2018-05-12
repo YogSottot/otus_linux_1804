@@ -1,17 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 PIDFILE=/var/www/test.pid
-if [ -f $PIDFILE ]
+if [ -f ${PIDFILE} ]
 then
-  PID=$(cat $PIDFILE)
-  ps -p $PID > /dev/null 2>&1
+  PID=$(cat ${PIDFILE})
+  ps -p ${PID} > /dev/null 2>&1
   if [ $? -eq 0 ]
   then
     echo "Process already running"
     exit 1
   else
     ## Process not found assume not running
-    echo $$ > $PIDFILE
+    echo $$ > ${PIDFILE}
     if [ $? -ne 0 ]
     then
       echo "Could not create PID file"
@@ -19,7 +19,7 @@ then
     fi
   fi
 else
-  echo $$ > $PIDFILE
+  echo $$ > ${PIDFILE}
   if [ $? -ne 0 ]
   then
     echo "Could not create PID file"
@@ -27,5 +27,7 @@ else
   fi
 fi
 
+# program that you want to run in cron without duplication
 /usr/bin/php -f /var/www/domain.tld/exports/test_h.php
-rm $PIDFILE
+
+rm ${PIDFILE}

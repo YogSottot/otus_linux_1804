@@ -5,6 +5,30 @@
 Учитывая существование [monit](https://mmonit.com/monit/) и [supervisord](http://supervisord.org/), полезность данных скриптов под большим вопросом.
 
 1) watchdog с перезагрузкой процесса/сервиса
+    ```bash
+    # Usage example
+    # ./watchdog_restart.sh uwsgi
+
+    if [ "$1" == "" ]; then
+    echo No service name have been provided.
+    echo Usage exmaple:
+    echo
+    echo -e "./watchdog_restart.sh uwsgi"
+    echo
+    fi
+
+    SERVICE1=$1
+    RESTART="systemctl restart ${SERVICE1}"
+    PGREP="/usr/bin/pgrep"
+    
+    # проверяем запущен ли сервис
+    $PGREP ${SERVICE1}
+    if [ $? -ne 0 ]
+       then
+       # перезапускаем
+       ${RESTART}
+    fi
+    ```
 2) watchdog с отсылкой емэйла
     ```bash
     # запускать как «скрипт имя_сервиса»

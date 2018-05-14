@@ -7,7 +7,7 @@ if [ "$1" == "" ]; then
 echo No service name have been provided.
 echo Usage exmaple:
 echo
-echo -e "./watchdog_restart_app.sh uwsgi"
+echo -e "./watchdog_restart_app.sh myapp.pl"
 echo
 fi
 

@@ -2,6 +2,8 @@
 #### Пишем скрипт
 подготовить свои скрипты для решения следующих кейсов
 
+Учитывая существование [monit](https://mmonit.com/monit/) и [supervisord](http://supervisord.org/), полезность данных скриптов под большим вопросом.
+
 1) watchdog с перезагрузкой процесса/сервиса
 2) watchdog с отсылкой емэйла
     ```bash
@@ -99,10 +101,23 @@
     ```
 
 5) любой скрипт на ваше усмотрение
-
-желательно чтобы в скрипте были
-циклы
-условия
-регекспы
-awk
-наличие в скрипте трапов и функций
+    Ещё один вариант watchdog.
+    В данном случае происходит не мониторинг уже запущенного процесса, но запуск и контроль с помощью watchdog обёртки.
+    ```bash
+    if [ "$1" == "" ]; then
+    echo No service name have been provided.
+    echo Usage exmaple:
+    echo
+    echo -e "./watchdog_restart_app.sh myapp.pl"
+    echo
+    fi
+    
+    DATE=`date`
+    SERVICE1="$1"
+    
+    until ${SERVICE1}; do
+ # запускаем приложение в петле, и перезапускаем, если завершилось с ошибкой
+        echo "App ${SERVICE1}' crashed with exit code $?.  Respawning.." >&2
+        sleep 1
+    done
+    ```

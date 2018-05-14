@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 # Usage example
-# ./watchdog.sh mysqld
+# ./watchdog_email.sh mysqld
 
 if [ "$1" == "" ]; then
 echo No service name have been provided.
 echo Usage exmaple:
 echo
-echo -e "./watchdog.sh mysqld"
+echo -e "./watchdog_email.sh mysqld"
 echo
 fi
 

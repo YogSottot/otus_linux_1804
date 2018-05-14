@@ -81,8 +81,7 @@
 3) анализ логов веб сервера/security лога - (на взлом/скорость ответа/выявление быстрых - медленных запросов, анализ IP адресов и кол-ва запросов от них)
         
      Однострочники
-     
-        ```bash
+     ```
         # получаем список useragent заблокированных ботов.
         grep "] 444" /var/log/nginx/default_access.log | awk -F\" '{print $6}' |  sort | uniq -c  | sort -nr
 
@@ -98,13 +97,11 @@
          2 Mozilla/5.0 (compatible; MegaIndex.ru/2.0; +http://megaindex.com/crawler)
          2 Mozilla/5.0 (compatible; Exabot/3.0; +http://www.exabot.com/go/robot)
          2 Mozilla/5.0 (compatible; AhrefsBot/5.2; +http://ahrefs.com/robot/)
-                     
-        ```
-   
-        ```bash
+     ```
+     ```bash
         # Ищем успешные входы по ssh
         egrep -i 'accept|success' /var/log/secure
-        ```
+     ```
     
 4) крон скрипт с защитой от мультизапуска
 

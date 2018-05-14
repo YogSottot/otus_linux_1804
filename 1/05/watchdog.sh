@@ -31,13 +31,15 @@ do
         if [ "$PID" == "" ]; then
                 echo "${SRVCHK} is down"
                 if  [ $(grep -c "${SRVCHK}" "${STATUS_CHECKER}") -eq 0 ]; then
-                        mailx -s "${MSG_DOWN}" ${EMAIL}
+                     echo "ALERT: ${SERVICE1} is down at ${DATE} / Sending Email ...."
+                     echo ${MSG_DOWN} | mailx -s "${MSG_DOWN}" ${EMAIL}
                         echo "${SRVCHK}" >> ${STATUS_CHECKER}
                 fi
         else
                 echo -e "${SRVCHK} is alive and its PID are as follows...\n${PID}"
                 if  [ $(grep -c "${SRVCHK}" "${STATUS_CHECKER}") -eq 1 ]; then
-                        mailx -s "${MSG_UP}" ${EMAIL}
+                       echo "INFO ALERT : ${SERVICE1} is UP at ${DATE} / Sending Email ...."
+                       echo ${MSG_UP} | mailx -s "${MSG_UP}" ${EMAIL}
                         sed -i "/${SRVCHK}/d" "${STATUS_CHECKER}"
                 fi
         fi

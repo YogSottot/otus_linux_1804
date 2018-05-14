@@ -35,9 +35,9 @@
             PID=$(pgrep ${SERVICE1})
             if [ "$PID" == "" ]; then
                     echo "${SRVCHK} is down"
-                 # проверяем запись о том, было ли уже отправлено письмо путём сравнения записей
+             # проверяем запись о том, было ли уже отправлено письмо путём сравнения записей
                     if  [ $(grep -c "${SRVCHK}" "${STATUS_CHECKER}") -eq 0 ]; then
-                 # если ещё не отправляли, пишем в файл и отправляем
+             # если ещё не отправляли, пишем в файл и отправляем
                          echo "ALERT: ${SERVICE1} is down at ${DATE} / Sending Email ...."
                          echo ${MSG_DOWN} | mailx -s "${MSG_DOWN}" ${EMAIL}
                             echo "${SRVCHK}" >> ${STATUS_CHECKER}

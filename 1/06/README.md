@@ -51,7 +51,44 @@
         RestartSec=30s
     ```
 2. Из epel установить spawn-fcgi и переписать init-скрипт на unit-файл. Имя сервиса должно так же называться.
+    
+    Раскомментировать параметры в /etc/sysconfig/spawn-fcgi и добавить /etc/systemd/system/spawn-fcgi.service
+    ```bash
+    [Unit]
+    Description=Spawn FastCGI scripts to be used by web servers
+    After=syslog.target network.target
+    
+    [Service]
+    Type=forking
+    EnvironmentFile=/etc/sysconfig/spawn-fcgi
+    ExecStart=/usr/bin/spawn-fcgi $OPTIONS
+    
+    [Install]
+    WantedBy=multi-user.target
+    ```
 
-3. Дополнить юнит-файл apache httpd возможностьб запустить несколько инстансов сервера с разными конфигами
+3. Дополнить юнит-файл apache httpd возможностью запустить несколько инстансов сервера с разными конфигами
+
+    Добавить в /etc/systemd/system/httpd.service.d/override.conf 
+    ```bash
+    
+    ```
 
 4. Скачать демо-версию Jira и переписать основной скрипт запуска на unit-файл
+
+    ```bash
+    [Unit] 
+    Description=Jira
+    After=network.target
+    
+    [Service] 
+    Type=forking
+    User=jira
+    PIDFile=/opt/atlassian/jira/work/catalina.pid
+    ExecStart=/opt/atlassian/jira/bin/start-jira.sh
+    ExecStop=/opt/atlassian/jira/bin/stop-jira.sh
+    ExecReload=/opt/atlassian/jira/bin/stop-jira.sh | sleep 60 | /opt/atlassian/jira/bin/start-jira.sh
+    
+    [Install] 
+    WantedBy=multi-user.target 
+    ```

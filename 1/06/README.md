@@ -87,7 +87,9 @@
     
     Добавить в /etc/systemd/system/httpd.service.d/override.conf 
     ```bash
-    
+    [Service]
+    PIDFile=/var/run/httpd/%i.pid
+    EnvironmentFile=/etc/sysconfig/httpd-%i
     ```
 
 4. **Скачать демо-версию Jira и переписать основной скрипт запуска на unit-файл**

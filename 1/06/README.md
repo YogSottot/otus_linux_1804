@@ -69,6 +69,17 @@
 
 3. Дополнить юнит-файл apache httpd возможностью запустить несколько инстансов сервера с разными конфигами
 
+    Самый простой способ запуска нескольких инстансов — создать копию юнита с новым именем и отредактировать
+    ```bash
+    EnvironmentFile=/etc/sysconfig/httpd-new-instance
+    ```
+     Внутри данного конфига нужно указать путь к копии конфига апача
+     ```bash
+    OPTIONS="-f /etc/httpd/conf/httpd-new-instance.conf"
+    ```
+    
+    Но условия задачи иные.
+    
     Добавить в /etc/systemd/system/httpd.service.d/override.conf 
     ```bash
     

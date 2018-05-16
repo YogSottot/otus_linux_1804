@@ -76,21 +76,31 @@
     Самый простой способ запуска нескольких инстансов — создать копию юнита с новым именем и отредактировать
 
     ```bash
-    EnvironmentFile=/etc/sysconfig/httpd-new-instance
+    EnvironmentFile=/etc/sysconfig/httpd-new
     ```
      Внутри данного конфига нужно указать путь к копии конфига апача
      ```bash
-    OPTIONS="-f /etc/httpd/conf/httpd-new-instance.conf"
+    OPTIONS="-f /etc/httpd/conf/httpd-new.conf"
     ```
     
-    Но условия задачи иные.
+    Можно использовать систему шаблонов.
     
-    Добавить в /etc/systemd/system/httpd.service.d/override.conf 
+    Скопируем юнит, для создания шаблона.
     ```bash
-    [Service]
-    PIDFile=/var/run/httpd/%i.pid
+    cp /etc/systemd/system/multi-user.target.wants/httpd.service /etc/systemd/system/httpd@.service
+    ```
+    Изменим в  /etc/systemd/system/httpd@.service 
+    ```bash
     EnvironmentFile=/etc/sysconfig/httpd-%i
     ```
+    Теперь можно запускать новые копии апача
+    ```bash
+    systemctl start httpd@new.service
+    ```
+    Конечно при этом должны быть созданы конфиги вида: ```/etc/sysconfig/httpd-{имя}```, внутри которых должен быть указан путь к конфигу отдельного инстанса апача.
+     ```bash
+     OPTIONS="-f /etc/httpd/conf/httpd-new.conf"
+     ```
 
 4. **Скачать демо-версию Jira и переписать основной скрипт запуска на unit-файл**
 

@@ -2,7 +2,7 @@
 #### Systemd
 1. Написать сервис, который будет раз в 30 секунд мониторить лог на предмет наличия ключевого слова. Файл и слово должны задаваться в /etc/sysconfig
 
-    Помешаем в /etc/systemd/system/logwatch.service
+    Помещаем в /etc/systemd/system/logwatch.service
     ```bash
     [Unit]
     Description=Log watcher
@@ -17,7 +17,7 @@
     [Install]
     WantedBy=multi-user.target
     ```
-    Помешаем в /etc/sysconfig/logwatch
+    Помещаем в /etc/sysconfig/logwatch
     ```bash
     # word for search
     WORD=accept

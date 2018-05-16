@@ -1,0 +1,9 @@
+[Unit]
+Description=This is the timer to set the schedule for automated restart of logwatch
+
+[Timer]
+OnCalendar=*:*:0/10
+AccuracySec=1us
+
+[Install]
+WantedBy=timers.target

@@ -30,6 +30,7 @@
     journalctl -f -u logwatch.service 
     ```
     Как вариант, можно использовать timer
+    
     Поместить в /etc/systemd/system/logwatch.timer
     ```bash
     [Unit]

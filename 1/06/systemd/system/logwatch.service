@@ -1,0 +1,12 @@
+[Unit]
+Description=Log watcher
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/sysconfig/logwatch
+ExecStart=/usr/bin/egrep -i $WORD $LOG
+Restart=on-success
+RestartSec=30s
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,4 @@
+# word for search
+WORD=accept
+# path to logfile
+LOG=/var/log/secure

@@ -79,28 +79,24 @@
     ```bash
     cp /etc/systemd/system/multi-user.target.wants/httpd.service /etc/systemd/system/httpd@.service
     ```
-    Изменим в  /etc/systemd/system/httpd@.service 
+    Так как по условиям ДЗ нужно использовать систему оверайдов, создадим директорию для оверрайда   
     ```bash
+    mkdir /etc/systemd/system/httpd@.service.d/
+    ```
+    Поместим туда файл override.conf c содержимым
+    ```bash
+    [Service]
     EnvironmentFile=/etc/sysconfig/httpd-%i
     ```
     Теперь можно запускать новые копии апача
     ```bash
+    systemctl daemon-reload
     systemctl start httpd@new.service
     ```
-    При этом должны быть созданы конфиги вида: ```/etc/sysconfig/httpd-{имя}```, внутри которых должен быть указан путь к конфигу отдельного инстанса апача.
+    При этом предварительно должны быть созданы конфиги вида: ```/etc/sysconfig/httpd-{имя}```, внутри которых должен быть указан путь к конфигу отдельного инстанса апача.
      ```bash
      OPTIONS="-f /etc/httpd/conf/httpd-new.conf"
-     ```
-     Или другой способ запуска нескольких инстансов — создать копию юнита с новым именем и отредактировать
-
-    ```bash
-    EnvironmentFile=/etc/sysconfig/httpd-new
-    ```
-     Внутри данного конфига нужно указать путь к копии конфига апача
-     ```bash
-    OPTIONS="-f /etc/httpd/conf/httpd-new.conf"
-    ```
-    
+     ```  
 
 4. **Скачать демо-версию Jira и переписать основной скрипт запуска на unit-файл**
 

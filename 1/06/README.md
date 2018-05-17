@@ -122,7 +122,7 @@
         JIRA starting...                                                                                                                                                                                 [204/1876]
     ****************
     
-2018-05-17 15:07:56,891 JIRA-Bootstrap INFO      [c.a.jira.startup.JiraStartupLogger] 
+    2018-05-17 15:07:56,891 JIRA-Bootstrap INFO      [c.a.jira.startup.JiraStartupLogger] 
     
     ___ Environment _____________________________
     

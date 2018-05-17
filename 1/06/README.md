@@ -79,7 +79,7 @@
     ```bash
     cp /etc/systemd/system/multi-user.target.wants/httpd.service /etc/systemd/system/httpd@.service
     ```
-    Так как по условиям ДЗ нужно использовать систему оверайдов, создадим директорию для оверрайда   
+    Так как по условиям ДЗ нужно использовать систему оверрайдов, создадим директорию для оверрайда   
     ```bash
     mkdir /etc/systemd/system/httpd@.service.d/
     ```

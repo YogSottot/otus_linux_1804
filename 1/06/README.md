@@ -99,7 +99,8 @@
      ```  
 
 4. **Скачать демо-версию Jira и переписать основной скрипт запуска на unit-файл**
-    [Jira Core Server](https://ru.atlassian.com/software/jira/core/download)
+
+   Скачал бинарную версию, установил по умолчанию. [Jira Core Server](https://ru.atlassian.com/software/jira/core/download)
     
     ```bash
     [Unit] 
@@ -117,6 +118,7 @@
     [Install] 
     WantedBy=multi-user.target 
     ```
+    Запускается.
 
     ```bash
         JIRA starting...                                                                                                                                                                                 [204/1876]

@@ -157,5 +157,13 @@
     cp /home/builder/rpmbuild/RPMS/x86_64/* /var/www/html/repos/centos/7/x86_64/Packages/
     createrepo /var/www/html/repos/centos/7/x86_64/
      ```
-     
+     Добавляем файл /etc/yum.repos.d/nginx-pgspeed.repo
+     ```bash
+    [bitrix]
+    name=Nginx Pagespeed
+    failovermethod=priority
+    baseurl=https://repo.domain.tld/centos/7/x86_64/
+    enabled=1
+    gpgcheck=0
+    ```
      Ссылка на репозиторий в чате.

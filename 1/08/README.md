@@ -159,7 +159,7 @@
      ```
      Добавляем файл /etc/yum.repos.d/nginx-pgspeed.repo
      ```bash
-    [bitrix]
+    [nginx-pagespeed]
     name=Nginx Pagespeed
     failovermethod=priority
     baseurl=https://repo.domain.tld/centos/7/x86_64/

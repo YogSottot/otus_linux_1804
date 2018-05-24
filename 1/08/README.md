@@ -153,17 +153,67 @@
 
     ```bash
     yum install createrepo
-    mkdir -p /var/www/html/repos/centos/7/x86_64/Packages/
-    cp /home/builder/rpmbuild/RPMS/x86_64/* /var/www/html/repos/centos/7/x86_64/Packages/
-    createrepo /var/www/html/repos/centos/7/x86_64/
+    mkdir -p /var/www/html/repos/centos/7/Packages/
+    cp /home/builder/rpmbuild/RPMS/x86_64/* /var/www/html/repos/centos/7/Packages/
+    createrepo /var/www/html/repos/centos/7/
      ```
      Добавляем файл /etc/yum.repos.d/nginx-pgspeed.repo
      ```bash
     [nginx-pagespeed]
     name=Nginx Pagespeed
     failovermethod=priority
-    baseurl=https://repo.domain.tld/centos/7/x86_64/
+    baseurl=https://repo.domain.tld/centos/7/
     enabled=1
     gpgcheck=0
     ```
      Ссылка на репозиторий в чате.
+     ```bash
+    yum --showduplicates list nginx
+         Loaded plugins: etckeeper, fastestmirror, merge-conf
+         Loading mirror speeds from cached hostfile
+          * atomic: www4.atomicorp.com
+          * base: mirror.reconn.ru
+          * epel: mirror.awanti.com
+          * extras: mirror.awanti.com
+          * remi: mirror.awanti.com
+          * remi-php71: mirror.awanti.com
+          * remi-safe: mirror.awanti.com
+          * updates: mirror.awanti.com
+         Available Packages
+         nginx.x86_64     1:1.12.2-2.el7           epel           
+         nginx.x86_64     1:1.14.0-1.el7_4.ngx     nginx-pagespeed
+         nginx.x86_64     1:1.14.0-4591.el7.art    atomic         
+         nginx.x86_64     1:1.14.0-4597.el7.art    atomic 
+    ```
+     ```bash
+    yum install nginx-1.14.0-1.el7_4.ngx                                                                                                                                                    
+    Loaded plugins: etckeeper, fastestmirror, merge-conf
+    Loading mirror speeds from cached hostfile
+     * atomic: www4.atomicorp.com
+     * base: mirror.reconn.ru
+     * epel: mirror.awanti.com
+     * extras: mirror.awanti.com
+     * remi: mirror.awanti.com
+     * remi-php71: mirror.awanti.com
+     * remi-safe: mirror.awanti.com
+     * updates: mirror.awanti.com
+    Resolving Dependencies
+    --> Running transaction check
+    ---> Package nginx.x86_64 1:1.14.0-1.el7_4.ngx will be installed
+    --> Finished Dependency Resolution
+    
+    Dependencies Resolved
+   ======================================================
+    Package        Arch      Version      Repository   Size
+   ===========================================================
+    Installing:
+    nginx         x86_64     1:1.14.0-1.el7_4.ngx  nginx-pagespeed 8.9 M
+    
+    Transaction Summary
+    ================================================================
+    Install  1 Package
+    
+    Total download size: 8.9 M
+    Installed size: 27 M
+    Is this ok [y/d/N]:
+    ```

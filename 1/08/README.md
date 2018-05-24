@@ -145,7 +145,7 @@
     Пакет находится в ```/home/otus/rpmbuild/RPMS/x86_64/nginx-1.14.0-1.el7_4.ngx.x86_64.rpm```
     Можно установить его
     ```bash
-    sudo yum install /home/builder/rpmbuild/RPMS/x86_64/nginx-1.14.0-1.el7.ngx.x86_64.rpm
+    sudo yum update /home/otus/rpmbuild/RPMS/x86_64/nginx-1.14.0-1.el7.ngx.x86_64.rpm
     ```
         
 2) ***создать свой репо и разместить там свой RPM
@@ -154,7 +154,7 @@
     ```bash
     yum install createrepo
     mkdir -p /var/www/html/repos/centos/7/Packages/
-    cp /home/builder/rpmbuild/RPMS/x86_64/* /var/www/html/repos/centos/7/Packages/
+    cp /home/otus/rpmbuild/RPMS/x86_64/* /var/www/html/repos/centos/7/Packages/
     createrepo /var/www/html/repos/centos/7/
      ```
      Добавляем файл /etc/yum.repos.d/nginx-pgspeed.repo
@@ -166,6 +166,7 @@
     enabled=1
     gpgcheck=0
     ```
+  
      Ссылка на репозиторий в чате.
      ```bash
     yum --showduplicates list nginx
@@ -183,7 +184,7 @@
          nginx.x86_64     1:1.14.0-1.el7_4.ngx     nginx-pagespeed
          ```
      ```bash
-    yum install nginx-1.14.0-1.el7_4.ngx                                                                                                                                                    
+    yum update nginx-1.14.0-1.el7_4.ngx                                                                                                                                                    
     Loaded plugins: etckeeper, fastestmirror, merge-conf
     Loading mirror speeds from cached hostfile
      * base: mirror.reconn.ru

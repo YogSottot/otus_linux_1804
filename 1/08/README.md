@@ -1,6 +1,6 @@
 ### Домашнее задание
 #### Размещаем свой RPM в своем репозитории
-1) создать свой RPM (можно взять свое приложение, либо собрать к примеру апач с определенными опциями)
+1) ***создать свой RPM (можно взять свое приложение, либо собрать к примеру апач с определенными опциями)***
     
     Решено собрать nginx с модулем Pagespeed
     
@@ -117,5 +117,45 @@
     ```
     Откиньтесь на спинку кресла и отдохните, пока ~~Windows 98 устанавливается на ваш компьютер~~ собирается пакет.
     
-2) создать свой репо и разместить там свой RPM
-реализовать это все либо в вагранте, либо развернуть у себя через nginx и дать ссылку на репо 
+    Если всё пройдёт без ошибок, в результате будет написано примерно следующее:
+    ```bash
+    Processing files: nginx-1.14.0-1.el7_4.ngx.x86_64
+    Provides: config(nginx) = 1:1.14.0-1.el7_4.ngx nginx = 1:1.14.0-1.el7_4.ngx nginx(x86-64) = 1:1.14.0-1.el7_4.ngx webserver
+    Requires(interp): /bin/sh /bin/sh /bin/sh /bin/sh
+    Requires(rpmlib): rpmlib(CompressedFileNames) <= 3.0.4-1 rpmlib(FileDigests) <= 4.6.0-1 rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+    Requires(pre): /bin/sh shadow-utils
+    Requires(post): /bin/sh
+    Requires(preun): /bin/sh
+    Requires(postun): /bin/sh
+    Requires: /bin/sh ld-linux-x86-64.so.2()(64bit) ld-linux-x86-64.so.2(GLIBC_2.3)(64bit) libc.so.6()(64bit) libc.so.6(GLIBC_2.10)(64bit) libc.so.6(GLIBC_2.11)(64bit) libc.so.6(GLIBC_2.14)(64bit) libc.so.6(GLIBC_2.2.5)(64bit) libc.so.6(GLIBC_2.3)(64bit) libc.so.6(GLIBC_2.3.2)(64bit) libc.so.6(GLIBC_2.3.3)(64bit) libc.so.6(GLIBC_2.3.4)(64bit) libc.so.6(GLIBC_2.4)(64bit) libc.so.6(GLIBC_2.7)(64bit) libc.so.6(GLIBC_2.8)(64bit) libcrypt.so.1()(64bit) libcrypt.so.1(GLIBC_2.2.5)(64bit) libcrypto.so.10()(64bit) libcrypto.so.10(OPENSSL_1.0.2)(64bit) libcrypto.so.10(libcrypto.so.10)(64bit) libdl.so.2()(64bit) libdl.so.2(GLIBC_2.2.5)(64bit) libgcc_s.so.1()(64bit) libgcc_s.so.1(GCC_3.0)(64bit) libm.so.6()(64bit) libm.so.6(GLIBC_2.2.5)(64bit) libpcre.so.1()(64bit) libpthread.so.0()(64bit) libpthread.so.0(GLIBC_2.12)(64bit) libpthread.so.0(GLIBC_2.2.5)(64bit) libpthread.so.0(GLIBC_2.3.2)(64bit) libpthread.so.0(GLIBC_2.3.3)(64bit) libpthread.so.0(GLIBC_2.4)(64bit) librt.so.1()(64bit) librt.so.1(GLIBC_2.2.5)(64bit) libssl.so.10()(64bit) libssl.so.10(libssl.so.10)(64bit) libstdc++.so.6()(64bit) libstdc++.so.6(CXXABI_1.3)(64bit) libstdc++.so.6(CXXABI_1.3.5)(64bit) libstdc++.so.6(GLIBCXX_3.4)(64bit) libstdc++.so.6(GLIBCXX_3.4.11)(64bit) libstdc++.so.6(GLIBCXX_3.4.14)(64bit) libstdc++.so.6(GLIBCXX_3.4.15)(64bit) libstdc++.so.6(GLIBCXX_3.4.18)(64bit) libstdc++.so.6(GLIBCXX_3.4.9)(64bit) libuuid.so.1()(64bit) libz.so.1()(64bit) rtld(GNU_HASH)
+    Processing files: nginx-debuginfo-1.14.0-1.el7_4.ngx.x86_64
+    Provides: nginx-debuginfo = 1:1.14.0-1.el7_4.ngx nginx-debuginfo(x86-64) = 1:1.14.0-1.el7_4.ngx
+    Requires(rpmlib): rpmlib(FileDigests) <= 4.6.0-1 rpmlib(PayloadFilesHavePrefix) <= 4.0-1 rpmlib(CompressedFileNames) <= 3.0.4-1
+    Checking for unpackaged file(s): /usr/lib/rpm/check-files /home/otus/rpmbuild/BUILDROOT/nginx-1.14.0-1.el7_4.ngx.x86_64
+    Wrote: /home/otus/rpmbuild/SRPMS/nginx-1.14.0-1.el7_4.ngx.src.rpm
+    Wrote: /home/otus/rpmbuild/RPMS/x86_64/nginx-1.14.0-1.el7_4.ngx.x86_64.rpm
+    Wrote: /home/otus/rpmbuild/RPMS/x86_64/nginx-debuginfo-1.14.0-1.el7_4.ngx.x86_64.rpm
+    Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.cPyiHj
+    + umask 022
+    + cd /home/otus/rpmbuild/BUILD
+    + cd nginx-1.14.0
+    + /usr/bin/rm -rf /home/otus/rpmbuild/BUILDROOT/nginx-1.14.0-1.el7_4.ngx.x86_64
+    + exit 0
+    ```
+    Пакет находится в ```/home/otus/rpmbuild/RPMS/x86_64/nginx-1.14.0-1.el7_4.ngx.x86_64.rpm```
+    Можно установить его
+    ```bash
+    sudo yum install /home/builder/rpmbuild/RPMS/x86_64/nginx-1.14.0-1.el7.ngx.x86_64.rpm
+    ```
+        
+2) ***создать свой репо и разместить там свой RPM
+реализовать это все либо в вагранте, либо развернуть у себя через nginx и дать ссылку на репо***
+
+    ```bash
+    yum install createrepo
+    mkdir -p /var/www/html/repos/centos/7/x86_64/Packages/
+    cp /home/builder/rpmbuild/RPMS/x86_64/* /var/www/html/repos/centos/7/x86_64/Packages/
+    createrepo /var/www/html/repos/centos/7/x86_64/
+     ```
+     
+     Ссылка на репозиторий в чате.

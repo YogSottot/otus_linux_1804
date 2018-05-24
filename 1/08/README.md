@@ -171,7 +171,6 @@
     yum --showduplicates list nginx
          Loaded plugins: etckeeper, fastestmirror, merge-conf
          Loading mirror speeds from cached hostfile
-          * atomic: www4.atomicorp.com
           * base: mirror.reconn.ru
           * epel: mirror.awanti.com
           * extras: mirror.awanti.com
@@ -182,14 +181,11 @@
          Available Packages
          nginx.x86_64     1:1.12.2-2.el7           epel           
          nginx.x86_64     1:1.14.0-1.el7_4.ngx     nginx-pagespeed
-         nginx.x86_64     1:1.14.0-4591.el7.art    atomic         
-         nginx.x86_64     1:1.14.0-4597.el7.art    atomic 
-    ```
+         ```
      ```bash
     yum install nginx-1.14.0-1.el7_4.ngx                                                                                                                                                    
     Loaded plugins: etckeeper, fastestmirror, merge-conf
     Loading mirror speeds from cached hostfile
-     * atomic: www4.atomicorp.com
      * base: mirror.reconn.ru
      * epel: mirror.awanti.com
      * extras: mirror.awanti.com

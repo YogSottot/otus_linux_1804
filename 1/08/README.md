@@ -163,7 +163,7 @@
     + exit 0
     Finish: rpmbuild nginx-1.14.0-1.el7_4.ngx.src.rpm
     Finish: build phase for nginx-1.14.0-1.el7_4.ngx.src.rpm
-    INFO: Done(/home/builder/rpmbuild/SRPMS/nginx-1.14.0-1.el7_4.ngx.src.rpm) Config(epel-7-x86_64) 5 minutes 23 seconds
+    INFO: Done(/home/otus/rpmbuild/SRPMS/nginx-1.14.0-1.el7_4.ngx.src.rpm) Config(epel-7-x86_64) 5 minutes 23 seconds
     INFO: Results and/or logs in: /var/lib/mock/epel-7-x86_64/result
     Finish: run
     ```

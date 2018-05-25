@@ -170,7 +170,7 @@
     Пакет находится в ```/home/otus/rpmbuild/RPMS/x86_64/nginx-1.14.0-1.el7_4.ngx.x86_64.rpm```
     Можно установить его
     ```bash
-    sudo yum update /home/otus/rpmbuild/RPMS/x86_64/nginx-1.14.0-1.el7.ngx.x86_64.rpm
+    sudo yum update /home/otus/rpmbuild/RPMS/x86_64/nginx-1.14.0-1.el7_4.ngx.x86_64.rpm
     ```
         
 2) ***создать свой репо и разместить там свой RPM

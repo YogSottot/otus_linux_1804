@@ -239,3 +239,6 @@
     Installed size: 27 M
     Is this ok [y/d/N]:
     ```
+    
+    Если не запускается с ошибкой ```error while loading shared libraries: cannot create cache for search path: Cannot allocate memory``` добавляем правило в selinux ```setsebool -P httpd_execmem on```
+    

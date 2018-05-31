@@ -9,7 +9,7 @@
 - у всех новых серверов отключить дефолт на нат (eth0), который вагрант поднимает для связи
 
 Для начала создал схему сети.
-![schema](https://raw.githubusercontent.com/YogSottot/otus_linux_1804/master/2/01/Networkchart.svg)
+![schema](https://raw.githubusercontent.com/YogSottot/otus_linux_1804/master/2/01/Networkchart.svg?sanitize=true)
 
 В vagrantfile задано создание сети по схеме.
 Добавлены статические роуты.

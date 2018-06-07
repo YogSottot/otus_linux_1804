@@ -193,7 +193,7 @@ traceroute to ya.ru (87.250.250.242), 30 hops max, 60 byte packets
 
 Доступы к серверу в чате.
 
-Конфиг в ocserv/ocserv.conf
+Конфиг в [ocserv/ocserv.conf](https://github.com/YogSottot/otus_linux_1804/blob/master/2/11/ocserv/ocserv.conf)
 ```bash
 yum install ocserv
 # Для серверного сертификата использую let's encrypt.

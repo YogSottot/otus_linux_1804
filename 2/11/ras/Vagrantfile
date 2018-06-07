@@ -1,0 +1,74 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+MACHINES = {
+:openvpn1 => {
+		:box_name => "centos/7",
+        :net => [
+                 {ip: '192.168.1.22', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "nat"},
+                 {ip: '192.168.1.1', adapter: 3, netmask: "255.255.255.0", virtualbox__intnet: "openvpn1-net"},
+                ]
+  },
+  
+}
+
+Vagrant.configure("2") do |config|
+
+  MACHINES.each do |boxname, boxconfig|
+
+    config.vm.define boxname do |box|
+
+        box.vm.box = boxconfig[:box_name]
+		box.vm.host_name = boxname.to_s
+
+        boxconfig[:net].each do |ipconf|
+          box.vm.network "private_network", ipconf
+        end
+        
+        if boxconfig.key?(:public)
+          box.vm.network "public_network", boxconfig[:public]
+        end
+
+        box.vm.provision "shell", inline: <<-SHELL
+          mkdir -p ~root/.ssh
+                cp ~vagrant/.ssh/auth* ~root/.ssh
+                yum -y install epel-release
+                yum -y install openvpn bridge-utils policycoreutils-python
+                echo -e 'net.ipv4.conf.all.forwarding=1\nnet.ipv4.ip_forward=1' >> /etc/sysctl.d/99-override.conf
+                sysctl --system
+                semanage port -a -t openvpn_port_t -p udp 3994
+        SHELL
+        
+		case boxname.to_s
+		when "openvpn1"
+			box.vm.provision "shell", path: "https://raw.githubusercontent.com/YogSottot/otus_linux_1804/master/2/11/scripts/ssh_server1.sh"
+			box.vm.provision "shell", inline: <<-SHELL
+			yum -y install easy-rsa 
+			cd /etc/openvpn/
+			mkdir keys
+			/usr/share/easy-rsa/3.0.3/easyrsa init-pki
+			/usr/share/easy-rsa/3.0.3/easyrsa --batch build-ca nopass
+			/usr/share/easy-rsa/3.0.3/easyrsa gen-dh
+			/usr/share/easy-rsa/3.0.3/easyrsa  build-server-full server1 nopass
+			/usr/share/easy-rsa/3.0.3/easyrsa  build-client-full client1 nopass
+			openvpn --genkey --secret ta.key
+			mv ta.key keys/
+			cp pki/ca.crt keys/
+			cp pki/dh.pem keys/
+			cp pki/issued/server1.crt keys/
+			cp pki/private/server1.key keys/
+			cp /vagrant/server_ras.conf server/
+			systemctl start openvpn-server@server_ras
+			SHELL
+			
+    end
+
+      end
+
+  end
+  
+  
+end
+

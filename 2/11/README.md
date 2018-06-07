@@ -6,7 +6,7 @@
 - tap
 Прочуствовать разницу.
 
-Vagrantfile для каждой задачи лежит в соответствующей директории. (tun/tap/ras/ocserv)
+Vagrantfile для задачь (tun/tap) лежит в соответствующей директории.
 
 Запускать нужно прямо оттуда.
 
@@ -152,16 +152,70 @@ cp pki/ca.crt keys/
 cp pki/dh.pem keys/
 cp pki/issued/server1.crt keys/
 cp pki/private/server1.key keys/
+echo -e 'net.ipv4.conf.all.forwarding=1\nnet.ipv4.ip_forward=1' >> /etc/sysctl.d/99-override.conf
+sysctl --system
 firewall-cmd --permanent --zone=public --add-port=3994/udp && firewall-cmd --reload
-sy
-iptables -t nat -A POSTROUTING -s 10.1.0.0/24 -o eth0 -j MASQUERADE
+firewall-cmd --add-masquerade
+# или iptables -t nat -A POSTROUTING -s 10.1.0.0/24 -o eth0 -j MASQUERADE если не используем firewall-cmd
 systemctl start openvpn-server@server_ras
 ```
-Использован server_ras.conf
-```
+Использован [server_ras.conf](https://github.com/YogSottot/otus_linux_1804/blob/master/2/11/ras/server_ras.conf)
 
+
+
+Добавляем клиентский конфиг и ключи. Ссылка на архив в чате. В репозитории пример конфига с неправильным ip.
+```bash
+systemctl start openvpn-client@client1
+
+```
+Проверяем, что трафик идёт через vpn.
+```bash
+traceroute ya.ru
+traceroute to ya.ru (87.250.250.242), 30 hops max, 60 byte packets
+ 1  10.1.0.1 (10.1.0.1)  7.386 ms  7.372 ms  7.353 ms
+ 2 secret ip
+ 3  172.16.5.73 (172.16.5.73)  8.027 ms  8.462 ms  8.725 ms
+ 4  PE-B57.p2p.MX240-B57.ptspb.net (188.227.25.46)  18.572 ms  18.706 ms  18.995 ms
+ 5  MX240-B57.p2p.PE-B57.ptspb.net (188.227.25.45)  7.038 ms  7.020 ms  7.037 ms
+ 6  MX480-MM11.p2p.MX240-B57.ptspb.net (188.227.25.33)  8.255 ms  6.096 ms  6.043 ms
+ 7  Yandex.AS13238.ptspb.net (85.235.198.206)  6.044 ms  6.048 ms  6.125 ms
+ 8  aurora-ae2-601.yndx.net (37.140.137.94)  8.973 ms  8.938 ms  9.012 ms
+ 9  m9-p2-100ge-2-0-3.yndx.net (213.180.213.16)  18.752 ms  18.752 ms  18.983 ms
+10  * * *
+11  ya.ru (87.250.250.242)  20.974 ms vla1-x8-eth-trunk2-1.yndx.net (87.250.239.241)  24.206 ms  24.185 ms
+```
+Можно дополнительно зайти на любой сервис проверки ip и убедиться, что он поменялся.
+
+Если используется dns от провайдера и linux, вероятно, понадобится [данный скрипт.](https://github.com/masterkorp/openvpn-update-resolv-conf)
 
 3. Самостоятельно изучить, поднять ocserv и подключиться с хоста к виртуалке 
 
+Поднят не в virtualbox, а в vps на базе qemu-kvm.
 
+Доступы к серверу в чате.
 
+Конфиг в ocserv/ocserv.conf
+```bash
+yum install ocserv
+# Для серверного сертификата использую let's encrypt.
+firewall-cmd --permanent --zone=public --add-port=4443/udp && firewall-cmd --reload
+firewall-cmd --permanent --zone=public --add-port=4443/tcp && firewall-cmd --reload
+firewall-cmd --add-masquerade
+systemctl start ocserv.service
+```
+Проверяем, что трафик идёт через vpn.
+```bash
+ traceroute ya.ru
+traceroute to ya.ru (87.250.250.242), 30 hops max, 60 byte packets
+ 1  10.35.0.1 (10.35.0.1)  5.877 ms  6.055 ms  6.002 ms
+ 2  gw.cpec.secret ip  13.317 ms  13.256 ms  13.552 ms
+ 3  172.16.5.73 (172.16.5.73)  8.087 ms  8.392 ms  8.654 ms
+ 4  PE-B57.p2p.MX240-B57.ptspb.net (188.227.25.46)  14.222 ms  14.298 ms  14.528 ms
+ 5  MX240-B57.p2p.PE-B57.ptspb.net (188.227.25.45)  6.975 ms  6.933 ms  7.095 ms
+ 6  MX480-MM11.p2p.MX240-B57.ptspb.net (188.227.25.33)  7.034 ms  6.165 ms  6.588 ms
+ 7  Yandex.AS13238.ptspb.net (85.235.198.206)  6.963 ms  6.904 ms  7.032 ms
+ 8  aurora-ae2-601.yndx.net (37.140.137.94)  7.407 ms  7.344 ms  7.245 ms
+ 9  m9-p2-100ge-2-0-3.yndx.net (213.180.213.16)  23.269 ms  23.213 ms  23.377 ms
+10  * * *
+11  * ya.ru (87.250.250.242)  21.214 ms *
+```

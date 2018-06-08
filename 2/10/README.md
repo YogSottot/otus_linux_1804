@@ -24,3 +24,56 @@ testClient2 <-> testServer2
 
 C клиента testClient1/2 можно попасть ssh на сервер testServer1/2 без пароля.
 
+```bash
+cat /proc/net/bonding/bond0 
+Ethernet Channel Bonding Driver: v3.7.1 (April 27, 2011)
+
+Bonding Mode: fault-tolerance (active-backup) (fail_over_mac active)
+Primary Slave: eth1 (primary_reselect always)
+Currently Active Slave: eth1
+MII Status: up
+MII Polling Interval (ms): 100
+Up Delay (ms): 200
+Down Delay (ms): 200
+
+Slave Interface: eth1
+MII Status: up
+Speed: 1000 Mbps
+Duplex: full
+Link Failure Count: 0
+Permanent HW addr: 08:00:27:99:e7:e7
+Slave queue ID: 0
+
+Slave Interface: eth2
+MII Status: up
+Speed: 1000 Mbps
+Duplex: full
+Link Failure Count: 0
+Permanent HW addr: 08:00:27:d1:fc:5b
+Slave queue ID: 0
+```
+
+При ifdown eth1
+```bash
+cat /proc/net/bonding/bond0 
+Ethernet Channel Bonding Driver: v3.7.1 (April 27, 2011)
+
+Bonding Mode: fault-tolerance (active-backup) (fail_over_mac active)
+Primary Slave: None
+Currently Active Slave: eth2
+MII Status: up
+MII Polling Interval (ms): 100
+Up Delay (ms): 200
+Down Delay (ms): 200
+
+Slave Interface: eth2
+MII Status: up
+Speed: 1000 Mbps
+Duplex: full
+Link Failure Count: 0
+Permanent HW addr: 08:00:27:d1:fc:5b
+Slave queue ID: 0
+```
+
+Если eth1 и eth2 размещены в разных internal сетях virtualbox, то пинг не проходит, при отключении eth1
+Если eth1 и eth2 размещены в одной internal сети virtualbox, то пинг проходит, при отключении eth1

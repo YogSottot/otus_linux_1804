@@ -17,8 +17,10 @@ testClient2 <-> testServer2
 проверить работу если выборать интерфейсы в бонде по очереди
 
 Для начала создал схему сети. 
-![schema](https://raw.githubusercontent.com/YogSottot/otus_linux_1804/master/2/01/Networkchart.svg?sanitize=true)
+![schema](https://raw.githubusercontent.com/YogSottot/otus_linux_1804/master/2/10/Networkchart_bond.svg?sanitize=true)
 Нажмите, чтобы открыть в полном размере.
 
-В vagrantfile задано создание сети по схеме.
+В vagrantfile задано создание сети по схеме. (Закомментированы узлы не относящиеся к задаче.)
+
+C клиента testClient1/2 можно попасть ssh на сервер testServer1/2 без пароля.
 

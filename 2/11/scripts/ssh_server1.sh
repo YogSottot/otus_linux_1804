@@ -29,7 +29,7 @@ DVgDMbcQzCa3WwGaPpD55lTmXg3UXqrTvdu++AgJoTfe+gHEY02o
 -----END RSA PRIVATE KEY-----
 EOT
 
-cat <<\EOT >> /home/vagrant/.ssh/id_rsa
+cat <<\EOT > /home/vagrant/.ssh/id_rsa
 -----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEAuXWShdSF7QZfKPZD5OSA5N+p3PhETTRYf8MmxvT1SBkRXi6B
 GxQyQhiBG+dJC71SuZLR+nNXEreLfnbZG7ojQwNK9nCp2d+GiBrtdGJaiWQnh/5d
@@ -63,10 +63,10 @@ cat <<\EOT >> /root/.ssh/id_rsa.pub
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5dZKF1IXtBl8o9kPk5IDk36nc+ERNNFh/wybG9PVIGRFeLoEbFDJCGIEb50kLvVK5ktH6c1cSt4t+dtkbuiNDA0r2cKnZ34aIGu10YlqJZCeH/l2f6q+g1OK5OmTHkfAuINiYv5Uh4q3fZQP5nFMVCiyR19Uo5ry2EWKuAH0XJ7/lUWUtobRPAUDYa0uzbcpRLuCIQoxzfAcY530NQskVkKhjvXU7+tYvQ9pgtmG4Kw2s84z3dsPjJJOBm8t61kC+KNX8wr0VveBLKDyPezJm47wrOIZLPei15Mzut1tpsAS0RJpgaJRVOrP5aN+4fmBmHX30bZ2KV+EubuK5BP31 root@openvpn1
 EOT
 
-cat <<\EOT >> /home/vagrant/.ssh/id_rsa.pub
+cat <<\EOT > /home/vagrant/.ssh/id_rsa.pub
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5dZKF1IXtBl8o9kPk5IDk36nc+ERNNFh/wybG9PVIGRFeLoEbFDJCGIEb50kLvVK5ktH6c1cSt4t+dtkbuiNDA0r2cKnZ34aIGu10YlqJZCeH/l2f6q+g1OK5OmTHkfAuINiYv5Uh4q3fZQP5nFMVCiyR19Uo5ry2EWKuAH0XJ7/lUWUtobRPAUDYa0uzbcpRLuCIQoxzfAcY530NQskVkKhjvXU7+tYvQ9pgtmG4Kw2s84z3dsPjJJOBm8t61kC+KNX8wr0VveBLKDyPezJm47wrOIZLPei15Mzut1tpsAS0RJpgaJRVOrP5aN+4fmBmHX30bZ2KV+EubuK5BP31 root@openvpn1
 EOT
 
 
 chmod 600 /root/.ssh/id_rsa
-chmod 600 /home/vagrant/id_rsa
+chmod 600 /home/vagrant/.ssh/id_rsa

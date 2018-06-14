@@ -74,58 +74,31 @@ END
 
 -  TAP
 
-Проверка доступности локалки за сервером.
-```bash
-[root@openvpn2 openvpn]# ping -c 4 10.1.0.1
-PING 10.1.0.1 (10.1.0.1) 56(84) bytes of data.
-64 bytes from 10.1.0.1: icmp_seq=1 ttl=64 time=1.29 ms
-64 bytes from 10.1.0.1: icmp_seq=2 ttl=64 time=1.15 ms
-64 bytes from 10.1.0.1: icmp_seq=3 ttl=64 time=1.20 ms
-64 bytes from 10.1.0.1: icmp_seq=4 ttl=64 time=1.32 ms
+Создан bridge
+Проверка связанности локалки
 
---- 10.1.0.1 ping statistics ---
-4 packets transmitted, 4 received, 0% packet loss, time 3005ms
-rtt min/avg/max/mdev = 1.155/1.245/1.321/0.079 ms
+Сервер с 192.168.1.1
+Для клиентов раздаются ip 192.168.1.30-254
+```bash
 [root@openvpn2 openvpn]# ping -c 4 192.168.1.1
 PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
-64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=1.31 ms
-64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=1.22 ms
-64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=1.17 ms
+64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=0.454 ms
+64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=1.21 ms
+64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=1.23 ms
 64 bytes from 192.168.1.1: icmp_seq=4 ttl=64 time=1.23 ms
 
 --- 192.168.1.1 ping statistics ---
-4 packets transmitted, 4 received, 0% packet loss, time 3006ms
-rtt min/avg/max/mdev = 1.179/1.235/1.310/0.064 ms
-```
-Проверка доступности локалки за клиентом
-```bash
-[root@openvpn1 openvpn]# ssh root@10.1.0.2
-The authenticity of host '10.1.0.2 (10.1.0.2)' can't be established.
-ECDSA key fingerprint is SHA256:6hPFbMiIGPKsGKAJE0OSnYYF59v/k2odbRSnDd6vkng.
-ECDSA key fingerprint is MD5:44:08:cc:dc:84:8d:a2:68:0f:88:80:5e:14:37:b6:aa.
-Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added '10.1.0.2' (ECDSA) to the list of known hosts.
-Last login: Wed Jun  6 08:27:41 2018 from 192.168.255.1
-[root@openvpn2 ~]# ping -c 4 10.1.0.2
-PING 10.1.0.2 (10.1.0.2) 56(84) bytes of data.
-64 bytes from 10.1.0.2: icmp_seq=1 ttl=64 time=0.012 ms
-64 bytes from 10.1.0.2: icmp_seq=2 ttl=64 time=0.052 ms
-64 bytes from 10.1.0.2: icmp_seq=3 ttl=64 time=0.031 ms
-64 bytes from 10.1.0.2: icmp_seq=4 ttl=64 time=0.057 ms
-
---- 10.1.0.2 ping statistics ---
 4 packets transmitted, 4 received, 0% packet loss, time 3004ms
-rtt min/avg/max/mdev = 0.012/0.038/0.057/0.017 ms
-[root@openvpn2 ~]# ping -c 4 192.168.2.1
-PING 192.168.2.1 (192.168.2.1) 56(84) bytes of data.
-64 bytes from 192.168.2.1: icmp_seq=1 ttl=64 time=0.057 ms
-64 bytes from 192.168.2.1: icmp_seq=2 ttl=64 time=0.055 ms
-64 bytes from 192.168.2.1: icmp_seq=3 ttl=64 time=0.054 ms
-64 bytes from 192.168.2.1: icmp_seq=4 ttl=64 time=0.023 ms
+rtt min/avg/max/mdev = 0.454/1.035/1.239/0.336 ms
 
---- 192.168.2.1 ping statistics ---
-4 packets transmitted, 4 received, 0% packet loss, time 3003ms
-rtt min/avg/max/mdev = 0.023/0.047/0.057/0.014 ms
+[root@openvpn2 openvpn]# ssh 192.168.1.1
+The authenticity of host '192.168.1.1 (192.168.1.1)' can't be established.
+ECDSA key fingerprint is SHA256:/dYBfvBZhsbTx5kPzL8hdzcufwb/gUw2gv5cia0Jwvg.
+ECDSA key fingerprint is MD5:e4:c3:1e:75:a7:b7:d8:df:ff:2e:df:67:45:a3:5f:b0.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '192.168.1.1' (ECDSA) to the list of known hosts.
+Last login: Thu Jun 14 06:31:36 2018
+[root@openvpn1 ~]# 
 ```
 
 2. ***Поднять RAS на базе OpenVPN с клиентскими сертификатами, подключиться с локальной машины на виртуалку***

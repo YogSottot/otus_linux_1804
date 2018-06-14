@@ -70,3 +70,4 @@ EOT
 
 chmod 600 /root/.ssh/id_rsa
 chmod 600 /home/vagrant/.ssh/id_rsa
+chown vagrant. -R  /home/vagrant/.ssh/

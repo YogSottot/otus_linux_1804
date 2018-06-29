@@ -251,13 +251,6 @@ Routing entry for 172.16.12.8/30
 Вывод tracepath
 
 ```bash
-[root@testServer1 vagrant]# tracepath 172.16.12.10
- 1?: [LOCALHOST]                                         pmtu 1500
- 1:  172.16.12.6                                           1.083ms 
- 1:  172.16.12.6                                           1.481ms 
- 2:  172.16.12.10                                          1.797ms reached
-     Resume: pmtu 1500 hops 2 back 2 
-
 [root@testServer1 vagrant]# tracepath 10.3.0.1
  1?: [LOCALHOST]                                         pmtu 1500
  1:  172.16.12.6                                           1.231ms 

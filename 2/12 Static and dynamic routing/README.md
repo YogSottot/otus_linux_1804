@@ -16,7 +16,7 @@
 
 В vagrantfile задано создание сети по схеме.
 
-1. Поднять OSPF между машинами на базе Quagga
+1. *Поднять OSPF между машинами на базе Quagga*
 
 Вывод ip a  ![в файле](https://github.com/YogSottot/otus_linux_1804/blob/master/2/12%20Static%20and%20dynamic%20routing/ip_a.md)
 

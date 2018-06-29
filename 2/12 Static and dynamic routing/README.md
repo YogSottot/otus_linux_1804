@@ -11,7 +11,7 @@
 - вывод tracepath для каждого из трёх случаев 
 
 Для начала создал схему сети. 
-![schema](https://raw.githubusercontent.com/YogSottot/otus_linux_1804/master/2/12%20Static%20and%20dynamic%20routing/Networkchart_quagga.xml?sanitize=true)
+![schema](https://raw.githubusercontent.com/YogSottot/otus_linux_1804/master/2/12%20Static%20and%20dynamic%20routing/Networkchart_quagga.svg?sanitize=true)
 Нажмите, чтобы открыть в полном размере.
 
 В vagrantfile задано создание сети по схеме.

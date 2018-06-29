@@ -214,7 +214,14 @@ Routing entry for 172.16.12.8/30
 
 2. ***Изобразить асимметричный роутинг***
 
-Увеличиваем стоимость eth1 только на testServer1
+Вывод tracepath
+
+```bash
+
+     
+```
+
+3. ***Сделать один из линков "дорогим", но что бы при этом роутинг был симметричным***
 
 ```bash
 testServer1# configure  terminal 
@@ -258,42 +265,22 @@ Routing entry for 172.16.12.8/30
  2:  172.16.12.10                                          1.797ms reached
      Resume: pmtu 1500 hops 2 back 2 
 
-[root@testServer1 vagrant]# tracepath 10.3.0.1
+[root@testServer1 vagrant]# tracepath 172.16.12.2
  1?: [LOCALHOST]                                         pmtu 1500
- 1:  172.16.12.6                                           1.231ms 
- 1:  172.16.12.6                                           1.100ms 
- 2:  10.3.0.1                                              1.566ms reached
-     Resume: pmtu 1500 hops 2 back 2 
-
-[root@testServer3 vagrant]# tracepath 10.1.0.1
- 1?: [LOCALHOST]                                         pmtu 1500
- 1:  10.1.0.1                                              1.231ms reached
- 1:  10.1.0.1                                              1.353ms reached
+ 1:  172.16.12.2                                           1.213ms reached
+ 1:  172.16.12.2                                           0.828ms reached
      Resume: pmtu 1500 hops 1 back 1 
     
-```
-
-3. ***Сделать один из линков "дорогим", но что бы при этом роутинг был симметричным***
-
-В добавок к увеличенной стоимости eth1 на testServer1, увеличиваем стоимость eth1 на testServer3. 
-
-
-Вывод tracepath
-
-```bash
-[root@testServer1 vagrant]# tracepath 10.3.0.1
+[root@testServer1 vagrant]# tracepath 172.16.12.6
  1?: [LOCALHOST]                                         pmtu 1500
- 1:  172.16.12.6                                           0.972ms 
- 1:  172.16.12.6                                           1.140ms 
- 2:  10.3.0.1                                              1.507ms reached
-     Resume: pmtu 1500 hops 2 back 2 
-
-
-[root@testServer3 vagrant]# tracepath 10.1.0.1
+ 1:  172.16.12.6                                           0.992ms reached
+ 1:  172.16.12.6                                           1.138ms reached
+     Resume: pmtu 1500 hops 1 back 1 
+     
+[root@testServer1 vagrant]# tracepath 172.16.12.9
  1?: [LOCALHOST]                                         pmtu 1500
- 1:  172.16.12.9                                           1.061ms 
- 1:  172.16.12.9                                           1.074ms 
- 2:  10.1.0.1                                              1.366ms reached
-     Resume: pmtu 1500 hops 2 back 2 
+ 1:  172.16.12.9                                           1.426ms reached
+ 1:  172.16.12.9                                           1.257ms reached
+     Resume: pmtu 1500 hops 1 back 1 
     
 ```

@@ -18,7 +18,7 @@
 
 1. Поднять OSPF между машинами на базе Quagga
 
-Вывод ip a  ![в файле](https://raw.githubusercontent.com/YogSottot/otus_linux_1804/master/2/12 Static and dynamic routing/ip_a.md)
+Вывод ip a  ![в файле](https://github.com/YogSottot/otus_linux_1804/blob/master/2/12%20Static%20and%20dynamic%20routing/ip_a.md)
 
 ```bash
 testServer1# show ip ospf

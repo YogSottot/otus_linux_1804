@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  sudo: yes
+  become: yes
   tasks:
   - name: install packages
     yum: name={{ item }} state=latest 
@@ -8,12 +8,18 @@
       - bind
       - bind-utils
       - ntp
+      - epel-release
+#      - policycoreutils-python-utils
+#      - setroubleshoot-server
+      - nano
+#  - name: setup selinux
+#    command: semanage fcontext -a -e /var/named /etc/named && restorecon -R /etc/named
 
   - name: copy transferkey to all servers and the client
     copy: src=named.zonetransfer.key dest=/etc/named.zonetransfer.key owner=root group=named mode=0644
 
 - hosts: ns01
-  sudo: yes
+  become: yes
   tasks:
   - name: copy named.conf
     copy: src=master-named.conf dest=/etc/named.conf owner=root group=named mode=0640
@@ -21,6 +27,8 @@
     copy: src={{ item }} dest=/etc/named/ owner=root group=named mode=0660
     with_fileglob:
       - named.d*
+      - named.c*
+      - named.n*
   - name: copy resolv.conf to the servers
     copy: src=servers-resolv.conf dest=/etc/resolv.conf owner=root group=root mode=0644
   
@@ -31,7 +39,7 @@
     service: name=named state=restarted enabled=yes
 
 - hosts: ns02
-  sudo: yes
+  become: yes
   tasks:
   - name: copy named.conf
     copy: src=slave-named.conf dest=/etc/named.conf owner=root group=named mode=0640
@@ -45,7 +53,7 @@
     service: name=named state=restarted enabled=yes
     
 - hosts: client1
-  sudo: yes
+  become: yes
   tasks:
   - name: copy resolv.conf to the client1
     copy: src=client-resolv.conf dest=/etc/resolv.conf owner=root group=root mode=0644
@@ -55,7 +63,7 @@
     copy: src=client-motd dest=/etc/motd owner=root group=root mode=0644
     
 - hosts: client2
-  sudo: yes
+  become: yes
   tasks:
   - name: copy resolv.conf to the client2
     copy: src=client-resolv.conf dest=/etc/resolv.conf owner=root group=root mode=0644

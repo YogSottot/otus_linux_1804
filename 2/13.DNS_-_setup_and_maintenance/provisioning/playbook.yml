@@ -8,12 +8,8 @@
       - bind
       - bind-utils
       - ntp
-      - epel-release
-#      - policycoreutils-python-utils
-#      - setroubleshoot-server
+      - policycoreutils-python
       - nano
-#  - name: setup selinux
-#    command: semanage fcontext -a -e /var/named /etc/named && restorecon -R /etc/named
 
   - name: copy transferkey to all servers and the client
     copy: src=named.zonetransfer.key dest=/etc/named.zonetransfer.key owner=root group=named mode=0644
@@ -21,6 +17,10 @@
 - hosts: ns01
   become: yes
   tasks:
+  - name: setup selinux
+    shell: semanage fcontext -a -e /var/named /etc/named && restorecon -R -v /etc/named && setsebool -P named_write_master_zones 1
+    
+  
   - name: copy named.conf
     copy: src=master-named.conf dest=/etc/named.conf owner=root group=named mode=0640
   - name: copy zones

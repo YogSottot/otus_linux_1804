@@ -3,26 +3,21 @@
 взять стенд https://github.com/erlong15/vagrant-bind
 
 ***добавить еще один сервер client2***
-Добавлен в ansible и vagrantfile
 
-***завести в зоне dns.lab***
-
-имена
-
-web1 - смотрит на клиент1
-
-web2 смотрит на клиент2
+Добавлен в ansible и vagrantfile  
+***завести в зоне dns.lab***  
+имена  
+web1 — смотрит на клиент1  
+web2 — смотрит на клиент2  
 
 ```
 web1            IN      A       192.168.50.15
 web2            IN      A       192.168.50.16
 ```
 
-завести еще одну зону newdns.lab
-
-завести в ней запись
-
-www - смотрит на обоих клиентов
+завести еще одну зону newdns.lab  
+завести в ней запись  
+www - смотрит на обоих клиентов  
 
 ```
 $TTL 3600
@@ -45,11 +40,9 @@ www            IN      A       192.168.50.15
 www            IN      A       192.168.50.16
 ```
 
-***настроить split-dns***
-
-Использованы views
-
-клиент1 - видит обе зоны, но в зоне dns.lab только web1
+***настроить split-dns***  
+Использованы views  
+клиент1 - видит обе зоны, но в зоне dns.lab только web1  
 
 ```bash
 [root@client1 vagrant]# ping -c 4 web1
@@ -78,7 +71,7 @@ PING www.newdns.lab (192.168.50.15) 56(84) bytes of data.
 rtt min/avg/max/mdev = 0.032/0.048/0.054/0.010 ms
 ```
 
-клиент2 видит только dns.lab
+клиент2 видит только dns.lab  
 ```bash
 [vagrant@client2 ~]$ ping -c 4 web1
 PING web1.dns.lab (192.168.50.15) 56(84) bytes of data.
@@ -105,10 +98,10 @@ ping: www.newdns.lab: Name or service not known
 [vagrant@client2 ~]$ 
 ```
 
-*) настроить все без выключения selinux
-ddns тоже должен работать без выключения selinux
+*) настроить все без выключения selinux  
+ddns тоже должен работать без выключения selinux  
 
-В playbook добавлены команды для настройки selinux
+В playbook добавлены команды для настройки selinux  
 
 ```bash
 [root@client1 vagrant]# nsupdate -k /etc/named.zonetransfer.key

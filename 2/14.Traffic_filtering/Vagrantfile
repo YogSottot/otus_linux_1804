@@ -1,0 +1,121 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+MACHINES = {
+:inetRouter => {
+        :box_name => "centos/6",
+        :net => [
+                   {ip: '192.168.255.1', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
+                ]
+  },
+	
+:inetRouter2 => {
+                    :box_name => "centos/7",
+                 :public => {:ip => '192.168.0.254', :adapter => 3 },   
+                 :net => [
+                             {ip: '192.168.255.5', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router2-net"},
+                                ]
+                     },
+	
+:centralRouter => {
+        :box_name => "centos/7",
+        :net => [
+                   {ip: '192.168.255.2', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
+                   {ip: '192.168.1.1', adapter: 3, netmask: "255.255.255.240", virtualbox__intnet: "dir-net"},
+                 {ip: '192.168.255.6', adapter: 4, netmask: "255.255.255.252", virtualbox__intnet: "router2-net"},
+                ]
+		
+  },
+  
+:centralServer => {
+        :box_name => "centos/7",
+        :net => [
+					{ip: '192.168.1.2', adapter: 2, netmask: "255.255.255.240", virtualbox__intnet: "dir-net"},
+
+                ]
+ },
+	
+}
+
+Vagrant.configure("2") do |config|
+
+  MACHINES.each do |boxname, boxconfig|
+
+    config.vm.define boxname do |box|
+
+        box.vm.box = boxconfig[:box_name]
+		box.vm.host_name = boxname.to_s
+
+        boxconfig[:net].each do |ipconf|
+          box.vm.network "private_network", ipconf
+        end
+        
+        if boxconfig.key?(:public)
+          box.vm.network "public_network", boxconfig[:public]
+        end
+
+        box.vm.provision "shell", inline: <<-SHELL
+          mkdir -p ~root/.ssh
+                cp ~vagrant/.ssh/auth* ~root/.ssh
+        SHELL
+        
+		case boxname.to_s
+		when "inetRouter"
+			box.vm.provision "shell", path: "https://raw.githubusercontent.com/YogSottot/otus_linux_1804/master/2/11/scripts/ssh_client1.sh"
+			box.vm.provision "shell", inline: <<-SHELL
+			echo -e 'net.ipv4.conf.all.forwarding=1\nnet.ipv4.ip_forward=1' >> /etc/sysctl.conf
+			sysctl -p
+			iptables-restore < /vagrant/provisioning/iptables_inetRouter.rules
+			echo "192.168.0.0/16 via 192.168.255.2" >  /etc/sysconfig/network-scripts/route-eth1
+			service network restart
+			SHELL
+			when "inetRouter2"
+			box.vm.provision "shell", inline: <<-SHELL
+			echo -e 'net.ipv4.conf.all.forwarding=1\nnet.ipv4.ip_forward=1' >> /etc/sysctl.d/99-override.conf
+			sysctl --system
+			echo "192.168.1.0/24 via 192.168.255.6" >  /etc/sysconfig/network-scripts/route-eth1
+			service network restart
+			systemctl start firewalld
+			systemctl enable firewalld
+			firewall-cmd --permanent --zone=public --add-masquerade
+			firewall-cmd --permanent --zone=public --add-forward-port=port=8080:proto=tcp:toport=80:toaddr=192.168.1.2
+			firewall-cmd --permanent --zone=public --add-port=8080/tcp && firewall-cmd --reload
+			SHELL
+		when "centralRouter"
+			box.vm.provision "shell", path: "https://raw.githubusercontent.com/YogSottot/otus_linux_1804/master/2/11/scripts/ssh_server1.sh"
+			box.vm.provision "shell", inline: <<-SHELL
+			yum install nmap -y
+			echo -e 'net.ipv4.conf.all.forwarding=1\nnet.ipv4.ip_forward=1' >> /etc/sysctl.d/99-override.conf
+			sysctl --system
+			echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0 
+			echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+			echo "GATEWAY=192.168.255.5" >> /etc/sysconfig/network-scripts/ifcfg-eth3
+			systemctl restart network
+			chmod +x /vagrant/provisioning/knock.sh
+			SHELL
+		when "centralServer"
+			box.vm.provision "shell", inline: <<-SHELL
+			echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0 
+			echo "GATEWAY=192.168.1.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+			systemctl restart network
+			yum install epel-release -y
+			yum install nginx -y
+			systemctl start nginx
+			systemctl enable nginx
+			systemctl start firewalld
+			systemctl enable firewalld
+			firewall-cmd --permanent --zone=public --add-service=http && firewall-cmd --reload
+			
+			SHELL
+
+        end
+
+      end
+
+  end
+  
+  
+end
+

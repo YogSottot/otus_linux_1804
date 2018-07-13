@@ -1,0 +1,94 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: disable selinux
+    shell: setenforce 0
+  - name: install packages
+    yum: name={{ item }} state=latest 
+    with_items:
+     - nmap
+     - nano
+     - policycoreutils-python
+
+- hosts: inetRouter
+  become: yes
+  roles:
+   - ip_forwarding
+   - ssh-server
+  tasks:
+  - name: install gateway
+    shell: echo "192.168.0.0/16 via 192.168.255.2" >  /etc/sysconfig/network-scripts/route-eth1
+  - name: Restart Network
+    service: name=network state=restarted  
+  - name: add iptables.
+    shell: /sbin/iptables-restore < /vagrant/provisioning/iptables_inetRouter.rules
+  
+- hosts: inetRouter2
+  become: yes
+  roles:
+   - ip_forwarding
+  tasks:
+  - name: Install Firewalld
+    yum: name=firewalld state=present
+  - name: Firewalld service state start
+    service: name=firewalld state=started enabled=yes
+  - name: install gateway
+    shell: echo "192.168.1.0/24 via 192.168.255.6" >  /etc/sysconfig/network-scripts/route-eth1
+  - name: firewalld open 8080
+    firewalld:
+     port: 8080/tcp
+     state: enabled
+     permanent: true
+     immediate: true
+  - name: firewalld add masquerade
+    firewalld:
+     masquerade: yes
+     state: enabled
+     permanent: true
+     immediate: true
+     zone: public
+  - name: firewalld add port redirect
+    firewalld:
+     rich_rule: 'rule family=ipv4 forward-port port=8080 protocol=tcp to-port=80 to-addr=192.168.1.2'
+     zone: public
+     state: enabled
+     immediate: true
+     permanent: true
+  - name: Restart Network
+    service: name=network state=restarted
+    
+- hosts: centralRouter
+  become: yes
+  roles:
+   - ip_forwarding
+   - ssh-client
+   - disable_defroute_vagrant
+  tasks:
+  - name: install gateway
+    shell: echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1 && echo "GATEWAY=192.168.255.5" >> /etc/sysconfig/network-scripts/ifcfg-eth3
+  - name: Restart Network
+    service: name=network state=restarted
+  - name: set portknocking script to exec
+    shell:  chmod +x /vagrant/provisioning/knock.sh && chmod +x /vagrant/provisioning/knock_full.sh
+    
+- hosts: centralServer
+  become: yes
+  roles:
+   - nginx
+   - disable_defroute_vagrant
+  tasks:
+  - name: install gateway
+    shell: echo "GATEWAY=192.168.1.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+  - name: Restart Network
+    service: name=network state=restarted
+  - name: Install Firewalld
+    yum: name=firewalld state=present
+  - name: Firewalld service state
+    service: name=firewalld state=started enabled=yes
+  - name: firewalld open http
+    firewalld:
+     service: http
+     permanent: true
+     immediate: true
+     state: enabled

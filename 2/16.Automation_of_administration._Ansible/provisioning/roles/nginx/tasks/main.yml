@@ -1,0 +1,11 @@
+---
+ - name: install epel-release
+   yum: name={{ item }} state=latest 
+   with_items:
+    - epel-release
+ - name: install nginx
+   yum: name={{ item }} state=latest 
+   with_items:
+    - nginx
+ - name: restart nginx
+   service: name=nginx state=restarted enabled=yes

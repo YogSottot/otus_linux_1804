@@ -1,0 +1,51 @@
+---
+- hosts: inetRouter2
+  become: yes
+  tasks:
+  - name: install packages
+    yum: name={{ item }} state=latest 
+    with_items:
+     - nmap
+     - nano
+     - policycoreutils-python
+  - name: Ensure group "admin" exists
+    group:
+     name: admin
+     state: present
+  - name: Ensure group "developers" exists
+    group:
+     name: developers
+     state: present
+  - name: Add the user 'john' with a primary group of 'admin'
+    user:
+     name: john
+     shell: /bin/bash
+     group: admin
+     password: $6$MeskV.DXzp7L1MRA$lHtZajw.BJL.mHCnzrOVErrcgOSTGtP.O9yslY19m.esbr.uOyPnz4Zillj0ZaLVP82ZF3/CAhrG2hd2T//oj1
+  - name: Add the user 'james' with a bash shell, appending the group 'developers' to the user's groups
+    user:
+     name: james
+     shell: /bin/bash
+     groups: developers
+     append: yes   
+     password: $6$CcNK/9rM0mgbSNj9$qNeITgXGaFm4nnE8YGiLGWMXEOTC4HS4/jxzofMR7JfNTPqmT.2AGIvTHwU77KTZv3SNnet1aI1XfE.3YUaZ4.
+  - name: Enable password ssh access
+    shell: find /etc/ssh/sshd_config -type f -print0 | xargs -0 sed -i 's/PasswordAuthentication\ no/PasswordAuthentication\ yes/g' && systemctl reload sshd
+  - name: Restrict time access for nonadmin
+    shell: echo '*;*;!admin;!SaSu0000-2400' >> /etc/security/time.conf
+  - name: Restrict ssh, local login and remote login access for nonadmin
+    shell: find /etc/pam.d/ -type f -print0 | xargs -0 sed -i 's/pam_nologin.so/pam_nologin.so\naccount\ required\ pam_time.so/g'
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

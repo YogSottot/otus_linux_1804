@@ -9,13 +9,21 @@
 
 ```bash
 /etc/security/time.conf
-*;*;!admin;!SaSu0000-2400
+*;*;vagrant|james;!SaSu0000-2400
 ```
+```bash
+/etc/pam.d/{sshd,login,remote}
+account    required     pam_nologin.so
+account required pam_time.so
+```
+Доступ в выходные дни доступен только для root и john.
 
 2 **Дать конкретному пользователю права рута**  
 
 
 ```bash
 /etc/pam.d/su
-auth sufficient pam_permit.so
+account         sufficient      pam_succeed_if.so uid = 0 use_uid quiet
+account         sufficient      pam_succeed_if.so user = john use_uid quiet
+account         required        pam_succeed_if.so user notin root:vagrant:john
 ```

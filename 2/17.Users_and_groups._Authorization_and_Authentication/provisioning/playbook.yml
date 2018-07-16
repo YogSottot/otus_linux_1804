@@ -32,10 +32,11 @@
   - name: Enable password ssh access
     shell: find /etc/ssh/sshd_config -type f -print0 | xargs -0 sed -i 's/PasswordAuthentication\ no/PasswordAuthentication\ yes/g' && systemctl reload sshd
   - name: Restrict time access for nonadmin
-    shell: echo '*;*;!admin;!SaSu0000-2400' >> /etc/security/time.conf
+    shell: echo '*;*;vagrant|james;!SaSu0000-2400' >> /etc/security/time.conf
   - name: Restrict ssh, local login and remote login access for nonadmin
     shell: find /etc/pam.d/ -type f -print0 | xargs -0 sed -i 's/pam_nologin.so/pam_nologin.so\naccount\ required\ pam_time.so/g'
-    
+  - name: Give root level to user john
+    shell: find /etc/pam.d/su -type f -print0 | xargs -0 sed -i 's/vagrant/vagrant\:john/g'
     
     
     

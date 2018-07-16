@@ -23,7 +23,16 @@ account required pam_time.so
 
 ```bash
 /etc/pam.d/su
-account         sufficient      pam_succeed_if.so uid = 0 use_uid quiet
-account         sufficient      pam_succeed_if.so user = john use_uid quiet
+account         [success=1 default=ignore] \
+                                pam_succeed_if.so user = vagrant:john use_uid quiet
 account         required        pam_succeed_if.so user notin root:vagrant:john
+```
+При этом, команда sudo не будет требовать пароль. Можно стать root через sudo su.
+
+
+Более распространённый вариант — добавить пользователя в группу wheel
+Это даст ему возможность использовать sudo со своим паролем.
+
+```bash
+usermod -a -G wheel john
 ```

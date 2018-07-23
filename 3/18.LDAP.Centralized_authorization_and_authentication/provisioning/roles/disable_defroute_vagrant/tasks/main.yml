@@ -1,0 +1,5 @@
+---
+ - name: disable vagrant defroute
+   shell: echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0 
+ - name: Restart Network
+   service: name=network state=restarted

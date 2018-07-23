@@ -1,0 +1,41 @@
+---
+ - name: install epel-release
+   yum: name={{ item }} state=latest 
+   with_items:
+    - epel-release
+ - name: install ipa-server
+   yum: name={{ item }} state=latest 
+   with_items:
+    - ipa-server
+    - ipa-server-dns
+ - name: Install Firewalld
+   yum: name=firewalld state=present
+ - name: Firewalld service state
+   service: name=firewalld state=started enabled=yes
+ - name: firewalld open freeipa-ldap (http-TCP 80, https-TCP 443, kerberos-TCP/UDP 88, kpasswd-TCP/UDP 464, ntp-TCP 123, ldap-TCP 389)
+   firewalld:
+    service: freeipa-ldap
+    permanent: true
+    immediate: true
+    state: enabled
+ - name: firewalld open ldaps
+   firewalld:
+    service: freeipa-ldaps
+    permanent: true
+    immediate: true
+    state: enabled
+ - name: firewalld open dns
+   firewalld:
+    service: dns
+    permanent: true
+    immediate: true
+    state: enabled   
+ - name: dbus service restart
+   shell: systemctl restart dbus
+ - name: ipa-server-install
+   ignore_errors: True
+   register: result
+   shell: ipa-server-install --setup-dns --auto-reverse --mkhomedir --hostname=centralserver.otus.lan --domain=otus.lan --realm=OTUS.LAN --ds-password=q1w2e3r4t5y6 --admin-password=1234567890  --forwarder=8.8.8.8 --forwarder=8.8.4.4 -U
+ - name: ipa-server-reinstall
+   when: result is failed
+   shell: systemctl restart dbus &&  ipa-server-install --uninstall -U && ipa-server-install --setup-dns --auto-reverse --mkhomedir --hostname=centralserver.otus.lan --domain=otus.lan --realm=OTUS.LAN --ds-password=q1w2e3r4t5y6 --admin-password=1234567890  --forwarder=8.8.8.8 --forwarder=8.8.4.4 -U

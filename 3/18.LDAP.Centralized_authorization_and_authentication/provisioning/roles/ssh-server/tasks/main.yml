@@ -1,0 +1,7 @@
+---
+ - name: Creates directory
+   file: path=/root/.ssh/ state=directory
+ - name: copy authorized_keys to server for root
+   shell:  echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5dZKF1IXtBl8o9kPk5IDk36nc+ERNNFh/wybG9PVIGRFeLoEbFDJCGIEb50kLvVK5ktH6c1cSt4t+dtkbuiNDA0r2cKnZ34aIGu10YlqJZCeH/l2f6q+g1OK5OmTHkfAuINiYv5Uh4q3fZQP5nFMVCiyR19Uo5ry2EWKuAH0XJ7/lUWUtobRPAUDYa0uzbcpRLuCIQoxzfAcY530NQskVkKhjvXU7+tYvQ9pgtmG4Kw2s84z3dsPjJJOBm8t61kC+KNX8wr0VveBLKDyPezJm47wrOIZLPei15Mzut1tpsAS0RJpgaJRVOrP5aN+4fmBmHX30bZ2KV+EubuK5BP31 root@openvpn1" >>  /root/.ssh/authorized_keys
+ - name: copy authorized_keys to server for vagrant
+   shell:  echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5dZKF1IXtBl8o9kPk5IDk36nc+ERNNFh/wybG9PVIGRFeLoEbFDJCGIEb50kLvVK5ktH6c1cSt4t+dtkbuiNDA0r2cKnZ34aIGu10YlqJZCeH/l2f6q+g1OK5OmTHkfAuINiYv5Uh4q3fZQP5nFMVCiyR19Uo5ry2EWKuAH0XJ7/lUWUtobRPAUDYa0uzbcpRLuCIQoxzfAcY530NQskVkKhjvXU7+tYvQ9pgtmG4Kw2s84z3dsPjJJOBm8t61kC+KNX8wr0VveBLKDyPezJm47wrOIZLPei15Mzut1tpsAS0RJpgaJRVOrP5aN+4fmBmHX30bZ2KV+EubuK5BP31 root@openvpn1" >> /home/vagrant/.ssh/authorized_keys

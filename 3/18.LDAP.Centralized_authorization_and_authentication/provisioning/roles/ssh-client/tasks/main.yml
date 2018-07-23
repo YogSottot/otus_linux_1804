@@ -1,0 +1,11 @@
+---
+ - name: Creates directory
+   file: path=/root/.ssh/ state=directory
+ - name: copy authorized_keys to server
+   copy: src=id_rsa dest=/root/.ssh/id_rsa owner=root group=root mode=0600
+ - name: copy authorized_keys to server
+   copy: src=id_rsa.pub dest=/root/.ssh/id_rsa.pub owner=root group=root mode=0644
+ - name: copy authorized_keys to server
+   copy: src=id_rsa dest=/home/vagrant/.ssh/id_rsa owner=vagrant group=vagrant mode=0600
+ - name: copy authorized_keys to server
+   copy: src=id_rsa.pub dest=/home/vagrant/.ssh/id_rsa.pub owner=vagrant group=vagrant mode=0644

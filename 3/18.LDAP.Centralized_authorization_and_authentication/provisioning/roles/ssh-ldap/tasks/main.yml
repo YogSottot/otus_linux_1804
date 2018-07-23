@@ -1,0 +1,4 @@
+---
+ - name: add autorized ldap
+   shell: echo -e 'AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys\nAuthorizedKeysCommandUser nobody\nKerberosAuthentication no' >>  /etc/ssh/sshd_config
+

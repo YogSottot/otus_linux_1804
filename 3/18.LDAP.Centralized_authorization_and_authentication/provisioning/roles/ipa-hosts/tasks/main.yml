@@ -1,0 +1,11 @@
+---
+ - name: add host-inetRouter
+   shell:  echo "192.168.255.1 inetrouter.otus.lan" >>  /etc/hosts
+ - name: add host-inetRouter2
+   shell:  echo "192.168.255.5 inetrouter2.otus.lan" >>  /etc/hosts
+ - name: add host-centralRouter
+   shell:  echo "192.168.1.1 centralrouter.otus.lan" >>  /etc/hosts
+ - name: add host-centralServer
+   shell:  echo "192.168.1.2 centralserver.otus.lan" >>  /etc/hosts
+ - name: add search
+   shell:  echo "search otus.lan" >>  /etc/hosts

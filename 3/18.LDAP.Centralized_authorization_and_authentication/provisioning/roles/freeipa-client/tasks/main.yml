@@ -1,0 +1,12 @@
+---
+ - name: install freeipa-client 
+   yum: name={{ item }} state=latest 
+   with_items:
+    - ipa-client
+ - name: add client to server
+   shell: ipa-client-install --mkhomedir --force-ntpd --domain=OTUS.LAN --server=centralserver.otus.lan --realm=OTUS.LAN --principal=admin --password=1234567890  --enable-dns-updates -U
+   when: ansible_distribution == "CentOS" and ansible_distribution_major_version == '7'
+ - name: add client to server
+   shell: ipa-client-install --mkhomedir --ntp-server=centralserver.otus.lan --domain=OTUS.LAN --server=centralserver.otus.lan --realm=OTUS.LAN --principal=admin --password=1234567890  --enable-dns-updates -U
+   when: ansible_distribution == "CentOS" and ansible_distribution_major_version == '6'
+    

@@ -14,8 +14,7 @@
 
 
 3 **Взять любой опубликованный плейбук, прокомментировать.**  
-
-Опубликован [только один](https://github.com/lalbrekht/Linux-OTUS/tree/master/3.Admins/18.Performance_%26_Tuning/HW), его и прокомментирую.
+Взял [любой](https://github.com/lalbrekht/Linux-OTUS/tree/master/3.Admins/18.Performance_%26_Tuning/HW), комментирую.
 
 
 Используется best practice — разбивка на defaults, handlers, tasks, templates, vars.

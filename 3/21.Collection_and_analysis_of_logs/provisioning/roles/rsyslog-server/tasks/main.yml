@@ -1,0 +1,3 @@
+---
+ - name: copy rsyslog.conf
+   copy: src=rsyslog.conf dest=/etc/rsyslog.conf 

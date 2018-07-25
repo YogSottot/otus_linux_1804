@@ -26,4 +26,5 @@
      - git
      - net-tools
      - iperf
-
+     - setools-console
+     - policycoreutils-python

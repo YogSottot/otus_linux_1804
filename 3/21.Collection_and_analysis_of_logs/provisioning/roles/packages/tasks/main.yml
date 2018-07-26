@@ -26,3 +26,6 @@
      - git
      - net-tools
      - iperf
+     - nmap
+     - policycoreutils-python
+     - setools-console

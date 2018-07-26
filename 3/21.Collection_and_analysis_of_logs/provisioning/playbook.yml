@@ -30,18 +30,10 @@
      permanent: true
      immediate: true
      zone: public
-     #prot for elk on centralrouter
+     #prot for nginx on centralserver
   - name: firewalld add port redirect
     firewalld:
-     rich_rule: 'rule family=ipv4 forward-port port=8080 protocol=tcp to-port=80 to-addr=192.168.1.1'
-     zone: public
-     state: enabled
-     immediate: true
-     permanent: true
-     # port for nginx on centralserver
-  - name: firewalld add port redirect
-    firewalld:
-     rich_rule: 'rule family=ipv4 forward-port port=8081 protocol=tcp to-port=80 to-addr=192.168.1.2'
+     rich_rule: 'rule family=ipv4 forward-port port=8080 protocol=tcp to-port=80 to-addr=192.168.1.2'
      zone: public
      state: enabled
      immediate: true
@@ -55,6 +47,7 @@
   roles:
    - ip_forwarding
    - disable_defroute_vagrant
+   - rsyslog-server
   tasks:
   - name: install gateway
     shell: echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1 && echo "GATEWAY=192.168.255.5" >> /etc/sysconfig/network-scripts/ifcfg-eth3
@@ -65,6 +58,7 @@
   become: yes
   roles:
    - nginx
+   - rsyslog-client
   tasks:
   - name: install gateway
     shell: echo "GATEWAY=192.168.1.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1

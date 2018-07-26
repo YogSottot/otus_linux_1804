@@ -1,11 +1,7 @@
 ---
- - name: install standart packages
-   yum: name={{ item }} state=latest 
-   with_items:
-    - audispd-plugins
-# - name: copy au-remote.conf
-#   copy: src=au-remote.conf dest=/etc/audisp/plugins.d/au-remote.conf
-# - name: copy audisp-remote.conf
-#   copy: src=audisp-remote.conf dest=/etc/audisp/audisp-remote.conf
- - name: copy auditd.conf
-   copy: src=auditd.conf dest=/etc/audit/auditd.conf 
+ - name: copy rsyslog.conf
+   shell: checkmodule -M -m -o /vagrant/provisioning/roles/rsyslog-client/files/rsyslog.mod  /vagrant/provisioning/roles/rsyslog-client/files/rsyslog.te && semodule_package -o /vagrant/provisioning/roles/rsyslog-client/files/rsyslog.pp -m /vagrant/provisioning/roles/rsyslog-client/files/rsyslog.mod && semodue -i /vagrant/provisioning/roles/rsyslog-client/files/rsyslog.pp
+ - name: copy rsyslog.conf
+   copy: src=rsyslog.conf dest=/etc/rsyslog.conf 
+ - name: Restart rsyslog
+   service: name=rsyslog state=restarted

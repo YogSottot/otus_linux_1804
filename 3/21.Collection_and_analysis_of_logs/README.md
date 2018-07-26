@@ -8,10 +8,38 @@
   - journald  
   - rsyslog  
   - elk  
+
+Выбран rsyslog.  
+
 - настраиваем аудит следящий за изменением конфигов нжинкса  
 
+```bash
+cat /etc/audit/rules.d/audit.rules
+## nginx configurations
+-w /etc/nginx/ -p wa -k nginx
+```
+```bash
+type=EXECVE msg=audit(1532512884.579:3560): argc=2 a0="nano" a1="/etc/nginx/fastcgi_params"
+type=SYSCALL msg=audit(1532512884.582:3561): arch=c000003e syscall=2 success=yes exit=3 a0=20f7510 a1=441 a2=1b6 a3=63 items=2 ppid=10489 pid=20239 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=6 comm="nano" exe="/usr/bin/nano" subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key="nginx"
+type=PATH msg=audit(1532512884.582:3561): item=0 name="/etc/nginx/" inode=33554530 dev=fd:00 mode=040755 ouid=0 ogid=0 rdev=00:00 obj=system_u:object_r:httpd_config_t:s0 objtype=PARENT
+type=PATH msg=audit(1532512884.582:3561): item=1 name="/etc/nginx/fastcgi_params" inode=33826723 dev=fd:00 mode=0100644 ouid=0 ogid=0 rdev=00:00 obj=system_u:object_r:httpd_config_t:s0 objtype=NORMAL
+type=SYSCALL msg=audit(1532512894.730:3562): arch=c000003e syscall=2 success=yes exit=3 a0=20fb990 a1=241 a2=1b6 a3=7ffdf0c9f370 items=2 ppid=10489 pid=20239 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts0 ses=6 comm="nano" exe="/usr/bin/nano" subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key="nginx"
+type=PATH msg=audit(1532512894.730:3562): item=0 name="/etc/nginx/" inode=33554530 dev=fd:00 mode=040755 ouid=0 ogid=0 rdev=00:00 obj=system_u:object_r:httpd_config_t:s0 objtype=PARENT
+type=PATH msg=audit(1532512894.730:3562): item=1 name="/etc/nginx/fastcgi_params" inode=33826723 dev=fd:00 mode=0100644 ouid=0 ogid=0 rdev=00:00 obj=system_u:object_r:httpd_config_t:s0 objtype=NORMAL
+type=EXECVE msg=audit(1532512904.010:3575): argc=4 a0="grep" a1="--color=auto" a2="nginx" a3="/var/log/audit/audit.log"
+
+```
+
 - все критичные логи с web должны собираться и локально и удаленно  
+
 - все логи с nginx должны уходить на удаленный сервер (локально только критичные)  
+
+В конфиг nginx.
+```bash
+access_log syslog:server=192.168.1.1,facility=local7,tag=nginx,severity=info;
+error_log syslog:server=192.168.1.1,facility=local7,tag=nginx,severity=info;
+error_log /var/log/nginx/error.log crit;
+```
 - логи аудита уходят ТОЛЬКО на удаленную систему  
 
 ```

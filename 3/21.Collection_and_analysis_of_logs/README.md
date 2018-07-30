@@ -33,8 +33,16 @@ type=EXECVE msg=audit(1532512904.010:3575): argc=4 a0="grep" a1="--color=auto" a
 - все критичные логи с web должны собираться и локально и удаленно  
 
 ```bash
-*.crit /var/log/crit.log
-*.crit @192.168.1.1
+
+if $syslogseverity-text == "crit" then {
+        action(type="omfwd"
+                Target="192.168.1.1"
+                Port="514"
+                Protocol="udp")
+		action(type="omfile"
+                File="/var/log/crit.log")
+}
+
 ```
 
 - все логи с nginx должны уходить на удаленный сервер (локально только критичные)  

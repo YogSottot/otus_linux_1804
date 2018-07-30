@@ -32,15 +32,32 @@ type=EXECVE msg=audit(1532512904.010:3575): argc=4 a0="grep" a1="--color=auto" a
 
 - все критичные логи с web должны собираться и локально и удаленно  
 
+```bash
+*.crit /var/log/crit.log
+*.crit @192.168.1.1
+```
+
 - все логи с nginx должны уходить на удаленный сервер (локально только критичные)  
 
 В конфиг nginx.
 ```bash
-access_log syslog:server=192.168.1.1,facility=local7,tag=nginx,severity=info;
-error_log syslog:server=192.168.1.1,facility=local7,tag=nginx,severity=info;
+access_log syslog:server=192.168.1.1,facility=local7,tag=nginx_acess,severity=info;
+error_log syslog:server=192.168.1.1,facility=local7,tag=nginx_error,severity=info;
 error_log /var/log/nginx/error.log crit;
 ```
 - логи аудита уходят ТОЛЬКО на удаленную систему  
+
+```bash
+if $programname == "audispd" then {
+        action(type="omfwd"
+                Target="192.168.1.1"
+                Port="514"
+                Protocol="udp")
+}
+
+```
+
+2 **развернуть еще машину elk**  
 
 ```
 кластер ElasticSearch из одной ноды.
@@ -51,7 +68,6 @@ discovery.zen.ping.multicast.enabled: false
 discovery.zen.minimum_master_nodes: 1
 node.max_local_storage_nodes: 1
 ```
-2 **развернуть еще машину elk**  
 
 - и таким образом настроить 2 центральных лог системы elk И какую либо еще  
 

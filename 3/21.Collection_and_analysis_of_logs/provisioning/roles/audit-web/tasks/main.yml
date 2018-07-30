@@ -9,6 +9,8 @@
 #   copy: src=audisp-remote.conf dest=/etc/audisp/audisp-remote.conf
 # - name: copy auditd.conf
 #   copy: src=auditd.conf dest=/etc/audit/auditd.conf 
+ - name: copy syslog.conf
+   copy: src=syslog.conf dest=/etc/audit/syslog.conf 
  - name: copy audit.rules
    copy: src=audit.rules dest=/etc/audit/rules.d/audit.rules
  - name: restart auditd

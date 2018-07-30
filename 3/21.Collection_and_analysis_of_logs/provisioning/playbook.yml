@@ -48,22 +48,23 @@
    - ip_forwarding
    - disable_defroute_vagrant
    - rsyslog-server
-  tasks:
-  - name: install gateway
-    shell: echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1 && echo "GATEWAY=192.168.255.5" >> /etc/sysconfig/network-scripts/ifcfg-eth3
-  - name: Restart Network
-    service: name=network state=restarted
+#  tasks:
+#  - name: install gateway
+#    shell: echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1 && echo "GATEWAY=192.168.255.5" >> /etc/sysconfig/network-scripts/ifcfg-eth3
+#  - name: Restart Network
+#    service: name=network state=restarted
     
 - hosts: web
   become: yes
   roles:
    - nginx
    - rsyslog-client
-  tasks:
-  - name: install gateway
-    shell: echo "GATEWAY=192.168.1.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-  - name: Restart Network
-    service: name=network state=restarted
+   - audisp-web
+#  tasks:
+#  - name: install gateway
+#    shell: echo "GATEWAY=192.168.1.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+#  - name: Restart Network
+#    service: name=network state=restarted
 
 - hosts: web
   become: yes

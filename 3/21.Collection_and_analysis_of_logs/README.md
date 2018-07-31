@@ -56,6 +56,12 @@ error_log /var/log/nginx/error.log crit;
 - логи аудита уходят ТОЛЬКО на удаленную систему  
 
 ```bash
+# в syslog.conf
+args = LOG_INFO LOG_LOCAL6
+
+# в rsyslog.conf
+*.info;mail.none;authpriv.none;cron.none;local6.none                /var/log/messages
+
 if $programname == "audispd" then {
         action(type="omfwd"
                 Target="192.168.1.1"
@@ -67,7 +73,7 @@ if $programname == "audispd" then {
 
 2 **развернуть еще машину elk**  
 
-```
+```bash
 кластер ElasticSearch из одной ноды.
 index.number_of_shards: 1
 index.number_of_replicas: 0
@@ -82,4 +88,46 @@ node.max_local_storage_nodes: 1
 В первой задаче создан один лог-сервер (rsyslog). Во второй задаче создан elk-сервер. Таким образом всего 2 лог-сервера.
 
 - в elk должны уходить только логи нжинкса  
+```bash
+# rsyslog Templates
+template(name="ElasticSearchTemplate"
+type="list"
+option.json="on") {
+constant(value="{")
+ constant(value="\"timestamp\":\"")      property(name="timereported" dateFormat="rfc3339")
+ constant(value="\",\"message\":\"")     property(name="msg")
+ constant(value="\",\"host\":\"")        property(name="hostname")
+ constant(value="\",\"severity\":\"")    property(name="syslogseverity-text")
+ constant(value="\",\"facility\":\"")    property(name="syslogfacility-text")
+ constant(value="\",\"syslogtag\":\"")   property(name="syslogtag")
+constant(value="\"}")
+}
+
+# rsyslog Input Modules
+module(load="omelasticsearch")
+
+# rsyslog RuleSets
+if $programname == "nginx_access" or if $programname == "nginx_error" then {
+	action(type="omelasticsearch" 
+	 	server="192.168.255.5"
+	 	serverport="9200"
+	 	searchIndex="nginx-index"
+	 	searchType="nginx-log"
+	 	bulkmode="1"
+	 	template="template(name="ElasticSearchTemplate"
+type="list"
+option.json="on") {
+constant(value="{")
+ constant(value="\"timestamp\":\"")      property(name="timereported" dateFormat="rfc3339")
+ constant(value="\",\"message\":\"")     property(name="msg")
+ constant(value="\",\"host\":\"")        property(name="hostname")
+ constant(value="\",\"severity\":\"")    property(name="syslogseverity-text")
+ constant(value="\",\"facility\":\"")    property(name="syslogfacility-text")
+ constant(value="\",\"syslogtag\":\"")   property(name="syslogtag")
+constant(value="\"}")
+}")
+}
+```
 - во вторую систему все остальное  
+
+Настройки из пункта 1.  

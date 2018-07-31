@@ -46,7 +46,6 @@
   become: yes
   roles:
    - ip_forwarding
-   - disable_defroute_vagrant
    - rsyslog-server
 #  tasks:
 #  - name: install gateway
@@ -54,12 +53,17 @@
 #  - name: Restart Network
 #    service: name=network state=restarted
     
+- hosts: log
+  become: yes
+  roles:
+   - disable_defroute_vagrant
+   
 - hosts: web
   become: yes
   roles:
    - nginx
    - rsyslog-client
-   - audisp-web
+   - audit-web
 #  tasks:
 #  - name: install gateway
 #    shell: echo "GATEWAY=192.168.1.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1

@@ -1,0 +1,73 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+
+MACHINES = {
+:web => {
+                       :box_name => "centos/7",
+                       :net => [
+                                {ip: '192.168.1.2', adapter: 2, netmask: "255.255.255.240", virtualbox__intnet: "dir-net", gateway: "192.168.1.1"},
+                                
+                                ]
+                      },
+	
+:log => {
+                       :box_name => "centos/7",
+                       :net => [
+                                {ip: '192.168.255.2', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net", gateway: "192.168.255.1"},
+                                {ip: '192.168.1.1', adapter: 3, netmask: "255.255.255.240", virtualbox__intnet: "dir-net"},
+                                {ip: '192.168.255.6', adapter: 4, netmask: "255.255.255.252", virtualbox__intnet: "router2-net", gateway: "192.168.255.5"},
+                                ]
+                      
+   },
+
+:log2 => {
+                    :box_name => "centos/7",
+                 :public => {:ip => '192.168.0.254', :adapter => 3 },   
+                 :net => [
+                          {ip: '192.168.255.5', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router2-net", gateway: "192.168.255.6"},
+                                ]
+                     },
+	
+
+  
+
+	
+}
+
+Vagrant.configure("2") do |config|
+
+  MACHINES.each do |boxname, boxconfig|
+
+    config.vm.define boxname do |box|
+
+        box.vm.box = boxconfig[:box_name]
+		box.vm.host_name = boxname.to_s
+
+        boxconfig[:net].each do |ipconf|
+          box.vm.network "private_network", ipconf
+        end
+        
+        if boxconfig.key?(:public)
+          box.vm.network "public_network", boxconfig[:public]
+        end
+
+		config.vm.provision "ansible" do |ansible|
+			ansible.verbose = "vvv"
+			ansible.playbook = "provisioning/playbook.yml"
+			ansible.become = "true"
+		end
+		
+		config.vm.provider "virtualbox" do |v|
+			v.memory = 256
+		end
+
+
+      end
+
+  end
+  
+  
+end
+

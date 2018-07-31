@@ -1,0 +1,15 @@
+---
+# - name: copy rsyslog.conf
+#   copy: src=rsyslog.conf dest=/etc/rsyslog.conf 
+ - name: copy rsyslog.repo
+   copy: src=rsyslog.repo dest=/etc/yum.repos.d/rsyslog.repo 
+ - name: copy otus.conf
+   copy: src=otus.conf dest=/etc/rsyslog.d/otus.conf
+ - name: install rsyslog
+   yum: name={{ item }} state=latest 
+   with_items:
+    - rsyslog
+    - rsyslog-elasticsearch
+    - rsyslog-mmnormalize
+ - name: Restart rsyslog
+   service: name=rsyslog state=restarted

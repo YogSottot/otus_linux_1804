@@ -1,0 +1,61 @@
+---
+ - name: copy elasticsearch.repo
+   copy: src=elasticsearch.repo dest=/etc/yum.repos.d/elasticsearch.repo 
+
+ - name: install elasticsearch
+   yum: name={{ item }} state=latest 
+   with_items:
+    - jre
+    - elasticsearch
+    - kibana
+    - logstash
+
+ - name: copy elasticsearch.yml
+   copy: src=elasticsearch.yml dest=/etc/elasticsearch/elasticsearch.yml   
+
+ - name: copy kibana.yml
+   copy: src=kibana.yml dest=/etc/kibana/kibana.yml 
+   
+ - file:
+    path: /etc/logstash/
+    state: directory
+    mode: 0755
+   
+ - name: copy logstash.yml
+   copy: src=jvm.options dest=/etc/logstash/jvm.options 
+   
+ - name: restart elasticsearch
+   service: name=elasticsearch state=restarted enabled=yes
+   
+ - name: restart kibana
+   service: name=kibana state=restarted enabled=yes
+   
+ - name: restart logstash
+   service: name=logstash state=restarted enabled=yes
+   
+ - name: Install Firewalld
+   yum: name=firewalld state=present
+   
+ - name: Firewalld service state
+   service: name=firewalld state=started enabled=yes
+   
+ - name: firewalld open Elasticsearch
+   firewalld:
+    service: elasticsearch
+    permanent: true
+    immediate: true
+    state: enabled
+
+ - name: firewalld open kibana
+   firewalld:
+    service: kibana
+    permanent: true
+    immediate: true
+    state: enabled
+
+ - name: firewalld open logstash
+   firewalld:
+    port: 9600/udp
+    permanent: true
+    immediate: true
+    state: enabled

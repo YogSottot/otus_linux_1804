@@ -1,0 +1,77 @@
+---
+- hosts: all
+  become: yes
+  roles:
+  - liquidprompt
+  - packages
+     
+
+- hosts: log2
+  become: yes
+  roles:
+   - ip_forwarding
+   - elasticsearch
+  tasks:
+  - name: Install Firewalld
+    yum: name=firewalld state=present
+  - name: Firewalld service state start
+    service: name=firewalld state=started enabled=yes
+  - name: install gateway
+    shell: echo "192.168.1.0/24 via 192.168.255.6" >  /etc/sysconfig/network-scripts/route-eth1
+  - name: firewalld open 443
+    firewalld:
+     service: https
+     state: enabled
+     permanent: true
+     immediate: true
+  - name: firewalld add masquerade
+    firewalld:
+     masquerade: yes
+     state: enabled
+     permanent: true
+     immediate: true
+     zone: public
+     #prot for nginx on centralserver
+  - name: firewalld add port redirect
+    firewalld:
+     rich_rule: 'rule family=ipv4 forward-port port=8080 protocol=tcp to-port=80 to-addr=192.168.1.2'
+     zone: public
+     state: enabled
+     immediate: true
+     permanent: true
+  - name: Restart Network
+    service: name=network state=restarted
+    
+    
+- hosts: log
+  become: yes
+  roles:
+   - ip_forwarding
+   - rsyslog-server
+#  tasks:
+#  - name: install gateway
+#    shell: echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1 && echo "GATEWAY=192.168.255.5" >> /etc/sysconfig/network-scripts/ifcfg-eth3
+#  - name: Restart Network
+#    service: name=network state=restarted
+    
+- hosts: log
+  become: yes
+  roles:
+   - disable_defroute_vagrant
+   
+- hosts: web
+  become: yes
+  roles:
+   - nginx
+   - rsyslog-client
+   - audit-web
+#  tasks:
+#  - name: install gateway
+#    shell: echo "GATEWAY=192.168.1.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+#  - name: Restart Network
+#    service: name=network state=restarted
+
+- hosts: web
+  become: yes
+  roles:
+   - disable_defroute_vagrant

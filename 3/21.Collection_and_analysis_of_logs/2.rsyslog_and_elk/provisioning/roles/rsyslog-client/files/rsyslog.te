@@ -1,0 +1,19 @@
+
+module rsyslog 1.0;
+
+require {
+        type syslogd_t;
+        type auditd_log_t;
+        class file read;
+        class file ioctl;
+        class file open;
+        class file getattr;
+        class dir search;
+}
+
+#============= syslogd_t ==============
+allow syslogd_t auditd_log_t:file read;
+allow syslogd_t auditd_log_t:file ioctl;
+allow syslogd_t auditd_log_t:file open;
+allow syslogd_t auditd_log_t:file getattr;
+allow syslogd_t auditd_log_t:dir search;

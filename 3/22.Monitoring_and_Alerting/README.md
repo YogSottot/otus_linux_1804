@@ -13,6 +13,8 @@
 
 В директории 01.zabbix расположен набор ролей, которые разворачивают сервер.
 
+Для скриншота изменил «Visible name» на «YogSottot for otus». В конфиге агента, имя хоста осталось Zabbix Server.  
+
 ![zabbix](https://i.imgur.com/VNQNLbB.jpg)
 
 - prometheus - grafana  

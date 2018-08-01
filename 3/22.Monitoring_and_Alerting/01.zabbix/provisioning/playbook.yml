@@ -1,0 +1,52 @@
+---
+- hosts: all
+  become: yes
+  roles:
+  - liquidprompt
+  - packages
+  tasks:
+   - name: selinux is nill
+     shell: setenforce 0
+     
+    
+- hosts: log2
+  become: yes
+  roles:
+   - { role: anxs.postgresql }
+   - { role: dj-wasabi.zabbix-server }
+   - { role: dj-wasabi.zabbix-web, zabbix_timezone: Europe/Moscow, zabbix_url: centralserver.otus.lan }
+   - { role: dj-wasabi.zabbix-agent, zabbix_agent_server: 127.0.0.1, zabbix_agent_listenport: 10050 }
+  tasks:
+  - name: Install Firewalld
+    yum: name=firewalld state=present
+  - name: Firewalld service state start
+    service: name=firewalld state=started enabled=yes
+  - name: install gateway
+    shell: echo "192.168.1.0/24 via 192.168.255.6" >  /etc/sysconfig/network-scripts/route-eth1
+  - name: firewalld open 443
+    firewalld:
+     service: https
+     state: enabled
+     permanent: true
+     immediate: true
+  - name: firewalld add masquerade
+    firewalld:
+     masquerade: yes
+     state: enabled
+     permanent: true
+     immediate: true
+     zone: public
+     #prot for nginx on centralserver
+  - name: firewalld add port redirect
+    firewalld:
+     rich_rule: 'rule family=ipv4 forward-port port=8080 protocol=tcp to-port=80 to-addr=192.168.1.2'
+     zone: public
+     state: enabled
+     immediate: true
+     permanent: true
+  - name: Restart Network
+    service: name=network state=restarted
+
+    
+    
+

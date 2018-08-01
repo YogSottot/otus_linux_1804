@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: yes
+  roles:
+  - liquidprompt
+  - packages
+  tasks:
+   - name: selinux is nill
+     shell: setenforce 0
+    
+- hosts: log2
+  become: yes
+  roles:
+   - { role: cloudalchemy.node-exporter }
+   - { role: cloudalchemy.prometheus }
+   - cloudalchemy.grafana
+  vars:
+   grafana_security:
+    admin_user: admin
+    admin_password: "admin"
+  tasks:
+   - name: copy prometheus
+     shell: cp -f /vagrant/provisioning/prometheus.yml /etc/prometheus/ && systemctl reload prometheus

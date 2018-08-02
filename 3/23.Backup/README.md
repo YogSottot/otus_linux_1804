@@ -74,7 +74,7 @@ SELECT Path.Path,Filename.Name FROM File,Filename,Path WHERE File.JobId=%1
 
 — настроенный конфиг  
 
-Размещён в vagrant-bacula/bacula-dir.conf
+Размещён в [vagrant-bacula/bacula-dir.conf](https://github.com/YogSottot/otus_linux_1804/blob/master/3/23.Backup/vagrant-bacula/bacula-dir.conf)
 
 
 2 **настроить доп опции - сжатия, шифрования, дедупликация</idfullbackup>**  

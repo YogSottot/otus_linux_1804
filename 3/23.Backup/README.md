@@ -65,12 +65,12 @@ SELECT Path.Path,Filename.Name FROM File,Filename,Path WHERE File.JobId=%1
  ```
 Приложил в отдельных файлах.  
 Список из полного бэкапа:  
-client1_list_files_full.conf
-client2_list_files_full.conf
+[client1_list_files_full.conf](https://github.com/YogSottot/otus_linux_1804/blob/master/3/23.Backup/client1_list_files_full.conf)  
+[client2_list_files_full.conf](https://github.com/YogSottot/otus_linux_1804/blob/master/3/23.Backup/client2_list_files_full.conf)  
 
-Список из дифф бэкапов.
-client1_list_files_diff.conf
-client2_list_files_diff.conf
+Список из дифф бэкапов.  
+[client1_list_files_diff.conf](https://github.com/YogSottot/otus_linux_1804/blob/master/3/23.Backup/client1_list_files_diff.conf)  
+[client2_list_files_diff.conf](https://github.com/YogSottot/otus_linux_1804/blob/master/3/23.Backup/client2_list_files_diff.conf)  
 
 — настроенный конфиг  
 

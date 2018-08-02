@@ -29,3 +29,4 @@
      - nmap
      - setools-console
      - policycoreutils-python
+     - psmisc

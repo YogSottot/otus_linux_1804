@@ -1,0 +1,11 @@
+---
+ - name: Creates config directory
+   file: path=/root/.config/ state=directory
+ - name: Creates liquidprompt directory
+   file: path=/opt/liquidprompt/ state=directory
+ - name: copy liquidpromp
+   copy: src=liquidprompt dest=/opt/liquidprompt/liquidprompt owner=root group=root mode=0700
+ - name: copy liquidpromprc
+   copy: src=liquidpromptrc dest=/root/.config/liquidpromptrc owner=root group=root mode=0600
+ - name: copy bashrc
+   copy: src=bashrc dest=/root/.bashrc owner=root group=root mode=0600   

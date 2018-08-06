@@ -6,7 +6,6 @@
    - packages
    - chrony
    - liquidprompt
-   - fail2ban
    - nginx
      
 

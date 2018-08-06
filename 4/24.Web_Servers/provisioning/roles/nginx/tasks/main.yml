@@ -4,11 +4,11 @@
  - name: install nginx
    yum: name={{ item }} state=latest 
    with_items:
-    - nginx
- - name: install nginx-module-testcookie
-   shell: yum -y install http://rpms.southbridge.ru/rhel7/stable/x86_64/nginx-module-testcookie-1.15.0.1.24-1.el7.ngx.x86_64.rpm
+    - nginx-module-testcookie
  - name: copy nginx.conf
    copy: src=nginx.conf dest=/etc/nginx/nginx.conf
+ - name: disable se
+   shell: setenforce 0
  - name: restart nginx
    service: name=nginx state=restarted enabled=yes
  - name: Install Firewalld

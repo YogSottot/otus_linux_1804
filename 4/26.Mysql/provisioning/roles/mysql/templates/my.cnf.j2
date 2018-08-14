@@ -1,0 +1,20 @@
+[mysqld]
+{% for key, value in mysqld.iteritems() %}
+{% if value == None %}
+{{ key }}
+{% else %}
+{{ key }} = {{ value }}
+{% endif %}
+{% endfor %}
+skip-character-set-client-handshake 
+init_connect='SET collation_connection = utf8_general_ci'
+init_connect='SET NAMES utf8'
+validate_password_policy=0
+validate_password_length=4
+
+[mysql]
+prompt = "{{ ansible_hostname }} mysql> "
+default-character-set = utf8
+
+[client]
+user = root

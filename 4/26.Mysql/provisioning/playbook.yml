@@ -1,0 +1,35 @@
+- hosts: master
+  become: yes
+  roles:
+#   - os
+   - mysql
+
+- hosts: master
+  become: yes
+  tasks:
+   - name: Check if bet.sql is present
+     shell: echo | mysql -s bet
+     register: bet_found
+     ignore_errors: yes
+     
+   - name: Create a new database with name 'bet'
+     when: bet_found is failed
+     mysql_db:
+      name: bet
+      state: present
+    
+   - name: Load bet.sql database
+     when: bet_found is failed   
+     mysql_db:
+      name: bet
+      state: import
+      target: /vagrant/provisioning/bet.sql
+      
+- hosts: slave
+  become: yes
+  roles:
+#   - os
+   - mysql
+     
+- import_playbook: plays/clone_mysql.yml
+    

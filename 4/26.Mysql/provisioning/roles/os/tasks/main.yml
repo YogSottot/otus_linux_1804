@@ -1,0 +1,52 @@
+---
+# tasks file for os
+- name: Install EPEL
+  yum: name=epel-release state=present
+  
+- name: Install Handy Tools
+  yum: name={{ item }} state=present
+  with_items:
+    - nc
+    - socat
+    - lsof
+    - wget
+    - curl
+    - tmux
+    - sysstat
+    - ntp
+    - ntpdate
+    - telnet
+    - unzip
+    - bind-utils
+    - vim
+    - perf
+    - libselinux-python
+    - htop
+    - ncdu
+    - iotop
+    - iftop
+    - traceroute
+    - mc
+    - nano
+    - bash-completion
+    - bash-completion-extras
+    - deltarpm
+    - nmap
+    - psmisc
+
+- name: Manage Services
+  service: name={{ item.name }} state={{ item.state }}
+  with_items:
+    - name: ntpd
+      state: running
+    - name: firewalld
+      state: stopped
+
+- name: Ensure SELINUX is permissive
+  selinux: state=permissive policy=targeted
+
+- name: Setup hosts
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+

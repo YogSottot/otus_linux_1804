@@ -1,0 +1,99 @@
+---
+- name: Check settings
+  vars:
+    - datadir: /var/lib/mysql
+    - port: 9999
+    - source: master
+    - target: slave
+    - owner: mysql
+    - group: mysql
+  hosts: all
+  tasks:
+    - name: Ensure critical variables are set
+      assert:
+        that:
+          - source is defined
+          - target is defined
+          - owner is defined
+          - group is defined
+          - port is defined and port > 0 and port < 65535
+          - datadir is defined and datadir != "/"
+
+- name: Target
+  vars:
+    - datadir: /var/lib/mysql
+    - port: 9999
+    - source: master
+    - target: slave
+    - owner: mysql
+    - group: mysql
+  hosts: 
+    - "{{ target }}"
+  tasks:
+    - name: Stop mysql
+      service: name=mysql state=stopped
+
+    - name: "Remove data in {{ datadir }}"
+      shell: "rm -rf {{ datadir }}/*"
+
+    - name: Start streaming listener
+      shell: "cd {{ datadir }} && nc -l {{ port }} | xbstream -xv ."
+      async: 300
+      poll: 0
+
+- name: Source
+  vars:
+    - datadir: /var/lib/mysql
+    - port: 9999
+    - source: master
+    - target: slave
+    - owner: mysql
+    - group: mysql
+  hosts: 
+    - "{{ source }}"
+  tasks:
+    - name: Setup replication user
+      shell: mysql -e "GRANT REPLICATION SLAVE ON *.* TO 'replication'@'%' IDENTIFIED BY 'dummysecret';"
+
+    - name: Stream backup
+      shell: innobackupex --stream xbstream /tmp | nc {{ target }} 9999
+    
+
+- name: "Start mysql and replication on {{ target }}"
+  hosts: 
+    - "{{ target }}"
+  vars:
+    - datadir: /var/lib/mysql
+    - port: 9999
+    - source: master
+    - target: slave
+    - owner: mysql
+    - group: mysql
+  tasks:
+    - name: Run apply log
+      shell: "cd {{ datadir }} && innobackupex --apply-log ."
+
+    - name: Fix permissions
+      file:
+        path: "{{ datadir }}"
+        owner: "{{ owner }}"
+        group: "{{ group }}"
+        recurse: yes
+
+    - name: Start mysql
+      service: name=mysql state=running
+
+    - name: Get master log file 
+      shell: "cat {{ datadir }}/xtrabackup_binlog_info | awk '{ print $1 }'"
+      register: master_log_file
+
+    - name: Get master log position
+      shell: "cat {{ datadir }}/xtrabackup_binlog_info | awk '{ print $2 }'"
+      register: master_log_pos
+
+    - name: Configure replication
+      shell: mysql -e "change master to master_host='{{ source }}', master_user='replication', master_password='dummysecret', master_port=3306, master_log_file='{{ master_log_file.stdout }}', master_log_pos={{ master_log_pos.stdout }};" 
+
+    - name: Start replication
+      shell: mysql -e "start slave;"
+

@@ -1,0 +1,67 @@
+---
+# tasks file for mysql
+- include_vars: percona_repo.yml
+
+- name: Install MySQL repository
+  yum: name={{ percona_yum_repo }} state=present
+
+- name: Install Percona Server 
+  yum: name="Percona-Server-server-57" state=present
+  register: percona_server
+
+- name: Install Percona Utilities
+  yum: name={{ item }} state=present
+  with_items:
+    - percona-toolkit
+    - percona-xtrabackup
+    - MySQL-python
+
+- name: Generate Random Server ID
+  when: percona_server is changed
+  shell: echo $RANDOM
+  register: random_number
+
+- name: Capture random number as server_id
+  when: random_number is changed
+  set_fact: server_id={{ random_number.stdout }}
+
+- name: Ensure server_id looks sane
+  when: random_number is changed
+  assert:
+    that:
+      - server_id is defined
+      - server_id|int >= 0
+      - server_id|int < 4294967295
+
+- name: restart mysql
+  service: name=mysql state=restarted enabled=yes
+      
+- include_vars: mysql_settings.yml
+
+- name: Configure MySQL
+  when: random_number is changed
+  template:
+    src: my.cnf.j2
+    dest: /etc/my.cnf
+    owner: root
+    group: root
+  notify:
+    - Restart MySQL
+    
+- name: restart mysql
+  service: name=mysql state=restarted enabled=yes
+    
+- name: Copy password into variable
+  shell:  grep generated /var/log/mysqld.log | cut -c 92-
+  register: mysql_password
+
+- name: set password
+  template:
+    src: .my.cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+  
+- name: Set new password from temporary password
+  shell: 'mysql -e "SET PASSWORD = PASSWORD(''{{ mysql_password.stdout }}'');" --connect-expired-password -uroot -p"{{ mysql_password.stdout }}"'
+  

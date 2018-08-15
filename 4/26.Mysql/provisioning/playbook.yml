@@ -1,9 +1,9 @@
-- hosts: master
+- hosts: all
   become: yes
   roles:
-#   - os
+   - os
    - mysql
-
+   
 - hosts: master
   become: yes
   tasks:
@@ -25,11 +25,15 @@
       state: import
       target: /vagrant/provisioning/bet.sql
       
+   - name: Setup replication user
+     shell: mysql -e "GRANT REPLICATION SLAVE ON *.* TO 'replication'@'%' IDENTIFIED BY 'dummysecret';"
+     
 - hosts: slave
   become: yes
-  roles:
-#   - os
-   - mysql
-     
-- import_playbook: plays/clone_mysql.yml
-    
+  tasks:
+   - name: Configure replication
+     ignore_errors: yes
+     shell: mysql -e "change master to master_host='master', master_user='replication', master_password='dummysecret', master_port=3306, MASTER_AUTO_POSITION=1;"    
+   - name: Start replication
+     ignore_errors: yes
+     shell: mysql -e "start slave;"

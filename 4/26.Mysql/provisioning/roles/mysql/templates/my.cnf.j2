@@ -11,6 +11,13 @@ init_connect='SET collation_connection = utf8_general_ci'
 init_connect='SET NAMES utf8'
 validate_password_policy=0
 validate_password_length=4
+gtid-mode = on
+enforce-gtid-consistency=true
+replicate-do-table=bet.bookmaker
+replicate-do-table=bet.competition
+replicate-do-table=bet.market
+replicate-do-table=bet.odds
+replicate-do-table=bet.outcome
 
 [mysql]
 prompt = "{{ ansible_hostname }} mysql> "

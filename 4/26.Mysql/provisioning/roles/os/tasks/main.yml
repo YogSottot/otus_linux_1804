@@ -38,7 +38,7 @@
   service: name={{ item.name }} state={{ item.state }}
   with_items:
     - name: ntpd
-      state: running
+      state: started
     - name: firewalld
       state: stopped
 

@@ -5,22 +5,15 @@
 
 - в vars вынести версию, так что бы поддерживалась версия 9.6 и 10  
 
-В postgresql/defaults/main.yml  
 Можно поставить в playbook 9.6 или 10  
 ```bash
    - vars/pg10.yml # or pg9.6.yml 
 ```
 - сконфигурировать pg_hba.conf (пересмотрите слайды)  
 
-Перевёл пользователей на пароли и добавлен .pgpass для пользователя vagrant.  
+Перевёл локальных пользователей на пароли и добавлен .pgpass для пользователя vagrant.  
 ```bash
-[vagrant@slave ~]$ psql -dvagrant
-psql (10.5)
-Type "help" for help.
-
-vagrant=> \q
-
-[vagrant@slave ~]$ psql -h 192.168.100.11 -dvagrant
+[vagrant@slave ~]$ psql
 psql (10.5)
 Type "help" for help.
 
@@ -40,6 +33,8 @@ postgresql_maintenance_work_mem: "{{ [(postgresql_tuning_memory_mb|int * 0.15 / 
 ```
 
 2 **Написать playbook разворачивания реплики с помощью pg_basebackup**  
+
+В playbook совмещены задачи 1 и 2.  
 
 ```bash
 postgresql_wal_level: "hot_standby"

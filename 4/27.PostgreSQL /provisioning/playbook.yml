@@ -1,0 +1,17 @@
+- hosts: master
+  become: yes
+  vars_files:
+   - vars/pg10.yml # or pg9.6.yml  
+  roles:
+   - os
+   - role: postgresql
+       
+    
+- hosts: slave
+  become: yes
+  vars_files:
+   - vars/pg10.yml # or pg9.6.yml  
+  roles:
+   - os
+   - role: postgresql_replication
+    

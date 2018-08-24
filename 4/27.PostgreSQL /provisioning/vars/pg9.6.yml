@@ -1,0 +1,38 @@
+---
+
+postgresql_version: 9.6
+
+postgresql_wal_level: "hot_standby"
+postgresql_wal_keep_segments: "20"
+postgresql_wal_log_hints: "on"
+
+postgresql_pg_hba_passwd_hosts: 
+ - 192.168.100.0/24
+postgresql_tune_server_use: 'oltp'
+postgresql_listen_addresses: '*'
+
+postgresql_databases:
+  - name: vagrant
+    owner: vagrant
+
+postgresql_users:
+
+  - name: root
+    pass: 74cc1c60799e0a786ac7094b532f01b1
+    encrypted: yes
+
+  - name: vagrant
+    pass: 01a915a28c6dde2f34babff8dc3aa527
+    encrypted: yes
+
+postgresql_user_privileges:
+  - name: vagrant
+    db: vagrant
+
+postgresql_database_schemas:
+  - database: vagrant
+    state: present
+    schema: acme
+    owner: vagrant
+
+pgpass_username: vagrant

@@ -1,0 +1,13 @@
+[master]
+192.168.100.11
+
+[slave]
+192.168.100.12
+
+[all:children]
+master
+slave
+
+[all:vars]
+remote_user = root
+private_key_file = ~/.vagrant.d/insecure_private_key

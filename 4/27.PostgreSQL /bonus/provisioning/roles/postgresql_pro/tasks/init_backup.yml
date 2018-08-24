@@ -1,0 +1,23 @@
+# file: postgresql/tasks/configure.yml
+
+- name: PostgreSQL | Create the backup directory | RedHat
+  file:
+    path: "{{ postgresql_backup_directory }}"
+    state: directory
+    owner: "{{ postgresql_service_user }}"
+  
+- name: PostgreSQL | Initialize the backup database | RedHat
+  shell: /opt/pgpro/std-{{ postgresql_version_terse }}/bin/pg_probackup init -B {{ postgresql_backup_directory }}
+  become: yes
+  become_user: "{{ postgresql_service_user }}"
+  
+- name: PostgreSQL | Make add-instance backup | RedHat
+  shell: /opt/pgpro/std-{{ postgresql_version_terse }}/bin/pg_probackup add-instance -B {{ postgresql_backup_directory }} -D {{ postgresql_data_directory }} --instance {{ postgresql_instance_name }}
+  become: yes
+  become_user: "{{ postgresql_service_user }}"
+
+- name: PostgreSQL | Make 1st backup | RedHat
+  shell: /opt/pgpro/std-{{ postgresql_version_terse }}/bin/pg_probackup backup -B {{ postgresql_backup_directory }} --instance {{ postgresql_instance_name }} -b full --stream --log-level-console=verbose --progress
+  become: yes
+  become_user: "{{ postgresql_service_user }}"
+  

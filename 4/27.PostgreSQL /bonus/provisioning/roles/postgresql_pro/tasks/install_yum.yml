@@ -1,0 +1,32 @@
+# file: postgresql/tasks/install_yum.yml
+
+# The standard ca-certs are needed because  without them yum will fail to
+# validate www.postgresql.org (or probably any other source).
+
+  - block:
+      - name: PostgreSQL | Install all the required dependencies | yum
+        yum:
+          name: ["ca-certificates","python-psycopg2", "python-pycurl", "glibc-common","epel-release","libselinux-python"]
+          state: present
+
+      - name: PostgreSQL | Add PostgreSQL repository | yum
+        shell: yum install http://repo.postgrespro.ru/pgpro-10/keys/postgrespro-std-10.centos.pro.yum-1.0-1.noarch.rpm -y
+        when: postgresql_install_repository
+        ignore_errors: yes
+                        
+      - name: PostgreSQL | Make sure the dependencies are installed | yum
+        yum:
+         name: "{{ item }}"
+         state: present
+         update_cache: yes
+        with_items: ["python-psycopg2", "python-pycurl", "glibc-common","libselinux-python"]
+
+      - name: PostgreSQL | Install PostgreSQL | yum
+        yum:
+          name: "{{ item }}"
+          state: present
+        environment: "{{ postgresql_env }}"
+        ignore_errors: yes
+        with_items:
+          - "postgrespro-std-{{ postgresql_version_terse }}"
+          - "postgrespro-std-{{ postgresql_version_terse }}-pgprobackup"

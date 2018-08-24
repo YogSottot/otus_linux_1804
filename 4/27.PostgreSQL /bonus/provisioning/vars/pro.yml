@@ -1,0 +1,4 @@
+---
+postgresql_version: 10
+postgresql_backup_directory: /opt/backup
+postgresql_instance_name: otus

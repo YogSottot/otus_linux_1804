@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+
+# hostname:port:database:username:password
+
+{% if postgresql_users is defined %}
+{% for line in postgresql_users %}
+*:{{ postgresql_port }}:vagrant:{{ line.name }}:{{ line.pass }}
+{% endfor %}
+{% endif %}
+

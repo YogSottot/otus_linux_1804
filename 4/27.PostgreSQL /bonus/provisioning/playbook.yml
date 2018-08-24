@@ -1,0 +1,8 @@
+- hosts: master
+  become: yes
+  vars_files:
+   - vars/pro.yml
+  roles:
+   - role: postgresql_pro
+       
+    

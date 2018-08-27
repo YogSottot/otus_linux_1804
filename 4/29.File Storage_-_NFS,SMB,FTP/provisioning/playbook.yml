@@ -2,14 +2,12 @@
   become: yes
   roles:
    - os
-   - { role: nfs, nfs_exports: ["/mnt/otus_share/upload *(rw,sync,no_root_squash)"] }
+   - nfs-server
 
-   #- { role: nfs, nfs_exports: ["/mnt/otus_share/upload *(rw,sync,no_root_squash)"] }
+
 - hosts: slave
   become: yes
   roles:
    - os
-#   - samba_client
-#cifs-utils
-
-#//192.168.100.11/mnt/otus_share/ /mnt/otus_share/ cifs guest,_netdev,nofail,rw,iocharset=utf8,file_mode=0777,dir_mode=0777 0 0
+   - nfs-client
+      

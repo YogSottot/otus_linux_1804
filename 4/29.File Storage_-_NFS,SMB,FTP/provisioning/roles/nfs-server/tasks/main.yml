@@ -1,0 +1,77 @@
+---
+- name: Ensure NFS utilities are installed.
+  package: name=nfs-utils state=present
+  
+- name: Ensure nfsmount directory exists
+  action: file path=/mnt/otus_share/ state=directory owner=root group=root mode=0755
+  
+- name: Ensure nfsmount_upload directory exists
+  action: file path=/mnt/otus_share/upload state=directory owner=vagrant group=vagrant mode=0755
+
+- name: Copy exports file.
+  copy: src=exports dest=/etc/exports
+   
+- name: Copy nfs.conf file.
+  copy: src=nfs.conf dest=/etc/nfs.conf
+   
+- name: Install Firewalld
+  yum: name=firewalld state=present
+   
+- name: Firewalld service state
+  service: name=firewalld state=started enabled=yes
+  
+- name: firewalld open nfs
+  firewalld:
+   service: nfs
+   permanent: true
+   immediate: true
+   state: enabled
+   
+- name: firewalld open mountd
+  firewalld:
+   service: mountd
+   permanent: true
+   immediate: true
+   state: enabled
+   
+- name: firewalld open rpc-bind
+  firewalld:
+   service: rpc-bind
+   permanent: true
+   immediate: true
+   state: enabled
+
+- name: firewalld open rpc-bind
+  firewalld:
+   port: 2049/udp
+   permanent: true
+   immediate: true
+   state: enabled
+
+- name: firewalld open rpc-bind
+  firewalld:
+   port: 2049/udp
+   permanent: true
+   immediate: true
+   state: enabled
+   
+- name: firewalld open rpc-bind
+  firewalld:
+   port: 20050/udp
+   permanent: true
+   immediate: true
+   state: enabled
+
+- name: firewalld open rpc-bind
+  firewalld:
+   port: 20051/udp
+   permanent: true
+   immediate: true
+   state: enabled
+   
+- name: Ensure rpcbind is running.
+  service: name=rpcbind state=restarted enabled=yes
+  
+- name: Ensure nfs is running.
+  service: name=nfs-server state=restarted enabled=yes
+  

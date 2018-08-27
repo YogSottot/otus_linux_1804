@@ -1,0 +1,19 @@
+---
+- name: Ensure NFS utilities are installed.
+  package: name=nfs-utils state=present
+
+- name: Ensure rpcbind is running.
+  service: name=rpcbind state=restarted enabled=yes
+  
+- name: Ensure {{nfsmount}} directory exists
+  action: file path={{nfsmount}} state=directory
+
+- name: configure /etc/fstab on clients
+  shell: echo "192.168.100.11:/mnt/otus_share/ /mnt/otus_share/ nfs rw,sync,nfsvers=3 0 0" >> /etc/fstab
+
+- name: configure /etc/fstab on clients
+  shell: echo "192.168.100.11:/mnt/otus_share/upload /mnt/otus_share/upload nfs rw,sync,nfsvers=3 0 0" >> /etc/fstab
+  
+- name: mount share
+  shell: mount -a
+

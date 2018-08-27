@@ -17,8 +17,8 @@
 - **в шаре должна быть папка upload с правами на запись**  
 Есть.
 ```bash
-[vagrant@slave ~]# echo test > /mnt/otus_share/upload/test
-[vagrant@slave ~]# 
+[vagrant@slave ~]$ echo test > /mnt/otus_share/upload/test
+[vagrant@slave ~]$ 
 
 [vagrant@master ~]$ cat /mnt/otus_share/upload/test 
 test

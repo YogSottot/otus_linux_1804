@@ -1,0 +1,13 @@
+- hosts: master
+  become: yes
+  roles:
+   - os
+   - nfs-server
+
+
+- hosts: slave
+  become: yes
+  roles:
+   - os
+   - nfs-client
+      

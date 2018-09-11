@@ -1,0 +1,9 @@
+- hosts: master
+  become: yes
+  vars_prompt:
+   - name: "mysqlpass"
+     prompt: "Mysqlpas$S"
+   - name: "keypass"
+     prompt: "123456"
+  roles:
+   - tls_asterisk

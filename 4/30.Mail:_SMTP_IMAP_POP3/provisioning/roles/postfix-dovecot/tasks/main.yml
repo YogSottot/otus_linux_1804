@@ -1,4 +1,12 @@
 ---
+- name: Add the user 'vmail'
+  user:
+    name: vmail
+    group: vmail
+    home: /var/vmail
+    shell: /sbin/nologin
+
+
 - hosts: mail
 #  var: 
   vars_files:

@@ -15,3 +15,6 @@ deploy_asterisk_packages:
 
 pbxname: "otus_pbx" 
 sipaccs: [1100,1101,1102]
+
+mysqlpass: "Mysqlpas$S"
+keypass: "123456"

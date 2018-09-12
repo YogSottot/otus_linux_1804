@@ -18,8 +18,8 @@ insert into ps_aors (id, max_contacts) values (@user, 1);
 insert into ps_auths (id, auth_type, password, username) values (@user, 'userpass',@pass, @user);
 insert into ps_endpoints (id, transport, aors, auth, dtls_cert_file, dtls_private_key, disallow, allow, 
 direct_media, rtp_symmetric, force_rport, rewrite_contact, dtmf_mode, media_encryption) 
-values (@user, 'transport-tls', @user, @user,@crt,@key, 'all', 'alaw,ulaw,gsm,g722', 'no',
-'yes', 'yes', 'yes', 'rfc4733', 'sdes');
+values (@user, 'transport-udp', @user, @user,@crt,@key, 'all', 'alaw,ulaw,gsm,g722', 'no',
+'yes', 'yes', 'yes', 'rfc4733', 'no');
 "
 echo $sql | mysql -p$mypass -D asterisk
 echo $pass

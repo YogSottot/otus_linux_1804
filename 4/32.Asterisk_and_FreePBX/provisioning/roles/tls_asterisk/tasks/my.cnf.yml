@@ -1,0 +1,7 @@
+---
+- name: set password to file
+  template:
+    src: .my.cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    group: root

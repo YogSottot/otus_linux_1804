@@ -1,9 +1,19 @@
 - hosts: master
   become: yes
-  vars_prompt:
-   - name: "mysqlpass"
-     prompt: "Mysqlpas$S"
-   - name: "keypass"
-     prompt: "123456"
   roles:
    - tls_asterisk
+
+   
+- hosts: slave1, slave2
+  become: yes
+  tasks:
+  - name: Install various groups of packages
+    yum:
+     name: "{{ item }}"
+     state: present
+    with_items:
+    - xorg-x11-xauth
+    - dbus-x11
+  - name: Install zoiper
+    shell: yum install /vagrant/zoiper5_5.2.19_x86_64.rpm -y
+    

@@ -1,13 +1,10 @@
 - hosts: master
   become: yes
+  vars:
+    - name: user1@otus.com
+    - pass: MyStr0ngPa$$w0rd
   roles:
    - os
-   - nfs-server
+   - postfix-dovecot
 
 
-- hosts: slave
-  become: yes
-  roles:
-   - os
-   - nfs-client
-      

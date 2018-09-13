@@ -6,19 +6,11 @@
 MACHINES = {
 :master => {
             :box_name => "centos/7",
-                #:public => {:ip => '192.168.0.254', :adapter => 3 },   
+                :public => {:ip => '192.168.0.254', :adapter => 3 },   
                 :net => [
                          {ip: '192.168.100.11', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "percona-net"},
                          ]
                 },
-	
-	
-:slave => {
-           :box_name => "centos/7",
-               :net => [
-                        {ip: '192.168.100.12', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "percona-net"},
-                        ]
-              },
 	
 	
 }

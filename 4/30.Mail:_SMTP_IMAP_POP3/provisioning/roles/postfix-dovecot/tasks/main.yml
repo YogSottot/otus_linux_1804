@@ -1,4 +1,8 @@
 ---
+  - name: create vmail group
+    group:
+     name: vmail
+
   - name: Add the user 'vmail'
     user:
      name: vmail
@@ -10,30 +14,22 @@
     yum: name=postfix state=present
   - name: install dovecot
     yum: name=dovecot state=present
-  - name: install mariadb-server
-    yum: name=mariadb-server state=present
-  - name: install dovecot-mysql
-    yum: name=dovecot-mysql state=present
   - name: install epel-release
     yum: name=epel-release state=present
   
   - name: Postfix Configuration
-    template: src=etc/postfix/{{item}} dest=/etc/postfix/{{item}} owner=root group=root mode=0644
+    template: src=postfix/{{item}} dest=/etc/postfix/{{item}} owner=root group=root mode=0644
     with_items:
       - main.cf
       - master.cf
-      - mysql_virtual_alias_maps.cf
-      - mysql_virtual_domains_maps.cf
-      - mysql_virtual_mailbox_limit_maps.cf
-      - mysql_virtual_mailbox_maps.cf
     notify:
       - reload postfix
       
   - name: add dovecot user
-    shell: scripts/add_user.sh "{{ name }}" "{{ pass }}"
+    script: add_user.sh "{{ name }}" "{{ password }}"
         
   - name: Dovecot Configuration
-    template: src=etc/dovecot/{{item}} dest=/etc/dovecot/{{item}} owner=root group=root mode=0644
+    template: src=dovecot/{{item}} dest=/etc/dovecot/{{item}} owner=root group=root mode=0644
     with_items:
       - dovecot.conf
     notify:
@@ -43,4 +39,3 @@
     with_items:
       - postfix
       - dovecot
-      - mariadb

@@ -22,7 +22,7 @@
 **Выполнение:**  
 
 - Схема:
-
+![schema](https://raw.githubusercontent.com/YogSottot/otus_linux_1804/master/5.Project/Networkchart_cluster.svg?sanitize=true)
 
 2 балансировщика с общим ip (VRRP/failover):  
 - keepalived (реализует VRRP и следит за состоянием сервисов ha-proxy / Galera Arbitrator)  

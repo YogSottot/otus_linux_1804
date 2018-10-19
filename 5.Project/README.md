@@ -25,18 +25,18 @@
 ![schema](https://raw.githubusercontent.com/YogSottot/otus_linux_1804/master/5.Project/Networkchart_cluster.svg?sanitize=true)
 
 2 балансировщика с общим ip (VRRP/failover):  
-- keepalived (реализует VRRP и следит за состоянием сервисов ha-proxy / Galera Arbitrator)  
-- ha-proxy (проксирование трафика на nginx в web1/web2 и на mysql в db1/db2)  клиенты подклчюаеются к ha-proxy по единому виртуальному ip-адресу
+- keepalived (реализует VRRP и следит за состоянием сервисов HAProxy / Galera Arbitrator)  
+- HAProxy (проксирование трафика на nginx в web1/web2 и на mysql в db1/db2)  клиенты подклчюаеются к HAProxy по единому виртуальному ip-адресу
 - Galera Arbitrator (следит за состоянием кластера БД на db1 / db2)  (Необходим для избежания split-brain, так как у нас только два узла БД)
 
 2 web-сервера (синхронизация файлов сайта через lsyncd):  
 - nginx  
 - php-fpm  
-- ProxySQL - вместо ha-proxy для db?
+- ProxySQL - вместо HAProxy для db?
 
 2 сервера БД:
 - Percona XtraDB Cluster (Master-Master)
 
-1 сервер для логирования м бэкапов
+1 сервер для логирования и бэкапов
 - elk
 - sftp

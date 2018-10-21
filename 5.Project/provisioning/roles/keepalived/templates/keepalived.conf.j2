@@ -1,0 +1,22 @@
+vrrp_script chk_haproxy {
+  script "killall -0 haproxy"
+  interval 2
+  weight 2
+}
+
+vrrp_instance VI_1 {
+  interface {{interface}}
+  state MASTER
+  virtual_router_id {{virtual_router_id}}
+  priority {{priority}}
+  virtual_ipaddress {
+    {{virtual_ipaddress}}
+  }
+  track_script {
+    chk_haproxy
+  }
+  authentication {
+    auth_type PASS
+    auth_pass {{secret_passwd}}
+        }
+}

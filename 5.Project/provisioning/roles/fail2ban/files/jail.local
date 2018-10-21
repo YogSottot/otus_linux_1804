@@ -1,0 +1,63 @@
+[DEFAULT]
+ignoreip = 127.0.0.1/8 38.123.140.0/24
+# Default banning action (e.g. iptables, iptables-new,
+# iptables-multiport, shorewall, etc) It is used to define
+# action_* variables. Can be overridden globally or per
+# section within jail.local file
+
+# Ban hosts for one hour:
+bantime = 3600
+destemail =
+# A host is banned if it has generated "maxretry" during the last "findtime"
+# seconds.
+findtime = 600
+
+[sshd]
+enabled = true
+maxretry = 4
+
+[sshd-ddos]
+enabled = true
+
+[nginx-http-auth]
+enabled = false
+
+[apache-auth]
+enabled = false
+
+[proftpd]
+enabled = false
+backend  = polling
+journalmatch =
+
+[nginx-x00]
+enabled  = false
+port     = http,https
+filter   = nginx-x00
+logpath  = %(nginx_access_log)s
+bantime  = 86400
+maxretry = 1
+
+[nginx-wordpress]
+enabled  = false
+port     = http,https
+filter   = nginx-wordpress
+logpath  = %(nginx_access_log)s
+bantime  = 86400
+maxretry = 1
+
+[nginx-scripts]
+enabled  = false
+port     = http,https
+filter   = nginx-scripts
+logpath  = %(nginx_access_log)s
+bantime  = 86400
+maxretry = 1
+
+[nginx-shells]
+enabled  = false
+port     = http,https
+filter   = nginx-shells
+logpath  = %(nginx_access_log)s
+bantime  = 86400
+maxretry = 1

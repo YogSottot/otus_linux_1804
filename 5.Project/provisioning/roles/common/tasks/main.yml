@@ -1,0 +1,13 @@
+---
+
+- yum: name="{{ item }}" state=present
+  with_items:
+    - epel-release
+    - zip
+    - unzip
+    - bzip2
+    - wget
+    - libselinux-python
+    - policycoreutils-python
+    - git
+    - curl

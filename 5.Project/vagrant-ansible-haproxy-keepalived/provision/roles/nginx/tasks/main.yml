@@ -1,0 +1,18 @@
+---
+#Installing nginx web server server from YUM
+- name: Install EPEL repository
+  yum: name=epel-release state=present
+
+- name: Installing nginx web server
+  yum: name=nginx state=present update_cache=true
+  notify: start nginx
+
+- name: Copying nginx.conf
+  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+  notify: restart nginx
+
+- name: Adding permissive access
+  command: semanage permissive -a httpd_t
+
+- name: Enable nginx to be started at boot
+  service: name=nginx enabled=yes state=started

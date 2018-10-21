@@ -1,0 +1,7 @@
+---
+
+- name: start keepalived
+  service: name=keepalived state=started
+
+- name: restart keepalived
+  service: name=keepalived state=restarted

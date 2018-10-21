@@ -1,0 +1,12 @@
+---
+
+- name: install haproxy
+  yum: name=haproxy state=present
+  tags: haproxy
+
+- name: deploy haproxy config
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+  notify: restart haproxy
+
+- name: Enable haproxy to be started at boot
+  service: name=haproxy enabled=yes state=started

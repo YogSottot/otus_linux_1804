@@ -1,5 +1,5 @@
 # HAProxy
-Install HAProxy on Centos/Red Hat with Ansible
+Install HAProxy 1.8 from SCL on Centos with Ansible
 
 ## Installation
 

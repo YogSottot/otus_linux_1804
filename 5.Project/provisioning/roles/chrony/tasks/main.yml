@@ -1,14 +1,16 @@
 ---
   - name: install chrony
-    yum: name={{ item }} state=latest 
-    with_items:
-     - chrony
+    yum: 
+     name: ['chrony']
+     state: latest 
+
   - name: disable ntp
     ignore_errors: True
     service:
      name: ntpd
      state: stopped
      enabled: no
+
   - name: start chronyd
     service:
      name: chronyd

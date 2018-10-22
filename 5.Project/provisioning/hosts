@@ -1,0 +1,13 @@
+[webservers]
+web1  ansible_ssh_host=10.0.5.20
+web2  ansible_ssh_host=10.0.5.21
+
+[lblservers]
+balancer1  ansible_ssh_host=10.0.5.10
+balancer2  ansible_ssh_host=10.0.5.11
+
+[keepalived_master]
+balancer1  ansible_ssh_host=10.0.5.10
+
+[keepalived_backup]
+balancer2  ansible_ssh_host=10.0.5.11

@@ -1,4 +1,5 @@
 ---
+# playbook.yml file.
 - hosts: all
   become: yes
   roles:
@@ -6,7 +7,42 @@
    - packages
    - chrony
    - liquidprompt
-   - fail2ban
+#   - fail2ban
 
-     
+- hosts: webservers
+  become: yes
+  roles:
+   - nginx
 
+- hosts: lblservers
+  user: root
+  become: true
+  become_user: root
+  roles:
+   - haproxy
+
+- hosts: keepalived_master
+  user: root
+  become: true
+  become_user: root
+  roles:
+   - keepalived
+  vars:
+   interface: eth1
+   virtual_router_id: 1
+   virtual_ipaddress: 10.0.5.81
+   priority: 101
+   secret_passwd: ZcnG9lGUoZeM3nFT
+
+- hosts: keepalived_backup
+  user: root
+  become: true
+  become_user: root
+  roles:
+   - keepalived
+  vars:
+   interface: eth1
+   virtual_router_id: 1
+   virtual_ipaddress: 10.0.5.81
+   priority: 100
+   secret_passwd: ZcnG9lGUoZeM3nFT

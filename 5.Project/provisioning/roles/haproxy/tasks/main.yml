@@ -1,12 +1,16 @@
 ---
-
-- name: install haproxy
-  yum: name=haproxy state=present
+- name: install centos-release-scl
+  yum: name=centos-release-scl state=present
   tags: haproxy
 
+- name: Install haproxy
+  yum:
+   name: ['rh-haproxy18-haproxy', 'rh-haproxy18-haproxy-syspaths']
+   state: present
+
 - name: deploy haproxy config
-  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+  template: src=haproxy.cfg.j2 dest=/etc/opt/rh/rh-haproxy18/haproxy/haproxy.cfg
   notify: restart haproxy
 
 - name: Enable haproxy to be started at boot
-  service: name=haproxy enabled=yes state=started
+  service: name=rh-haproxy18-haproxy enabled=yes state=started

@@ -1,17 +1,20 @@
 ---
- - name: install epel
-   yum: name={{ item }} state=latest 
-   with_items:
-    - fail2ban
- - name: copy filters
-   copy: src={{ item }} dest=/etc/fail2ban/filter.d/
-   with_fileglob:
-     - nginx-*
- - name: copy jail.local
-   copy: src=jail.local dest=/etc/fail2ban/jail.local
- - name: start fail2ban
-   service:
-    name: fail2ban
-    state: restarted
-    enabled: yes
+- name: Install fail2ban
+  yum:
+   name: ['fail2ban']
+   state: present
+   
+- name: copy filters
+  copy: src={{ item }} dest=/etc/fail2ban/filter.d/
+  with_fileglob:
+   - nginx-*
+     
+- name: copy jail.local
+  copy: src=jail.local dest=/etc/fail2ban/jail.local
+
+- name: start fail2ban
+  service:
+   name: fail2ban
+   state: restarted
+   enabled: yes
 

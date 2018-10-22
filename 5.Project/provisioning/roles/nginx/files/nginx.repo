@@ -1,0 +1,5 @@
+[nginx]
+name=nginx repo
+baseurl=http://rpms.southbridge.ru/rhel7/stable/$basearch/
+gpgcheck=0
+enabled=1

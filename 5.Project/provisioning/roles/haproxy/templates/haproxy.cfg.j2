@@ -1,6 +1,19 @@
 #---------------------------------------------------------------------
 # Global settings
 #---------------------------------------------------------------------
+    # to have these messages end up in /var/opt/rh/rh-haproxy18/log/haproxy.log you will
+    # need to:
+    #
+    # 1) configure syslog to accept network log events.  This is done
+    #    by adding the '-r' option to the SYSLOGD_OPTIONS in
+    #    /etc/sysconfig/syslog
+    #
+    # 2) configure local2 events to go to the /var/opt/rh/rh-haproxy18/log/haproxy.log
+    #   file. A line like the following can be added to
+    #   /etc/sysconfig/syslog
+    #
+    #    local2.*                       /var/opt/rh/rh-haproxy18/log/haproxy.log
+    #
 global
     log         127.0.0.1 local2     #Log configuration
 
@@ -13,6 +26,10 @@ global
 
     # turn on stats unix socket
     stats socket /var/lib/haproxy/stats
+    
+	# utilize system-wide crypto-policies
+    ssl-default-bind-ciphers PROFILE=SYSTEM
+    ssl-default-server-ciphers PROFILE=SYSTEM
 
 #---------------------------------------------------------------------
 # common defaults that all the 'listen' and 'backend' sections will
@@ -39,7 +56,8 @@ defaults
 #---------------------------------------------------------------------
 #HAProxy Monitoring Config
 #---------------------------------------------------------------------
-listen haproxy-stat *:8080                #Haproxy Monitoring run on port 8080
+listen haproxy-stat                 #Haproxy Monitoring run on port 8080
+    bind *:8080
     mode http
     option forwardfor
     option httpclose
@@ -66,7 +84,7 @@ frontend main
 #---------------------------------------------------------------------
 
 backend app-main
-    balance roundrobin                                   #Balance algorithm
+    balance leastconn                                   #Balance algorithm
 {% for host in groups['webservers'] %}
     server {{ host }} {{ hostvars[host]['ansible_ssh_host'] }}:{{ port }} check
 {% endfor %}

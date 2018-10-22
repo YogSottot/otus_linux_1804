@@ -1,6 +1,5 @@
 ---
-
-- yum: name="{{ item }}" state=present
-  with_items:
-    - epel-release
-    - keepalived
+- name: Install packages
+  yum:
+    name: ['epel-release', 'keepalived']
+    state: present

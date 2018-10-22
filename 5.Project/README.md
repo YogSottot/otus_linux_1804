@@ -45,3 +45,4 @@ https://github.com/hanru/ansible-lsyncd
 https://github.com/leucos/ansible-lsyncd-fanout
 https://github.com/lchabert/ansible-lsyncd
 https://github.com/ccremer/ansible-lsyncd
+https://www.digitalocean.com/community/tutorials/how-to-share-php-sessions-on-multiple-memcached-servers-on-ubuntu-14-04

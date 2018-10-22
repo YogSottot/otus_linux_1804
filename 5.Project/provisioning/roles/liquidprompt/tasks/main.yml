@@ -8,4 +8,4 @@
  - name: copy liquidpromprc
    copy: src=liquidpromptrc dest=/root/.config/liquidpromptrc owner=root group=root mode=0600
  - name: copy bashrc
-   copy: src=bashrc dest=/root/.bashrc owner=root group=root mode=0600   
+   copy: src=bashrc dest=/root/.bashrc owner=root group=root mode=0600

@@ -1,8 +1,8 @@
 ---
   - name: install chrony
-    yum: 
+    yum:
      name: ['chrony']
-     state: latest 
+     state: present
 
   - name: disable ntp
     ignore_errors: True

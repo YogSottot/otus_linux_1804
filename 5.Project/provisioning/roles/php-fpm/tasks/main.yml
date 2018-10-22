@@ -1,0 +1,25 @@
+---
+- name: Copy the REMI repository definition
+  copy: src=remi.repo dest=/etc/yum.repos.d/
+
+- name: Copy the REMI-php72 repository definition
+  copy: src=remi-php72.repo dest=/etc/yum.repos.d/
+
+- name: Create the GPG key for REMI
+  copy: src=RPM-GPG-KEY-remi dest=/etc/pki/rpm-gpg
+
+- name: Install php-fpm and deps
+  yum:
+   name: ['php-fpm', 'php-enchant', 'php-IDNA_Convert', 'php-mbstring', 'php-mysql', 'php-PHPMailer', 'php-process', 'php-simplepie', 'php-xml']
+   state: present
+
+- name: Disable default pool
+  command: mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.disabled creates=/etc/php-fpm.d/www.disabled
+  notify: reload php-fpm
+
+- name: Copy php-fpm configuration
+  template: src=wordpress.conf dest=/etc/php-fpm.d/
+  notify: reload php-fpm
+
+- name: php-fpm service state
+  service: name=php-fpm state=started enabled=yes

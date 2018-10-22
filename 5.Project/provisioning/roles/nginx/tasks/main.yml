@@ -2,34 +2,47 @@
 #Installing nginx web server server from YUM
 - name: copy nginx.repo
   copy: src=nginx.repo dest=/etc/yum.repos.d/nginx.repo
-  
+
+- name: Create the GPG key for NGINX
+  copy: src=RPM-GPG-KEY-NGINX dest=/etc/pki/rpm-gpg
+
 - name: Installing nginx web server
   yum: name=nginx state=present update_cache=true
   notify: start nginx
 
-- name: Copying nginx.conf
-  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+#- name: Copying nginx.conf
+#  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
+#  notify: reload nginx
+
+- name: Copy nginx configuration for wordpress
+  template: src=default.conf.j2 dest=/etc/nginx/conf.d/default.conf
   notify: restart nginx
 
 - name: Adding permissive access
   command: semanage permissive -a httpd_t
+  tags:
+  - skip_ansible_lint
 
 - name: Enable nginx to be started at boot
   service: name=nginx enabled=yes state=started
-  
+
 - name: Install Firewalld
   yum: name=firewalld state=present
-  
+
 - name: Firewalld service state
   service: name=firewalld state=started enabled=yes
-  
+
+- name: insert firewalld rule for nginx
+  firewalld: port={{ nginx_port }}/tcp permanent=true state=enabled immediate=yes
+  ignore_errors: yes
+
 - name: firewalld open http
   firewalld:
    service: http
    permanent: true
    immediate: true
    state: enabled
-   
+
 - name: firewalld open https
   firewalld:
    service: https

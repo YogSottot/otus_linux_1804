@@ -12,7 +12,11 @@
 - hosts: webservers
   become: yes
   roles:
+   - mariadb
    - nginx
+   - php-fpm
+   - wordpress
+
 
 - hosts: lblservers
   user: root

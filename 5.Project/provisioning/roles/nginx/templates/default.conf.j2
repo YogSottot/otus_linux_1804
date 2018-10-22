@@ -1,0 +1,33 @@
+server {
+        listen       {{ nginx_port }} default_server;
+        server_name  {{ server_hostname }};
+        root /srv/wordpress/ ;
+		
+		index index.php; 
+		client_max_body_size 64M;
+ 
+	# Deny access to any files with a .php extension in the uploads directory
+        location ~* /(?:uploads|files)/.*\.php$ {
+                deny all;
+        }
+ 
+        location / {
+                try_files $uri $uri/ /index.php?$args;
+        }
+ 
+        location ~* \.(css|js|gif|png|jpg|jpeg|ico|ogg|ttf|woff|woff2|eot|otf|txt|json|log|svg)$ {
+                expires max;
+				access_log   off;
+				log_not_found off;
+        }
+ 
+        location ~ \.php$ {
+                try_files $uri =404;
+                fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                fastcgi_index index.php;
+                fastcgi_pass  unix:/var/run/php-fpm/wordpress.sock;
+                fastcgi_param   SCRIPT_FILENAME
+                                $document_root$fastcgi_script_name;
+                include       fastcgi_params;
+        }
+}

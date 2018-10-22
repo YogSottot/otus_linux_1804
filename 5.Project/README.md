@@ -40,3 +40,8 @@
 1 сервер для логирования и бэкапов
 - elk
 - sftp
+
+https://github.com/hanru/ansible-lsyncd
+https://github.com/leucos/ansible-lsyncd-fanout
+https://github.com/lchabert/ansible-lsyncd
+https://github.com/ccremer/ansible-lsyncd

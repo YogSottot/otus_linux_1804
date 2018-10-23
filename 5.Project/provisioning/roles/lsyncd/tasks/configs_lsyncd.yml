@@ -1,0 +1,48 @@
+---
+# lsync_server: cluster_web_server|new_web_server
+# lsync_config: balancer|backend
+# lsync_started: true|false
+# lsync_server_version: 6|7
+- name: create lsyncd config
+  template:
+    src: "{{ lsync_config }}-lsyncd.conf.j2"
+    dest: "/etc/lsyncd-{{ inventory_hostname }}.conf"
+
+- name: create lsyncd sysconfig
+  template: 
+    src: sysconfig-lsyncd.j2
+    dest: "/etc/sysconfig/lsyncd-{{ inventory_hostname }}"
+
+- name: create lsyncd logrotate config
+  template: 
+    src: logrotate-lsyncd.j2 
+    dest: /etc/logrotate.d/lsyncd
+
+# Centos 7
+- name: create systemd lsyncd service
+  template: 
+    src: systemd-lsyncd.service.j2
+    dest: "/etc/systemd/system/lsyncd-{{ inventory_hostname }}.service"
+
+- name: create tmpfiles.d lsyncd config
+  template: 
+    src: tmpfiles.d-lsyncd.conf.j2
+    dest: /etc/tmpfiles.d/lsyncd.conf
+
+- name: create tmp directory for lsyncd
+  shell: systemd-tmpfiles --create /etc/tmpfiles.d/lsyncd.conf
+  args:
+    creates: /var/run/lsyncd
+
+- name: create tmp directory for lsyncd
+  file: path={{ item }}
+    state=directory owner={{ site_user }} group={{ site_user }}
+  with_items:
+    - /var/run/lsyncd
+    - /var/log/lsyncd
+
+# enable service
+- name: enable service lsyncd
+  service: name=lsyncd-{{ inventory_hostname }} state=started enabled=yes
+
+

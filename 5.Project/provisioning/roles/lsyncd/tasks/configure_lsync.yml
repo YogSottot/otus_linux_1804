@@ -1,0 +1,69 @@
+---
+# initial synchronize for site configs and site data
+- name: install lsync
+  yum: name=lsyncd state=latest
+  tags: lsyncd
+
+# ssh keys
+- name: create ssh-key for site user
+  user: name={{ site_user }} generate_ssh_key=yes ssh_key_bits=2048 ssh_key_file=/home/{{ site_user }}/.ssh/id_rsa_lsyncd
+  
+- name: Copy Remote-To-Remote (from source to target_server)
+  synchronize: 
+   src: /home/{{ site_user }}/.ssh/id_rsa_lsyncd.pub
+   dest: /home/{{ site_user }}/.ssh/id_rsa_lsyncd_{{ inventory_hostname }}.pub
+   mode: pull
+  delegate_to: {{ target_server }}
+
+- name: install balancer key on backend
+  authorized_key:
+    user: {{ site_user }}
+    key: "{{ lookup('file', '/home/{{ site_user }}/.ssh/id_rsa_lsyncd_{{ inventory_hostname }}.pub') }}"
+  delegate_to: {{ target_server }}
+
+- name: pull backend key on balancer
+  synchronize:
+    mode: pull
+    src: /home/{{ site_user }}/.ssh/id_rsa_lsyncd.pub
+    dest: "/home/{{ site_user }}/.ssh/id_rsa-{{ inventory_hostname }}.pub"
+  delegate_to: {{ target_server }}
+
+- name: install backend key on balancer
+  authorized_key:
+    user: {{ site_user }}
+    key: "{{ lookup('file', '/home/{{ site_user }}/.ssh/id_rsa-'+new_web_server+'.pub' ) }}"
+  when: "inventory_hostname == cluster_web_server"
+
+# configure inotify watches options
+- name: update sysctl.conf for max_user_watches
+  sysctl: 
+    name: fs.inotify.max_user_watches
+    value: 1500000
+    reload: yes
+  when: "inventory_hostname == cluster_web_server or inventory_hostname == new_web_server"
+
+- name: update sysctl.conf for max_queued_events
+  sysctl: 
+    name: fs.inotify.max_queued_events
+    value: 65536
+    reload: yes
+  when: "inventory_hostname == cluster_web_server or inventory_hostname == new_web_server"
+
+# BALANCER
+- include: configs_lsyncd.yml
+  vars:
+    lsync_server: "{{ cluster_web_server }}"
+    lsync_config: "balancer"
+    lsync_started: true
+    lsync_server_version: "{{ lb_distribution_version }}"
+  when: "inventory_hostname == new_web_server"
+
+# BACKEND
+- include: configs_lsyncd.yml
+  vars:
+    lsync_server: "{{ new_web_server }}"
+    lsync_config: "balancer"
+    lsync_started: false
+    lsync_server_version: "{{ backend_distribution_version }}"
+  when: "inventory_hostname == cluster_web_server"
+

@@ -1,0 +1,7 @@
+---
+# systemd-tmpfiles
+- name: systemd-tmpfiles-create
+  shell: systemd-tmpfiles --create 
+
+- name: restart service lsyncd
+  service: name=lsyncd-{{ cluster_web_server }} state=started enabled=yes

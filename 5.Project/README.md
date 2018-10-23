@@ -46,3 +46,15 @@ https://github.com/leucos/ansible-lsyncd-fanout
 https://github.com/lchabert/ansible-lsyncd
 https://github.com/ccremer/ansible-lsyncd
 https://www.digitalocean.com/community/tutorials/how-to-share-php-sessions-on-multiple-memcached-servers-on-ubuntu-14-04
+
+https://github.com/JRemitz/ansible-role-redis-cluster
+https://github.com/debops/ansible-redis
+https://github.com/alainchiasson/redis
+https://github.com/DavidWittman/ansible-redis
+https://github.com/idealista/redis-role
+https://github.com/Joeskyyy/redis_cluster
+https://github.com/geerlingguy/ansible-role-redis
+https://github.com/phpredis/phpredis/blob/master/cluster.markdown#sessionsave_path
+
+https://github.com/116davinder/memcached-cluster-ansible
+https://github.com/geerlingguy/ansible-role-memcached

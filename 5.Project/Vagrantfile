@@ -6,14 +6,15 @@
 MACHINES = {
 :balancer1 => {
                :box_name => "centos/7",
+               :public => {:ip => '192.168.0.110', :adapter => 3 },
                :net => [
-              #              {ip: '192.168.1.2', adapter: 2, netmask: "255.255.255.240", virtualbox__intnet: "router-net"},
-                       {ip: '10.0.5.10', adapter: 2, netmask: "255.255.255.0"},
+                        {ip: '10.0.5.10', adapter: 2, netmask: "255.255.255.0"},
                        ]
  },
 	
 :balancer2 => {
                :box_name => "centos/7",
+               :public => {:ip => '192.168.0.111', :adapter => 3 },
                :net => [
 					   {ip: '10.0.5.11', adapter: 2, netmask: "255.255.255.0"},
                        ]
@@ -22,6 +23,7 @@ MACHINES = {
 
 :web1 => {
           :box_name => "centos/7",
+          :public => {:ip => '192.168.0.120', :adapter => 3 },
           :net => [
                   {ip: '10.0.5.20', adapter: 2, netmask: "255.255.255.0"},
                   ]
@@ -29,13 +31,14 @@ MACHINES = {
 	
 :web2 => {
 		:box_name => "centos/7",
+		:public => {:ip => '192.168.0.121', :adapter => 3 },
 		:net => [
-				{ip: '10.0.5.21', adapter: 2, netmask: "255.255.255.240"},
+				{ip: '10.0.5.21', adapter: 2, netmask: "255.255.255.0"},
 				]
  },
 
 }
-#    :public => {:ip => '192.168.0.254', :adapter => 3 }, 
+
 
 Vagrant.configure("2") do |config|
 

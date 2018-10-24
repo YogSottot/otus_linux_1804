@@ -1,69 +1,118 @@
 ---
 # initial synchronize for site configs and site data
+- name: check epel
+  yum: name=epel-release state=present
+  tags: lsyncd
+
 - name: install lsync
-  yum: name=lsyncd state=latest
+  yum: name=lsyncd state=present
   tags: lsyncd
 
 # ssh keys
 - name: create ssh-key for site user
-  user: name={{ site_user }} generate_ssh_key=yes ssh_key_bits=2048 ssh_key_file=/home/{{ site_user }}/.ssh/id_rsa_lsyncd
-  
-- name: Copy Remote-To-Remote (from source to target_server)
-  synchronize: 
-   src: /home/{{ site_user }}/.ssh/id_rsa_lsyncd.pub
-   dest: /home/{{ site_user }}/.ssh/id_rsa_lsyncd_{{ inventory_hostname }}.pub
-   mode: pull
-  delegate_to: {{ target_server }}
+  user: name="{{ site_user }}" generate_ssh_key=yes ssh_key_bits=2048 ssh_key_file=/home/{{ site_user }}/.ssh/id_rsa
 
-- name: install balancer key on backend
-  authorized_key:
-    user: {{ site_user }}
-    key: "{{ lookup('file', '/home/{{ site_user }}/.ssh/id_rsa_lsyncd_{{ inventory_hostname }}.pub') }}"
-  delegate_to: {{ target_server }}
+- name: fetch all public ssh keys
+  shell: cat ~/.ssh/id_rsa.pub
+  become: yes
+  become_user: "{{ site_user }}"
+  register: ssh_keys
+  tags:
+   - ssh
+   - skip_ansible_lint
 
-- name: pull backend key on balancer
-  synchronize:
-    mode: pull
-    src: /home/{{ site_user }}/.ssh/id_rsa_lsyncd.pub
-    dest: "/home/{{ site_user }}/.ssh/id_rsa-{{ inventory_hostname }}.pub"
-  delegate_to: {{ target_server }}
+- name: check keys
+  debug: msg="{{ ssh_keys.stdout }}"
+  tags:
+   - ssh
 
-- name: install backend key on balancer
-  authorized_key:
-    user: {{ site_user }}
-    key: "{{ lookup('file', '/home/{{ site_user }}/.ssh/id_rsa-'+new_web_server+'.pub' ) }}"
-  when: "inventory_hostname == cluster_web_server"
+- name: deploy keys on all servers
+  authorized_key: user="{{ site_user }}" key="{{ item[0] }}"
+  delegate_to: "{{ item[1] }}"
+  with_nested:
+   - "{{ ssh_keys.stdout }}"
+   - "{{groups['webservers']}}"
+  tags:
+   - ssh
+# start block that needed only because web2 don't started when web1 is up in vagrant
+  when: inventory_hostname == "web2"
+
+- name: fetch public ssh key web1
+  become: yes
+  become_user: "{{ site_user }}"
+  fetch:
+   src: ~/.ssh/id_rsa.pub
+   dest: /tmp/id_rsa.pub
+   flat: yes
+  when: inventory_hostname == "web1"
+
+- name: fetch public ssh key web1
+  become: yes
+  become_user: "{{ site_user }}"
+  copy:
+   src: /tmp/id_rsa.pub
+   dest: ~/.ssh/id_rsa_web1.pub
+  when: inventory_hostname == "web2"
+
+- name: fetch web1 public ssh key
+  shell: cat ~/.ssh/id_rsa_web1.pub
+  become: yes
+  become_user: "{{ site_user }}"
+  register: ssh_keys_web1
+  tags:
+   - ssh
+   - skip_ansible_lint
+  when: inventory_hostname == "web2"
+
+- name: deploy keys on all servers
+  authorized_key: user="{{ site_user }}" key="{{ item[0] }}"
+  become: yes
+  become_user: "{{ site_user }}"
+  with_nested:
+   - "{{ ssh_keys_web1.stdout }}"
+   - "{{groups['webservers']}}"
+  tags:
+   - ssh
+  when: inventory_hostname == "web2"
+# end block that needed only because web2 don't started when web1 is up in vagrant
+
+- name: check host in ssh known_hosts on backend
+  shell: ssh-keyscan -H -T 10 {{ groups['ssh'][1] }} >> /etc/ssh/ssh_known_hosts
+  when: inventory_hostname == "web1"
+  tags:
+   - ssh
+   - skip_ansible_lint
+#  ignore_errors: yes
+
+- name: check host in ssh known_hosts on balancer
+  shell: ssh-keyscan -H -T 10 {{ groups['ssh'][0] }} >> /etc/ssh/ssh_known_hosts
+  when: inventory_hostname == "web2"
+  tags:
+   - ssh
+   - skip_ansible_lint
+#  ignore_errors: yes
 
 # configure inotify watches options
 - name: update sysctl.conf for max_user_watches
-  sysctl: 
-    name: fs.inotify.max_user_watches
-    value: 1500000
-    reload: yes
-  when: "inventory_hostname == cluster_web_server or inventory_hostname == new_web_server"
+  sysctl:
+   name: fs.inotify.max_user_watches
+   value: 1500000
+   reload: yes
 
 - name: update sysctl.conf for max_queued_events
-  sysctl: 
-    name: fs.inotify.max_queued_events
-    value: 65536
-    reload: yes
-  when: "inventory_hostname == cluster_web_server or inventory_hostname == new_web_server"
+  sysctl:
+   name: fs.inotify.max_queued_events
+   value: 65536
+   reload: yes
 
-# BALANCER
 - include: configs_lsyncd.yml
   vars:
-    lsync_server: "{{ cluster_web_server }}"
-    lsync_config: "balancer"
-    lsync_started: true
-    lsync_server_version: "{{ lb_distribution_version }}"
-  when: "inventory_hostname == new_web_server"
+   target: "{{ groups['ssh'][1] }}"
+   lsync_started: true
+  when: inventory_hostname == "web1"
 
-# BACKEND
 - include: configs_lsyncd.yml
   vars:
-    lsync_server: "{{ new_web_server }}"
-    lsync_config: "balancer"
-    lsync_started: false
-    lsync_server_version: "{{ backend_distribution_version }}"
-  when: "inventory_hostname == cluster_web_server"
-
+   target: "{{ groups['ssh'][0] }}"
+   lsync_started: true
+  when: inventory_hostname == "web2"

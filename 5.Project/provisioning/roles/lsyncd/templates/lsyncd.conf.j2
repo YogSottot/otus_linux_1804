@@ -26,9 +26,9 @@ settings {
 -- Settings start
 sync {
   default.rsyncssh,
-  host        = "{{ inventory_hostname }}",
-  source      = "{{ s.DocumentRoot }}/",
-  targetdir   = "{{ s.DocumentRoot }}/",
+  host        = "{{ target }}",
+  source      = "{{ DocumentRoot }}/",
+  targetdir   = "{{ DocumentRoot }}/",
   exclude   = {
     "*.log",
   },
@@ -37,8 +37,10 @@ sync {
     compress    = true,
     owner       = true,
     perms       = true,
+    update      = true,
+    temp_dir    = "/tmp",
   },
   delay = 5,
-  maxProcesses = 2,
+  maxProcesses = 1,
 }
 -- Settings end

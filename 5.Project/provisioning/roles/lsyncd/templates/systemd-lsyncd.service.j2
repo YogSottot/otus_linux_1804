@@ -6,7 +6,10 @@ After=network.target
 Type=simple
 Nice=19
 EnvironmentFile=-/etc/sysconfig/lsyncd-{{ inventory_hostname }}
-ExecStart=/usr/bin/sh -c 'eval `/usr/bin/lsyncd -nodaemon $LSYNCD_OPTIONS`'
+PIDFile=/var/run/{{ inventory_hostname }}.pid
+ExecStart=/usr/bin/lsyncd -nodaemon $LSYNCD_OPTIONS
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
 User={{ site_user }}
 Group={{ site_user }}
 

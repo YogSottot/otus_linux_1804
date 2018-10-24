@@ -1,4 +1,10 @@
 ---
+- name: Add group "wordpress"
+  group: name=wordpress
+
+- name: Add user "wordpress"
+  user: name=wordpress group=wordpress home=/home/wordpress
+
 - name: Download WordPress
   get_url:
    url: https://ru.wordpress.org/wordpress-{{ wp_version }}-ru_RU.tar.gz
@@ -6,22 +12,16 @@
    checksum: sha256:{{ wp_sha256sum }}
 
 - name: Extract archive
-#  command: chdir=/srv/ /bin/tar xvf wordpress-{{ wp_version }}.tar.gz creates=/srv/wordpress
   unarchive:
     src: /srv/wordpress-{{ wp_version }}.tar.gz
-    dest: /srv/wordpress
+    dest: /srv/
     remote_src: yes
-
-- name: Add group "wordpress"
-  group: name=wordpress
-
-- name: Add user "wordpress"
-  user: name=wordpress group=wordpress home=/srv/wordpress/
 
 - name: Fetch random salts for WordPress config
   local_action: command curl https://api.wordpress.org/secret-key/1.1/salt/
   register: "wp_salt"
   become: no
+  warn: False
   tags:
   - skip_ansible_lint
 

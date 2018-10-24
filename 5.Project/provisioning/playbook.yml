@@ -3,19 +3,19 @@
 - hosts: all
   become: yes
   roles:
-   - sysctl
-   - packages
-   - chrony
-   - liquidprompt
+#   - sysctl
+#   - packages
+#   - chrony
+#   - liquidprompt
 #   - fail2ban
 
 - hosts: webservers
   become: yes
   roles:
-   - mariadb
-   - nginx
-   - php-fpm
-   - wordpress
+#   - mariadb
+#   - wordpress
+#   - nginx
+#   - php-fpm
    - lsyncd
 
 

@@ -1,0 +1,37 @@
+---
+
+  - name: Generate certs (on control machine); requires Galaxy role "easypath.generate-tls-certs"
+    import_role: 
+      name: easypath.generate-tls-certs
+    vars:
+      # @AB TODO: Percona not compatible with SAN-certs
+      - tls_server_enable_san: false
+
+  - name: Create certificate folder
+    file:
+      path: "{{cert_dest_path}}"
+      state: directory
+      owner: mysql
+      group: mysql
+      mode: 0750
+      seuser: system_u
+      setype: mysqld_db_t
+    become: yes
+
+  - name: Copy TLS certificates
+    copy: 
+      src: "{{item.src}}"
+      dest: "{{item.dest}}"
+      owner: mysql
+      group: mysql
+      mode: 0640
+      seuser: system_u
+      setype: mysqld_db_t
+    become: yes
+    with_items:
+      - { src: "{{cert_dir}}/{{tls_ca_cert}}", dest: "{{cert_dest_path}}/{{tls_ca_cert}}" }
+      - { src: "{{cert_dir}}/{{inventory_hostname_short}}.pem", dest: "{{cert_dest_path}}/{{inventory_hostname_short}}.pem" }
+      - { src: "{{cert_dir}}/{{inventory_hostname_short}}.key", dest: "{{cert_dest_path}}/{{inventory_hostname_short}}.key" }
+    when:
+      - tls_ca_cert is defined
+

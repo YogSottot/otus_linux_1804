@@ -6,4 +6,4 @@
   - skip_ansible_lint
 
 - name: restart service lsyncd
-  service: name=lsyncd-{{ cluster_web_server }} state=started enabled=yes
+  service: name=lsyncd-{{ inventory_hostname }} state=started enabled=yes

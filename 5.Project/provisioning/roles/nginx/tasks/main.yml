@@ -10,12 +10,12 @@
   yum: name=nginx state=present update_cache=true
   notify: start nginx
 
-#- name: Copying nginx.conf
-#  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
-#  notify: reload nginx
-
 - name: Copy nginx configuration for wordpress
   template: src=default.conf.j2 dest=/etc/nginx/conf.d/default.conf
+  notify: reload nginx
+
+- name: Copy nginx configuration for nginx
+  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
   notify: reload nginx
 
 - name: Adding permissive access

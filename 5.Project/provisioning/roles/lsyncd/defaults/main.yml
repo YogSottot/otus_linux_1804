@@ -1,4 +1,4 @@
 ---
 lsync_logdir: /var/log/lsyncd
 site_user: wordpress
-DocumentRoot: /home/wordpress/www
+DocumentRoot: /srv/wordpress

@@ -1,0 +1,32 @@
+[mysqld]
+bind-address={{percona_bind_ip}}
+
+# Require clients to connect using TLS
+require_secure_transport = ON
+
+# @AB TODO: MySQL Shell and Workbench CE currently uses yaSSL instead of OpenSSL, 
+# therefore cannot connect when MySQL server configured for TLSv1.2 exclusively
+# tls_version=TLSv1.2
+tls_version=TLSv1.1,TLSv1.2
+
+# TLS certificates
+ssl-ca={{cert_dest_path}}/{{tls_ca_cert}}
+ssl-cert={{cert_dest_path}}/{{inventory_hostname_short}}.pem
+ssl-key={{cert_dest_path}}/{{inventory_hostname_short}}.key
+
+{% if config_cluster %}
+# Percona XtraDB Cluster config
+wsrep_provider=/usr/lib64/galera3/libgalera_smm.so
+
+wsrep_cluster_name={{wsrep_cluster_name}}
+wsrep_cluster_address={{wsrep_cluster_address}}
+wsrep_sst_method=xtrabackup-v2
+wsrep_sst_auth={{wsrep_sst_user}}:{{wsrep_sst_password}}
+
+pxc_encrypt_cluster_traffic=ON
+pxc_strict_mode=ENFORCING
+
+binlog_format=ROW
+default_storage_engine=InnoDB
+innodb_autoinc_lock_mode=2
+{% endif %}

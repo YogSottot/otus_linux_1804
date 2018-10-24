@@ -77,20 +77,24 @@
 # end block that needed only because web2 don't started when web1 is up in vagrant
 
 - name: check host in ssh known_hosts on backend
-  shell: ssh-keyscan -H -T 10 {{ groups['ssh'][1] }} >> /etc/ssh/ssh_known_hosts
-  when: inventory_hostname == "web1"
-  tags:
-   - ssh
-   - skip_ansible_lint
-#  ignore_errors: yes
-
-- name: check host in ssh known_hosts on balancer
-  shell: ssh-keyscan -H -T 10 {{ groups['ssh'][0] }} >> /etc/ssh/ssh_known_hosts
+  shell: ssh-keyscan -H -T 10 {{ hostvars[host]['ansible_ssh_host'][1] }} >> /etc/ssh/ssh_known_hosts
+  delegate_to: web1
   when: inventory_hostname == "web2"
   tags:
    - ssh
    - skip_ansible_lint
-#  ignore_errors: yes
+
+- name: check host in ssh known_hosts on balancer
+  shell: ssh-keyscan -H -T 10 {{ hostvars[host]['ansible_ssh_host'][0] }} >> /etc/ssh/ssh_known_hosts
+  when: inventory_hostname == "web2"
+  tags:
+   - ssh
+   - skip_ansible_lint
+
+- name: restart service lsyncd
+  service: name=lsyncd-web1 state=restarted enabled=yes
+  delegate_to: web1
+  when: inventory_hostname == "web2"
 
 # configure inotify watches options
 - name: update sysctl.conf for max_user_watches
@@ -107,12 +111,12 @@
 
 - include: configs_lsyncd.yml
   vars:
-   target: "{{ groups['ssh'][1] }}"
+   target: "{{ hostvars[host]['ansible_ssh_host'][1] }}"
    lsync_started: true
   when: inventory_hostname == "web1"
 
 - include: configs_lsyncd.yml
   vars:
-   target: "{{ groups['ssh'][0] }}"
+   target: "{{ hostvars[host]['ansible_ssh_host'][0] }}"
    lsync_started: true
   when: inventory_hostname == "web2"

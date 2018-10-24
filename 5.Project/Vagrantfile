@@ -28,12 +28,45 @@ MACHINES = {
                   {ip: '10.0.5.20', adapter: 2, netmask: "255.255.255.0"},
                   ]
  },
-	
+
 :web2 => {
 		:box_name => "centos/7",
 		:public => {:ip => '192.168.0.121', :adapter => 3 },
 		:net => [
 				{ip: '10.0.5.21', adapter: 2, netmask: "255.255.255.0"},
+				]
+ },
+
+	
+:clcontrol => {
+		:box_name => "centos/7",
+		:public => {:ip => '192.168.0.130', :adapter => 3 },
+		:net => [
+				{ip: '10.0.5.30', adapter: 2, netmask: "255.255.255.0"},
+				]
+ },
+
+:cluster1 => {
+		:box_name => "centos/7",
+		:public => {:ip => '192.168.0.131', :adapter => 3 },
+		:net => [
+				{ip: '10.0.5.31', adapter: 2, netmask: "255.255.255.0"},
+				]
+ },
+
+:cluster2 => {
+		:box_name => "centos/7",
+		:public => {:ip => '192.168.0.132', :adapter => 3 },
+		:net => [
+				{ip: '10.0.5.32', adapter: 2, netmask: "255.255.255.0"},
+				]
+ },
+
+:cluster3 => {
+		:box_name => "centos/7",
+		:public => {:ip => '192.168.0.133', :adapter => 3 },
+		:net => [
+				{ip: '10.0.5.33', adapter: 2, netmask: "255.255.255.0"},
 				]
  },
 

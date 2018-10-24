@@ -41,6 +41,6 @@
 
 # enable service
 - name: enable service lsyncd
-  service: name=lsyncd-{{ inventory_hostname }} state=started enabled=yes
+  service: name=lsyncd-{{ inventory_hostname }} state=restarted enabled=yes
 
 

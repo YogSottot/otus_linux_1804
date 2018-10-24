@@ -1,0 +1,5 @@
+---
+percona_cluster_name: xtradb-cluster
+percona_cluster_bootstrap_hostname: "{{ groups.percona[0] }}"
+percona_cluster_stt_user: sstuser
+percona_cluster_stt_password: s3cret

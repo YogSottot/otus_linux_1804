@@ -1,0 +1,34 @@
+---
+  # Add rules
+  - name: Add rule - mysql
+    firewalld:
+      zone: "{{fw_zone_name}}"
+      service: mysql
+      permanent: true
+      state: enabled
+    become: yes
+
+  - name: Add rule - cluster 4444/tcp
+    firewalld:
+      zone: "{{fw_zone_name}}"
+      port: 4444/tcp
+      permanent: true
+      state: enabled
+    become: yes
+    when: config_cluster|bool
+
+  - name: Add rule - cluster 4567-4568/tcp
+    firewalld:
+      zone: "{{fw_zone_name}}"
+      port: 4567-4568/tcp
+      permanent: true
+      state: enabled
+    become: yes
+    when: config_cluster|bool
+
+  - name: Restart firewalld
+    systemd:
+      name: firewalld
+      enabled: yes
+      state: restarted
+    become: yes

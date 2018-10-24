@@ -58,3 +58,8 @@ https://github.com/phpredis/phpredis/blob/master/cluster.markdown#sessionsave_pa
 
 https://github.com/116davinder/memcached-cluster-ansible
 https://github.com/geerlingguy/ansible-role-memcached
+
+https://github.com/easypath/ansible-role-percona-host
+https://github.com/liviuchircu/ansible-role-XtraDB-Cluster
+https://github.com/severalnines/ansible-clustercontrol
+https://github.com/leucos/ansible-pxc

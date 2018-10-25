@@ -18,4 +18,4 @@ clcontrol ansible_ssh_host=192.168.0.130 ansible_ssh_private_key_file=.vagrant/m
 [percona-cluster]
 cluster1 ansible_ssh_host=192.168.0.131 ansible_ssh_private_key_file=.vagrant/machines/cluster1/virtualbox/private_key
 cluster2 ansible_ssh_host=192.168.0.132 ansible_ssh_private_key_file=.vagrant/machines/cluster2/virtualbox/private_key
-cluster3 ansible_ssh_host=192.168.0.134 ansible_ssh_private_key_file=.vagrant/machines/cluster3/virtualbox/private_key
+cluster3 ansible_ssh_host=192.168.0.133 ansible_ssh_private_key_file=.vagrant/machines/cluster3/virtualbox/private_key

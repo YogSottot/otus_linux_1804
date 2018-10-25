@@ -41,10 +41,7 @@
 - elk
 - sftp
 
-https://github.com/hanru/ansible-lsyncd
-https://github.com/leucos/ansible-lsyncd-fanout
-https://github.com/lchabert/ansible-lsyncd
-https://github.com/ccremer/ansible-lsyncd
+
 https://www.digitalocean.com/community/tutorials/how-to-share-php-sessions-on-multiple-memcached-servers-on-ubuntu-14-04
 
 https://github.com/JRemitz/ansible-role-redis-cluster
@@ -59,7 +56,8 @@ https://github.com/phpredis/phpredis/blob/master/cluster.markdown#sessionsave_pa
 https://github.com/116davinder/memcached-cluster-ansible
 https://github.com/geerlingguy/ansible-role-memcached
 
-https://github.com/easypath/ansible-role-percona-host
 https://github.com/liviuchircu/ansible-role-XtraDB-Cluster
-https://github.com/severalnines/ansible-clustercontrol
-https://github.com/leucos/ansible-pxc
+
+
+https://github.com/timorunge/ansible-proxysql
+https://github.com/timorunge/ansible-pmm-client

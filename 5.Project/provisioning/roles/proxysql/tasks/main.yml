@@ -1,0 +1,23 @@
+---
+
+- name: Gather general variables
+  include_vars: main.yml
+
+- name: Gather OS specific variables
+  include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "{{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+      paths:
+        - vars
+
+- include_tasks: facts.yml
+
+- include_tasks: proxysql-official-repo.yml
+
+- include_tasks: install.yml
+
+- include_tasks: config.yml

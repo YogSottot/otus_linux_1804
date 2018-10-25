@@ -13,9 +13,9 @@
   become: yes
   roles:
 #   - mariadb
-#   - wordpress
-#   - nginx
-#   - php-fpm
+   - wordpress
+   - nginx
+   - php-fpm
    - lsyncd
 
 
@@ -51,3 +51,15 @@
    virtual_ipaddress: 10.0.5.81
    priority: 100
    secret_passwd: ZcnG9lGUoZeM3nFT
+
+- hosts: percona-cluster
+  become: true
+  roles:
+   - XtraDB-Cluster
+
+#- hosts: percona-cluster
+#  tasks:
+#    - debug: var=ansible_all_ipv4_addresses
+#    - debug: var=ansible_default_ipv4.address
+#    - debug: var="groups[xtradb_nodes_group] | map('extract', hostvars, ['ansible_' ~ xtradb_bind_interface, 'ipv4', 'address']) | join(',')"
+#    - debug: var="groups[xtradb_nodes_group] | map('extract', hostvars, ['ansible_ssh_host']) | join(',')"

@@ -18,10 +18,9 @@
     remote_src: yes
 
 - name: Fetch random salts for WordPress config
-  local_action: command curl https://api.wordpress.org/secret-key/1.1/salt/
+  local_action: command curl https://api.wordpress.org/secret-key/1.1/salt/ warn=no
   register: "wp_salt"
   become: no
-  warn: False
   tags:
   - skip_ansible_lint
 

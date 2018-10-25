@@ -12,6 +12,13 @@
     group: root
     mode: 0644
 
+- name: Set password to file
+  template:
+    src: .my.cnf.j2
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+
 - name: Configure swappiness
   sysctl:
     name: vm.swappiness
@@ -40,7 +47,7 @@
     login_password: "{{ xtradb_root_password }}"
     user: "{{ xtradb_sst_user }}"
     password: "{{ xtradb_sst_password }}"
-    priv: "*.*:grant,reload,lock tables,process,replication client"
+    priv: "*.*:reload,lock tables,process,replication client"
   when:
     - xtradb_bind_address == xtradb_master_node
 

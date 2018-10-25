@@ -24,6 +24,8 @@ datadir={{ xtradb_datadir }}
 
 {% if xtradb_query_cache_size %}query_cache_size={{ xtradb_query_cache_size }}{% endif %}
 
+{% if xtradb_query_cache_type %}query_cache_type={{ xtradb_query_cache_type }}{% endif %}
+
 {% if xtradb_sort_buffer_size %}sort_buffer_size={{ xtradb_sort_buffer_size }}{% endif %}
 
 {% if xtradb_tmp_table_size %}tmp_table_size={{ xtradb_tmp_table_size }}{% endif %}
@@ -44,6 +46,7 @@ datadir={{ xtradb_datadir }}
 
 {% if xtradb_collation_server %}collation_server={{ xtradb_collation_server }}{% endif %}
 
+{% if xtradb_explicit_defaults_for_timestamp %}explicit_defaults_for_timestamp={{ xtradb_explicit_defaults_for_timestamp }}{% endif %}
 
 {% if xtradb_skip_name_resolve %}# Skip reverse DNS lookup of clients
 skip_name_resolve={{ xtradb_skip_name_resolve }}{% endif %}

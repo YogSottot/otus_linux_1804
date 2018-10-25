@@ -35,7 +35,7 @@ core_update_level: minor
 # Pecrona
 xtradb_root_password: "{{ lookup('password', '/tmp/mysqlpasswordfile_root length=15') }}"
 xtradb_sst_password: "{{ lookup('password', '/tmp/mysqlpasswordfile_sst length=15') }}"
-xtradb_bind_interface: eth2
+xtradb_bind_interface: eth1
 
 xtradb_wsrep_cluster_address: "gcomm://{{ groups[xtradb_nodes_group] | map('extract', hostvars, ['ansible_ssh_host']) | join(',') }}"
 xtradb_master_node: "{{ hostvars[ groups[xtradb_nodes_group][0] ].ansible_ssh_host }}"
@@ -47,6 +47,8 @@ xtradb_character_set_server: "utf8mb4"
 xtradb_collation_server: "utf8mb4_unicode_ci"
 
 xtradb_innodb_buffer_pool_size: "196M"
+xtradb_query_cache_size: "0"
+xtradb_query_cache_type: "0"
 xtradb_innodb_file_per_table: "1"
 xtradb_innodb_flush_log_at_trx_commit: "2"
 

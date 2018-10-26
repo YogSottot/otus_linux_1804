@@ -12,11 +12,11 @@
 - hosts: webservers
   become: yes
   roles:
-#   - mariadb
    - wordpress
    - nginx
    - php-fpm
    - lsyncd
+   - proxysql
 
 
 - hosts: lblservers

@@ -65,6 +65,7 @@ xtradb_databases: []
 
 xtradb_binlog_format: "ROW"
 xtradb_character_set_server: "utf8"
+xtradb_character-set-client-handshake: "FALSE"
 xtradb_collation_server: "utf8_general_ci"
 xtradb_default_storage_engine: "InnoDB"
 xtradb_innodb_autoinc_lock_mode: 2
@@ -74,6 +75,7 @@ xtradb_innodb_file_format: ""
 xtradb_innodb_file_format_check: ""
 xtradb_innodb_file_per_table: ""
 xtradb_innodb_flush_log_at_trx_commit: ""
+xtradb_innodb_large_prefix: "on"
 xtradb_innodb_log_buffer_size: ""
 xtradb_innodb_log_file_size: ""
 xtradb_innodb_strict_mode: "on"

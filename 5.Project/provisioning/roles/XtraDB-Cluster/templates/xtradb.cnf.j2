@@ -44,7 +44,13 @@ datadir={{ xtradb_datadir }}
 
 {% if xtradb_character_set_server %}character_set_server={{ xtradb_character_set_server }}{% endif %}
 
+{% if xtradb_character-set-client-handshake %}character_set_client_handshake={{ xtradb_character-set-client-handshake }}{% endif %}
+
 {% if xtradb_collation_server %}collation_server={{ xtradb_collation_server }}{% endif %}
+
+{% if xtradb_character_set_server %}init-connect = "SET NAMES {{ xtradb_character_set_server }} COLLATE {{ xtradb_collation_server }}"{% endif %}
+
+{% if xtradb_innodb_large_prefix %}innodb_large_prefix={{ xtradb_innodb_large_prefix }}{% endif %}
 
 {% if xtradb_explicit_defaults_for_timestamp %}explicit_defaults_for_timestamp={{ xtradb_explicit_defaults_for_timestamp }}{% endif %}
 
@@ -111,3 +117,8 @@ wsrep_sst_auth={{ xtradb_sst_user }}:{{ xtradb_sst_password }}
 {% if xtradb_pxc_strict_mode %}# pxc_strict_mode allowed values: DISABLED,PERMISSIVE,ENFORCING,MASTER
 # Set ENFORCING to block the use of experimental and unsupported features in Percona XtraDB Cluster
 pxc_strict_mode={{ xtradb_pxc_strict_mode }}{% endif %}
+
+{% if xtradb_character_set_server %}
+[client]
+default_character_set={{ xtradb_character_set_server }}{% endif %}
+

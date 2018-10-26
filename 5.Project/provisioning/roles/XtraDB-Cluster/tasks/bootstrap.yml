@@ -47,7 +47,7 @@
     login_password: "{{ xtradb_root_password }}"
     user: "{{ xtradb_sst_user }}"
     password: "{{ xtradb_sst_password }}"
-    priv: "*.*:reload,lock tables,process,replication client"
+    priv: "*.*:grant,reload,lock tables,process,replication client"
   when:
     - xtradb_bind_address == xtradb_master_node
 
@@ -57,6 +57,12 @@
     state: started
   when:
     - xtradb_bind_address != xtradb_master_node
+  #async: 1000
+  #poll: 0
+  retries: 5
+  delay: 5
+  register: result
+  until: result == 0
 
 - name: Marking as configured
   file:

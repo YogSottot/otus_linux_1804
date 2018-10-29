@@ -44,11 +44,11 @@ datadir={{ xtradb_datadir }}
 
 {% if xtradb_character_set_server %}character_set_server={{ xtradb_character_set_server }}{% endif %}
 
-{% if xtradb_character-set-client-handshake %}character_set_client_handshake={{ xtradb_character-set-client-handshake }}{% endif %}
+{% if xtradb_character_set_client_handshake %}character_set_client_handshake={{ xtradb_character_set_client_handshake }}{% endif %}
 
 {% if xtradb_collation_server %}collation_server={{ xtradb_collation_server }}{% endif %}
 
-{% if xtradb_character_set_server %}init-connect = "SET NAMES {{ xtradb_character_set_server }} COLLATE {{ xtradb_collation_server }}"{% endif %}
+{% if xtradb_init_connect %}init-connect={{ xtradb_init_connect }}{% endif %}
 
 {% if xtradb_innodb_large_prefix %}innodb_large_prefix={{ xtradb_innodb_large_prefix }}{% endif %}
 
@@ -78,7 +78,6 @@ skip_name_resolve={{ xtradb_skip_name_resolve }}{% endif %}
 {% if xtradb_innodb_log_buffer_size %}innodb_log_buffer_size={{ xtradb_innodb_log_buffer_size }}{% endif %}
 
 {% if xtradb_innodb_log_file_size %}innodb_log_file_size={{ xtradb_innodb_log_file_size }}{% endif %}
-
 
 {% if xtradb_innodb_autoinc_lock_mode %}# This InnoDB autoincrement locking mode is a requirement for Galera
 innodb_autoinc_lock_mode={{ xtradb_innodb_autoinc_lock_mode }}{% endif %}
@@ -121,4 +120,3 @@ pxc_strict_mode={{ xtradb_pxc_strict_mode }}{% endif %}
 {% if xtradb_character_set_server %}
 [client]
 default_character_set={{ xtradb_character_set_server }}{% endif %}
-

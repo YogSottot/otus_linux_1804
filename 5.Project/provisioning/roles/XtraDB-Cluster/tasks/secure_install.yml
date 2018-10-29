@@ -38,10 +38,11 @@
     name: "{{ xtradb_root_user }}"
     host: "{{ item }}"
   with_items:
-    - "::1"
-    - "127.0.0.1"
-    - "localhost"
-    - "{{ xtradb_bind_address }}"
+    - "%"
+    #- "192.168.0.%"
+    #- "127.0.0.1"
+    #- "localhost"
+    #- "{{ xtradb_bind_address }}"
 
 
 - name: Remove the MySQL test database

@@ -32,7 +32,7 @@
 2 web-сервера (синхронизация файлов сайта через lsyncd):  
 - nginx  
 - php-fpm  
-- ProxySQL - вместо HAProxy для db?
+- ProxySQL - (в продакшене можно использовать не раньше закрытия этоих багов https://github.com/sysown/proxysql/issues/1745 https://github.com/sysown/proxysql/issues/1039)
 
 2 сервера БД:
 - Percona XtraDB Cluster (Master-Master)

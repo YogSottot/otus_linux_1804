@@ -12,12 +12,11 @@
 - hosts: webservers
   become: yes
   roles:
+   - proxysql-pxc
    - wordpress
    - nginx
    - php-fpm
    - lsyncd
-   - proxysql
-
 
 - hosts: lblservers
   user: root
@@ -63,3 +62,4 @@
 #    - debug: var=ansible_default_ipv4.address
 #    - debug: var="groups[xtradb_nodes_group] | map('extract', hostvars, ['ansible_' ~ xtradb_bind_interface, 'ipv4', 'address']) | join(',')"
 #    - debug: var="groups[xtradb_nodes_group] | map('extract', hostvars, ['ansible_ssh_host']) | join(',')"
+#    - debug: var="hostvars[inventory_hostname]['ansible_ssh_host']"

@@ -19,3 +19,6 @@ clcontrol ansible_ssh_host=10.0.5.30 ansible_ssh_private_key_file=.vagrant/machi
 cluster1 ansible_ssh_host=10.0.5.31 ansible_ssh_private_key_file=.vagrant/machines/cluster1/virtualbox/private_key
 cluster2 ansible_ssh_host=10.0.5.32 ansible_ssh_private_key_file=.vagrant/machines/cluster2/virtualbox/private_key
 cluster3 ansible_ssh_host=10.0.5.33 ansible_ssh_private_key_file=.vagrant/machines/cluster3/virtualbox/private_key
+
+[logger]
+log1 ansible_ssh_host=10.0.5.41 ansible_ssh_private_key_file=.vagrant/machines/cluster3/virtualbox/private_key

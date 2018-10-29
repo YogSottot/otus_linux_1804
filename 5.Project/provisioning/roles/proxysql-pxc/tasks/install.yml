@@ -1,0 +1,16 @@
+---
+- name: repository installation
+  yum_repository:
+    file: "{{ xtradb_repo_filename }}"
+    name: "{{ xtradb_repo_name }}"
+    description: "{{ xtradb_repo_desc }}"
+    baseurl: "{{ xtradb_repo_baseurl }}"
+    gpgkey: "{{ xtradb_repo_gpgkey }}"
+    gpgcheck: "{{ xtradb_repo_gpgcheck }}"
+
+- name: Install dependency packages
+  yum:
+    name:
+     - proxysql
+     - Percona-XtraDB-Cluster-client-{{ xtradb_version }}
+    state: present

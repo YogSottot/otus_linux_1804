@@ -1,0 +1,30 @@
+# proxysql admin interface credentials.
+export PROXYSQL_DATADIR='/var/lib/proxysql'
+export PROXYSQL_USERNAME='{{ proxysql_username }}'
+export PROXYSQL_PASSWORD='{{ proxysql_password }}'
+export PROXYSQL_HOSTNAME='localhost'
+export PROXYSQL_PORT='6032'
+
+# PXC admin credentials for connecting to pxc-cluster-node.
+export CLUSTER_USERNAME='root'
+export CLUSTER_PASSWORD='{{ xtradb_root_password }}'
+export CLUSTER_HOSTNAME='{{ xtradb_master_node }}'
+export CLUSTER_PORT='3306'
+
+# proxysql monitoring user. proxysql admin script will create this user in pxc to monitor pxc-nodes.
+export MONITOR_USERNAME='{{ proxysql_username_monitor }}'
+export MONITOR_PASSWORD='{{ proxysql_password_monitor }}'
+
+# Application user to connect to pxc-node through proxysql
+export CLUSTER_APP_USERNAME='{{ wp_db_user }}'
+export CLUSTER_APP_PASSWORD='{{ wp_db_password }}'
+
+# ProxySQL read/write hostgroup 
+export WRITE_HOSTGROUP_ID='10'
+export READ_HOSTGROUP_ID='11'
+
+# ProxySQL read/write configuration mode.
+export MODE="singlewrite"
+
+# Writer-is-reader configuration
+export WRITER_IS_READER="always"

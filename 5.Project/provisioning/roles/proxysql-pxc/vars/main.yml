@@ -1,0 +1,8 @@
+---
+xtradb_repo_filename: "percona"
+xtradb_repo_name: "percona-release-$basearch"
+xtradb_repo_desc: "Percona-Release YUM repository - $basearch"
+xtradb_repo_baseurl: "http://repo.percona.com/release/$releasever/RPMS/$basearch"
+xtradb_repo_enabled: yes
+xtradb_repo_gpgcheck: yes
+xtradb_repo_gpgkey: "https://www.percona.com/downloads/RPM-GPG-KEY-percona"

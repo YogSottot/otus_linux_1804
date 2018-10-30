@@ -19,13 +19,14 @@ proxysql_nodes_group: proxysql
 proxysql_global_variables_kv:
  admin-admin_credentials: "{{ proxysql_login_admin_user }}:{{ proxysql_login_admin_password }};{{ proxysql_cluster_username }}:{{ proxysql_cluster_password }}"
  admin-mysql_ifaces: "{{ proxysql_login_admin_host }}:{{ proxysql_login_admin_port }}"
-# admin-cluster_username: "{{ proxysql_cluster_username }}"
-# admin-cluster_password: "{{ proxysql_cluster_password }}"
+ admin-cluster_username: "{{ proxysql_cluster_username }}"
+ admin-cluster_password: "{{ proxysql_cluster_password }}"
  mysql-default_charset: "{{ xtradb_character_set_server }}"
  mysql-interfaces: 127.0.0.1:3306
  mysql-max_connections: 8192
  mysql-monitor_username: "{{ proxysql_username_monitor }}"
  mysql-monitor_password: "{{ proxysql_password_monitor }}"
+ mysql-server_version: 5.7.23
 
 proxysql_backend_servers:
  mysql-srv1-hg1:

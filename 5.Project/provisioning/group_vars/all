@@ -66,6 +66,11 @@ xtradb_users:
    priv: "*.*:ALL,GRANT"
    host: "%"
    state: present
+ - name: "{{ proxysql_username_monitor }}"
+   password: "{{ proxysql_password_monitor }}"
+   priv: "*.*:USAGE"
+   host: "%"
+   state: present
 
 # Defines databases to create
 xtradb_databases:
@@ -75,8 +80,8 @@ xtradb_databases:
 # ProxySQL-pxc role
 #proxysql_username: "admin"
 #proxysql_password: "{{ lookup('password', '/tmp/mysqlpasswordfile_proxy_admin chars=ascii_letters,digits length=15') }}"
-#proxysql_username_monitor: "monitor"
-#proxysql_password_monitor: "{{ lookup('password', '/tmp/mysqlpasswordfile_proxy_monitor chars=ascii_letters,digits length=15') }}"
+proxysql_username_monitor: "monitor"
+proxysql_password_monitor: "{{ lookup('password', '/tmp/mysqlpasswordfile_proxy_monitor chars=ascii_letters,digits length=15') }}"
 
 #proxysql_cluster_username: "cluster"
 #proxysql_cluster_password: "{{ lookup('password', '/tmp/mysqlpasswordfile_proxy_cluster chars=ascii_letters,digits length=15') }}"

@@ -175,17 +175,17 @@ proxysql_servers =
 # defines schedulers
 scheduler =
 (
-#  {
-#    id = 1
-#    active = 0
-#    interval_ms = 10000
-#    filename = "/var/lib/proxysql/proxysql_galera_checker.sh"
-#    arg1 = "0"
-#    arg2 = "0"
-#    arg3 = "0"
-#    arg4 = "1"
-#    arg5 = "/var/lib/proxysql/proxysql_galera_checker.log"
-#  }
+  {
+    id = 1
+    active = 1
+    interval_ms = 5000
+    filename = "/usr/share/proxysql/tools/proxysql_galera_checker.sh"
+    arg1 = "1"
+    arg2 = "2"
+    arg3 = "1"
+    arg4 = "0"
+    arg5 = "/var/lib/proxysql/proxysql_galera_checker.log"
+  }
 )
 
 # http://www.hyperrealm.com/libconfig/libconfig_manual.html#Configuration-File-Grammar

@@ -59,10 +59,10 @@
     - xtradb_bind_address != xtradb_master_node
   #async: 1000
   #poll: 0
-  retries: 5
-  delay: 5
-  register: result
-  until: result == 0
+  #retries: 5
+  #delay: 5
+  #register: result
+  #until: result == 0
 
 - name: Marking as configured
   file:

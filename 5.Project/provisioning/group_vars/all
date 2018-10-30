@@ -52,7 +52,7 @@ xtradb_query_cache_size: "0"
 xtradb_query_cache_type: "0"
 xtradb_innodb_file_per_table: "1"
 xtradb_innodb_flush_log_at_trx_commit: "2"
-xtradb_max_connections: "100"
+xtradb_max_connections: "200"
 
 # Defines users to create
 xtradb_users:
@@ -61,20 +61,26 @@ xtradb_users:
    priv: "{{ wp_db_name }}.*:ALL"
    host: "%"
    state: present
+ - name: "{{ xtradb_root_user }}"
+   password: "{{ xtradb_root_password }}"
+   priv: "*.*:ALL,GRANT"
+   host: "%"
+   state: present
 
 # Defines databases to create
 xtradb_databases:
  - name: "{{ wp_db_name }}"
 
 
-# ProxySQL
-proxysql_username: "admin"
-proxysql_password: "{{ lookup('password', '/tmp/mysqlpasswordfile_proxy_admin chars=ascii_letters,digits length=15') }}"
-proxysql_username_monitor: "admin"
-proxysql_password_monitor: "{{ lookup('password', '/tmp/mysqlpasswordfile_proxy_monitor chars=ascii_letters,digits length=15') }}"
+# ProxySQL-pxc role
+#proxysql_username: "admin"
+#proxysql_password: "{{ lookup('password', '/tmp/mysqlpasswordfile_proxy_admin chars=ascii_letters,digits length=15') }}"
+#proxysql_username_monitor: "monitor"
+#proxysql_password_monitor: "{{ lookup('password', '/tmp/mysqlpasswordfile_proxy_monitor chars=ascii_letters,digits length=15') }}"
 
-proxysql_hostname: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}"
+#proxysql_cluster_username: "cluster"
+#proxysql_cluster_password: "{{ lookup('password', '/tmp/mysqlpasswordfile_proxy_cluster chars=ascii_letters,digits length=15') }}"
 
-proxysql_global_variables_kv:
- mysql-default_charset: "{{ xtradb_character_set_server }}"
-# see https://github.com/sysown/proxysql/issues/1422
+#proxysql_nodes_group: proxysql
+
+#proxysql_hostname: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}"

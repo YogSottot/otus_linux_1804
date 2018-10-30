@@ -9,7 +9,7 @@
   get_url:
    url: https://ru.wordpress.org/wordpress-{{ wp_version }}-ru_RU.tar.gz
    dest: /srv/wordpress-{{ wp_version }}.tar.gz
-   checksum: sha256:{{ wp_sha256sum }}
+   #checksum: sha256:{{ wp_sha256sum }}
 
 - name: Extract archive
   unarchive:

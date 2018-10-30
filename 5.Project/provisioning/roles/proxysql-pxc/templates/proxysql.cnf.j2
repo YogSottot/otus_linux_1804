@@ -35,7 +35,9 @@ datadir="/var/lib/proxysql"
 
 admin_variables=
 {
-        admin_credentials="{{ proxysql_username }}:{{ proxysql_password }}"
+        admin_credentials="{{ proxysql_username }}:{{ proxysql_password }};{{ proxysql_cluster_username }}:{{ proxysql_cluster_password }}"
+        cluster_username="{{ proxysql_cluster_username }}"
+        cluster_password="{{ proxysql_cluster_password }}"
 #       mysql_ifaces="127.0.0.1:6032;/tmp/proxysql_admin.sock"
         mysql_ifaces="0.0.0.0:6032"
 #       refresh_interval=2000
@@ -45,13 +47,13 @@ admin_variables=
 mysql_variables=
 {
         threads=4
-        max_connections={{ xtradb_max_connections }}
+        max_connections=2048
         default_query_delay=0
-        default_query_timeout=300
+        default_query_timeout=36000000
         have_compress=true
         poll_timeout=2000
 #       interfaces="0.0.0.0:6033;/tmp/proxysql.sock"
-        interfaces="0.0.0.0:6033"
+        interfaces="0.0.0.0:3306"
         default_schema="information_schema"
         stacksize=1048576
         server_version="5.7.23"
@@ -177,7 +179,19 @@ mysql_replication_hostgroups=
 #        }
 )
 
-
+#proxysql_servers =
+#(
+#    {
+#        hostname="{{ hostvars[ groups[proxysql_nodes_group][0] ].ansible_ssh_host }}"
+#        port=6032
+#        comment="proxysql1"
+#    },
+#    {
+#        hostname="{{ hostvars[ groups[proxysql_nodes_group][1] ].ansible_ssh_host }}"
+#        port=6032
+#        comment="proxysql2
+#    }
+#)
 
 
 # http://www.hyperrealm.com/libconfig/libconfig_manual.html#Configuration-File-Grammar

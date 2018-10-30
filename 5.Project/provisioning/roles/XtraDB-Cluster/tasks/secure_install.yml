@@ -31,14 +31,14 @@
     host_all: yes
     state: absent
 
-- name: "Secure the MySQL root user for localhost"
-  mysql_user:
-    login_user: "{{ xtradb_root_user }}"
-    login_password: "{{ xtradb_root_password }}"
-    name: "{{ xtradb_root_user }}"
-    host: "{{ item }}"
-  with_items:
-    - "%"
+#- name: "Secure the MySQL root user for localhost"
+#  mysql_user:
+#    login_user: "{{ xtradb_root_user }}"
+#    login_password: "{{ xtradb_root_password }}"
+#    name: "{{ xtradb_root_user }}"
+#    host: "{{ item }}"
+#    password: "{{ xtradb_root_password }}"
+#  with_items:
     #- "192.168.0.%"
     #- "127.0.0.1"
     #- "localhost"

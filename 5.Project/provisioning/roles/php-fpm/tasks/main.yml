@@ -8,6 +8,11 @@
 - name: Create the GPG key for REMI
   copy: src=RPM-GPG-KEY-remi dest=/etc/pki/rpm-gpg
 
+- name: Install epel-release
+  yum:
+   name: epel-release
+   state: present
+
 - name: Install php-fpm and deps
   yum:
    name: ['php-fpm', 'php-enchant', 'php-IDNA_Convert', 'php-mbstring', 'php-mysql', 'php-PHPMailer', 'php-process', 'php-simplepie', 'php-xml']

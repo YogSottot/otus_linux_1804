@@ -10,13 +10,15 @@
 #   - fail2ban
 
 - hosts: webservers
+  vars_files:
+   - group_vars/proxysql.yml
   become: yes
   roles:
-   - proxysql-pxc
-   - wordpress
-   - nginx
-   - php-fpm
-   - lsyncd
+   - proxysql
+   #- wordpress
+   #- nginx
+   #- php-fpm
+   #- lsyncd
 
 - hosts: lblservers
   user: root

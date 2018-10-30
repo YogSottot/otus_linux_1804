@@ -9,10 +9,7 @@
    src: "proxysql.cnf.j2"
 
 - name: Ensure that ProxySQL is running
-  service:
-    enabled: "{{ proxysql_service_enabled_state | default('yes') }}"
-    name: proxysql
-    state: "{{ proxysql_service_state | default('started') }}"
+  service: name=proxysql enabled=yes state=started
 
 - name: Create ProxySQL-admin config file
   template:

@@ -27,14 +27,15 @@
 2 балансировщика с общим ip (VRRP/failover):  
 - keepalived (реализует VRRP и следит за состоянием сервисов HAProxy / Galera Arbitrator)  
 - HAProxy (проксирование трафика на nginx в web1/web2 и на mysql в db1/db2)  клиенты подклчюаеются к HAProxy по единому виртуальному ip-адресу
-- Galera Arbitrator (следит за состоянием кластера БД на db1 / db2)  (Необходим для избежания split-brain, так как у нас только два узла БД)
 
 2 web-сервера (синхронизация файлов сайта через lsyncd):  
 - nginx  
 - php-fpm  
-- ProxySQL - (в продакшене можно использовать не раньше закрытия этоих багов https://github.com/sysown/proxysql/issues/1745 https://github.com/sysown/proxysql/issues/1039)
+- ProxySQL-Cluster - обеспечивает прозрачное для веб-приложения разделение чтения/записи на разные узлы кластера. Для предотвращения deadlocks, запись в один момент времени идёт только на один узел, в случае его падения запись автоматически переходит на следующий узел.  
+[в продакшене можно использовать не раньше закрытия этоих багов https://github.com/sysown/proxysql/issues/1745 https://github.com/sysown/proxysql/issues/1039]  
+[Please note that proxysql_galera_checker will be deprecated in 2.0 , with native support for Galera]  
 
-2 сервера БД:
+3 сервера БД:
 - Percona XtraDB Cluster (Master-Master)
 
 1 сервер для логирования и бэкапов

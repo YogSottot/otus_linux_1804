@@ -1,0 +1,29 @@
+[server]
+name = {{ server_name }}
+path = "/home/{{ site_user }}/backup"
+
+modules =
+    backup
+    backup.file
+    backup.mysql
+
+[cloud]
+login = {{ backup_login }}
+password = {{ backup_password }}
+ftp = {{ ftp_server }}
+dir = /{{ server_name }}/
+days = 4
+
+
+[mysql]
+host = 127.0.0.1
+password = {{ wp_db_password }}
+user = {{ wp_db_user }}
+database = {{ wp_db_name }}
+
+
+[file]
+exclude =
+
+dir =
+    /srv/wordpress/

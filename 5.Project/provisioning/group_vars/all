@@ -12,6 +12,7 @@ wp_sha256sum: eaeb0af01c2e59c1ec81d68e471468f65992470905d49650b5091493dcd3241
 mysqlservice: mysqld
 mysql_port: 3306
 
+site_user: wordpress
 # These are the WordPress database settings
 wp_db_name: wordpress
 wp_db_user: wordpress
@@ -75,7 +76,6 @@ xtradb_users:
 # Defines databases to create
 xtradb_databases:
  - name: "{{ wp_db_name }}"
-
 
 # ProxySQL-pxc role
 #proxysql_username: "admin"

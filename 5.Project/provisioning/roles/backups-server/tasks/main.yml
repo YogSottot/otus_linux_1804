@@ -1,0 +1,80 @@
+---
+- name: Add backup group
+  group:
+   name: "{{ ftp_backup_user }}"
+
+- name: Add backup user
+  user:
+   name: "{{ ftp_backup_user }}"
+   group: "{{ ftp_backup_user }}"
+   home: "{{ ftp_backup_home }}"
+   uid: 1250
+
+- name: Make backup dir
+  file:
+   path: "{{ ftp_backup_dir }}"
+   state: directory
+   owner: "{{ ftp_backup_user }}"
+   mode: 0755
+
+- name: Change ownership of backup installation
+  file: path="{{ ftp_backup_home }}/" owner={{ ftp_backup_user }} group={{ ftp_backup_user }} state=directory recurse=yes
+
+- name: Install dependency packages for backup
+  yum:
+    name:
+     - epel-release
+    state: present
+
+- name: Install dependency packages for backup
+  yum:
+    name:
+     - proftpd
+     - perl
+    state: present
+
+- name: Make proftpd dir
+  file:
+   path: /etc/proftpd
+   state: directory
+   mode: 0755
+
+- name: copy ftpasswd script
+  copy:
+   src: ftpasswd
+   dest: /etc/proftpd/ftpasswd
+   mode: 0755
+
+- name: copy proftpd.conf script
+  copy:
+   src: proftpd.conf
+   dest: /etc/proftpd.conf
+   mode: 0640
+
+- name: Install Firewalld
+  yum: name=firewalld state=present
+
+- name: Firewalld service state
+  service: name=firewalld state=started enabled=yes
+
+- name: firewalld open ftp
+  firewalld:
+   service: ftp
+   permanent: true
+   immediate: true
+   state: enabled
+
+- name: Setup ftp user
+  shell: /etc/proftpd/ftpasswd --passwd --name={{ ftp_backup_user }} --uid=1250 --home={{ ftp_backup_dir }} --shell=/sbin/nologin --stdin | echo {{ ftp_backup_password }}
+  tags:
+  - skip_ansible_lint
+
+- name: Make proftpd dir
+  file:
+   path: /etc/ftpd.passwd
+   mode: 0600
+
+- name: Proftpd service state
+  service: name=proftpd state=started enabled=yes
+
+

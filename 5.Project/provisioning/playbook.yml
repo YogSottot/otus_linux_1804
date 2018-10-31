@@ -20,7 +20,13 @@
    #- nginx
    #- php-fpm
    #- lsyncd
-   - filebeat
+   #- filebeat
+   - backups-client
+
+- hosts: web2
+  become: yes
+  roles:
+   - backups-client
 
 - hosts: lblservers
   user: root
@@ -62,13 +68,19 @@
    - group_vars/filebeat_mysql.yml
   become: true
   roles:
-   #- XtraDB-Cluster
+   - XtraDB-Cluster
    - filebeat
+
+- hosts: cluster3
+  become: true
+  roles:
+    - backups-client
 
 - hosts: log1
   become: true
   roles:
-   - elasticsearch
+   #- elasticsearch
+   - backups-server
 
 #- hosts: percona-cluster
 #  tasks:
@@ -77,3 +89,4 @@
 #    - debug: var="groups[xtradb_nodes_group] | map('extract', hostvars, ['ansible_' ~ xtradb_bind_interface, 'ipv4', 'address']) | join(',')"
 #    - debug: var="groups[xtradb_nodes_group] | map('extract', hostvars, ['ansible_ssh_host']) | join(',')"
 #    - debug: var="hostvars[inventory_hostname]['ansible_ssh_host']"
+#    - debug: var="hostvars[inventory_hostname]['inventory_hostname']"

@@ -1,0 +1,9 @@
+---
+backup_nodes_group: backup
+ftp_server: "{{ hostvars[ groups[backup_nodes_group][0] ].ansible_ssh_host }}"
+ftp_backup_server_name: "{{ hostvars[inventory_hostname]['inventory_hostname'] }}"
+ftp_backup_login: "{{ ftp_backup_user }}"
+ftp_backup_password: "{{ lookup('password', '/tmp/ftppasswordfile length=15') }}"
+ftp_backup_dir: "{{ ftp_backup_home }}/backup"
+ftp_backup_home: "/home/{{ ftp_backup_user }}"
+ftp_backup_user: backup

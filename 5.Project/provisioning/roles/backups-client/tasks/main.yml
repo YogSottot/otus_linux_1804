@@ -1,37 +1,4 @@
 ---
-# Files
-- name: copy backup files script
-  copy:
-   src: backup-tool-files.tar.gz
-   dest: "{{ backup_home }}/backup-tool-files.tar.gz"
-   owner: "{{ site_user }}"
-  when: "'webservers' in group_names"
-
-- name: Extract archive
-  unarchive:
-   src: "{{ backup_home }}/backup-tool-files.tar.gz"
-   dest: "{{ backup_home }}/"
-   remote_src: yes
-  when: "'webservers' in group_names"
-
-- name: Change ownership of backup installation
-  file: path="{{ backup_home }}/backup-tool-filesl" owner={{ site_user }} group={{ site_user }} state=directory recurse=yes
-  when: "'webservers' in group_names"
-
-- name: copy backup script
-  template:
-   src: config.ini.j2
-   dest: "{{ backup_home }}/backup-tool-files/config.ini"
-   owner: "{{ site_user }}"
-  when: "'webservers' in group_names"
-
-- name: copy backup files script
-  copy:
-   src: backup-tool-files.tar.gz
-   dest: "{{ backup_home }}/backup-tool-files.tar.gz"
-   owner: "{{ site_user }}"
-  when: "'webservers' in group_names"
-
 # DB
 - name: Add backup group
   group:
@@ -55,27 +22,53 @@
 - name: copy backup files script
   copy:
    src: backup-tool-xtrabackup.tar.gz
-   dest: "{{ backup_home }}/backup-tool-xtrabackup.tar.gz"
+   dest: "{{ backup_dir }}/backup-tool-xtrabackup.tar.gz"
    owner: "{{ site_user }}"
   when: "'percona-cluster' in group_names"
 
 - name: Extract archive
   unarchive:
-   src: "{{ backup_home }}/backup-tool-xtrabackup.tar.gz"
-   dest: "{{ backup_home }}/"
+   src: "{{ backup_dir }}/backup-tool-xtrabackup.tar.gz"
+   dest: "{{ backup_dir }}/"
    remote_src: yes
   when: "'percona-cluster' in group_names"
 
 - name: Change ownership of backup installation
-  file: path="{{ backup_home }}/backup-tool-xtrabackup" owner={{ site_user }} group={{ site_user }} state=directory recurse=yes
+  file: path="{{ backup_dir }}" owner={{ site_user }} group={{ site_user }} state=directory recurse=yes
   when: "'percona-cluster' in group_names"
 
 - name: copy backup script
   template:
    src: config.ini.j2
-   dest: "{{ backup_home }}/backup-tool-xtrabackup/config.ini"
+   dest: "{{ backup_dir }}/config.ini"
    owner: "{{ site_user }}"
   when: "'percona-cluster' in group_names"
+
+# Files
+- name: copy backup files script
+  copy:
+   src: backup-tool-files.tar.gz
+   dest: "{{ backup_dir }}/backup-tool-files.tar.gz"
+   owner: "{{ site_user }}"
+  when: "'webservers' in group_names"
+
+- name: Extract archive
+  unarchive:
+   src: "{{ backup_dir }}/backup-tool-files.tar.gz"
+   dest: "{{ backup_dir }}/"
+   remote_src: yes
+  when: "'webservers' in group_names"
+
+- name: Change ownership of backup installation
+  file: path="{{ backup_dir }}" owner={{ site_user }} group={{ site_user }} state=directory recurse=yes
+  when: "'webservers' in group_names"
+
+- name: copy backup script
+  template:
+   src: config.ini.j2
+   dest: "{{ backup_dir }}/config.ini"
+   owner: "{{ site_user }}"
+  when: "'webservers' in group_names"
 
 - name: Install dependency packages for backup
   yum:
@@ -96,6 +89,9 @@
   pip:
     name: ftputil
     extra_args: --user
+#  become: yes
+#  become_user: "{{ site_user }}"
+ 
 
 #- name: Make backup-script dir
 #  file:

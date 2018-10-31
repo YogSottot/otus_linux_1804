@@ -2,6 +2,7 @@
 - name: Add backup group
   group:
    name: "{{ ftp_backup_user }}"
+   gid: 1250
 
 - name: Add backup user
   user:
@@ -13,6 +14,20 @@
 - name: Make backup dir
   file:
    path: "{{ ftp_backup_dir }}"
+   state: directory
+   owner: "{{ ftp_backup_user }}"
+   mode: 0755
+
+- name: Make backup dir
+  file:
+   path: "{{ ftp_backup_dir }}/cluster3"
+   state: directory
+   owner: "{{ ftp_backup_user }}"
+   mode: 0755
+
+- name: Make backup dir
+  file:
+   path: "{{ ftp_backup_dir }}/web2"
    state: directory
    owner: "{{ ftp_backup_user }}"
    mode: 0755
@@ -65,13 +80,13 @@
    state: enabled
 
 - name: Setup ftp user
-  shell: /etc/proftpd/ftpasswd --passwd --name={{ ftp_backup_user }} --uid=1250 --home={{ ftp_backup_dir }} --shell=/sbin/nologin --stdin | echo {{ ftp_backup_password }}
+  shell: cd /etc/proftpd/ && echo  {{ ftp_backup_password }} | /etc/proftpd/ftpasswd --passwd --name={{ ftp_backup_user }} --uid=1250 --home={{ ftp_backup_dir }} --shell=/sbin/nologin --stdin
   tags:
   - skip_ansible_lint
 
-- name: Make proftpd dir
+- name: Set mode to ftpd.passwd
   file:
-   path: /etc/ftpd.passwd
+   path: /etc/proftpd/ftpd.passwd
    mode: 0600
 
 - name: Proftpd service state

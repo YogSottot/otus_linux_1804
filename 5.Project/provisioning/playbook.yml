@@ -15,13 +15,12 @@
    - group_vars/filebeat.yml
   become: yes
   roles:
-   #- proxysql
-   #- wordpress
-   #- nginx
-   #- php-fpm
+   - proxysql
+   - wordpress
+   - nginx
+   - php-fpm
    #- lsyncd
    #- filebeat
-   - backups-client
 
 - hosts: web2
   become: yes
@@ -44,8 +43,8 @@
   vars:
    interface: eth1
    virtual_router_id: 1
-   #virtual_ipaddress: 10.0.5.81
-   virtual_ipaddress: 192.168.0.254
+   virtual_ipaddress: 10.0.5.81
+   #virtual_ipaddress: 192.168.0.254
    priority: 101
    secret_passwd: ZcnG9lGUoZeM3nFT
 
@@ -58,8 +57,8 @@
   vars:
    interface: eth1
    virtual_router_id: 1
-   #virtual_ipaddress: 10.0.5.81
-   virtual_ipaddress: 192.168.0.254
+   virtual_ipaddress: 10.0.5.81
+   #virtual_ipaddress: 192.168.0.254
    priority: 100
    secret_passwd: ZcnG9lGUoZeM3nFT
 
@@ -69,12 +68,12 @@
   become: true
   roles:
    - XtraDB-Cluster
-   - filebeat
+ #  - filebeat
 
 - hosts: cluster3
   become: true
   roles:
-    - backups-client
+   - backups-client
 
 - hosts: log1
   become: true
@@ -90,3 +89,4 @@
 #    - debug: var="groups[xtradb_nodes_group] | map('extract', hostvars, ['ansible_ssh_host']) | join(',')"
 #    - debug: var="hostvars[inventory_hostname]['ansible_ssh_host']"
 #    - debug: var="hostvars[inventory_hostname]['inventory_hostname']"
+#    - debug: var="hostvars[ groups[xtradb_nodes_group][0] ].ansible_ssh_host"

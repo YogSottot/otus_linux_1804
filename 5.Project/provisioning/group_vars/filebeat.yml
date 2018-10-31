@@ -1,0 +1,41 @@
+---
+# filebeat
+logger_nodes_group: logger
+
+filebeat_config_output: |
+  output:
+    elasticsearch:
+      hosts: [ '{{ hostvars[ groups[logger_nodes_group][0] ].ansible_ssh_host }}:9200' ]
+#    logstash:
+#      hosts: [ '{{ hostvars[ groups[logger_nodes_group][0] ].ansible_ssh_host }}:5044' ]
+    
+#filebeat_config_inputs: |
+#  filebeat.inputs:
+#      -
+#        type: log
+#        paths:
+#          - "/var/log/*.log"
+#          - "/var/log/nginx/*.log"
+#          - "/var/log/mysqld/*.log"
+#          - "/var/log/php-fpm/*.log"
+
+filebeat_config_modules: |
+  filebeat.modules:
+    - module: auditd
+    - module: nginx
+    - module: system
+
+filebeat_config_setup: |
+  setup:
+    dashboards.enabled: true
+    dashboards.retry.enabled: true
+    kibana: 
+     host: "{{ hostvars[ groups[logger_nodes_group][0] ].ansible_ssh_host }}:5601"
+    
+filebeat_config_config: |
+  filebeat.config:
+    
+  
+  
+filebeat_templates: []
+  

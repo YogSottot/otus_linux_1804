@@ -12,13 +12,15 @@
 - hosts: webservers
   vars_files:
    - group_vars/proxysql.yml
+   - group_vars/filebeat.yml
   become: yes
   roles:
-   - proxysql
+   #- proxysql
    #- wordpress
    #- nginx
    #- php-fpm
    #- lsyncd
+   - filebeat
 
 - hosts: lblservers
   user: root
@@ -36,7 +38,8 @@
   vars:
    interface: eth1
    virtual_router_id: 1
-   virtual_ipaddress: 10.0.5.81
+   #virtual_ipaddress: 10.0.5.81
+   virtual_ipaddress: 192.168.0.254
    priority: 101
    secret_passwd: ZcnG9lGUoZeM3nFT
 
@@ -49,14 +52,23 @@
   vars:
    interface: eth1
    virtual_router_id: 1
-   virtual_ipaddress: 10.0.5.81
+   #virtual_ipaddress: 10.0.5.81
+   virtual_ipaddress: 192.168.0.254
    priority: 100
    secret_passwd: ZcnG9lGUoZeM3nFT
 
 - hosts: percona-cluster
+  vars_files:
+   - group_vars/filebeat_mysql.yml
   become: true
   roles:
-   - XtraDB-Cluster
+   #- XtraDB-Cluster
+   - filebeat
+
+- hosts: log1
+  become: true
+  roles:
+   - elasticsearch
 
 #- hosts: percona-cluster
 #  tasks:

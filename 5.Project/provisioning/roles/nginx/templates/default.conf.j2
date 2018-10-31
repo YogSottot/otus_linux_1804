@@ -15,7 +15,7 @@ server {
                 try_files $uri $uri/ /index.php?$args;
         }
  
-        location ~* \.(css|js|gif|png|jpg|jpeg|ico|ogg|ttf|woff|woff2|eot|otf|txt|json|log|svg)$ {
+        location ~* \.(css|js|gif|png|jpg|jpeg|ico|ogg|ttf|woff|woff2|eot|otf|txt|log|svg)$ {
                 expires max;
 				access_log   off;
 				log_not_found off;

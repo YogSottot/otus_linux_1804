@@ -31,34 +31,31 @@
 2 web-сервера (синхронизация файлов сайта через lsyncd):  
 - nginx  
 - php-fpm  
+- filebeat  
 - ProxySQL-Cluster - обеспечивает прозрачное для веб-приложения разделение чтения/записи на разные узлы кластера. Для предотвращения deadlocks, запись в один момент времени идёт только на один узел, в случае его падения запись автоматически переходит на следующий узел.  
 [в продакшене можно использовать не раньше закрытия этоих багов https://github.com/sysown/proxysql/issues/1745 https://github.com/sysown/proxysql/issues/1039]  
 [Please note that proxysql_galera_checker will be deprecated in 2.0 , with native support for Galera]  
 
+
 3 сервера БД:
 - Percona XtraDB Cluster (Master-Master)
+- filebeat  
 
 1 сервер для логирования и бэкапов
-- elk
+- elasticsearch
+- kibana
 - sftp
 
+https://i.imgur.com/i7OZxnO.png
+https://i.imgur.com/1B5gb5B.png
 
 https://www.digitalocean.com/community/tutorials/how-to-share-php-sessions-on-multiple-memcached-servers-on-ubuntu-14-04
 
-https://github.com/JRemitz/ansible-role-redis-cluster
-https://github.com/debops/ansible-redis
-https://github.com/alainchiasson/redis
-https://github.com/DavidWittman/ansible-redis
-https://github.com/idealista/redis-role
-https://github.com/Joeskyyy/redis_cluster
-https://github.com/geerlingguy/ansible-role-redis
-https://github.com/phpredis/phpredis/blob/master/cluster.markdown#sessionsave_path
 
 https://github.com/116davinder/memcached-cluster-ansible
 https://github.com/geerlingguy/ansible-role-memcached
 
 https://github.com/liviuchircu/ansible-role-XtraDB-Cluster
-
-
 https://github.com/timorunge/ansible-proxysql
 https://github.com/timorunge/ansible-pmm-client
+https://github.com/torian/ansible-role-filebeat

@@ -1,0 +1,73 @@
+---
+ - name: copy elasticsearch.repo
+   copy: src=elasticsearch.repo dest=/etc/yum.repos.d/elasticsearch.repo
+
+ - name: install elasticsearch
+   yum:
+    name:
+     - jre
+     - elasticsearch
+     - kibana
+#     - logstash
+    state: present
+
+ - name: copy elasticsearch.yml
+   template: src=elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml
+
+ - name: copy kibana.yml
+   template: src=kibana.yml.j2 dest=/etc/kibana/kibana.yml
+
+ - name: Make logstash config dir
+   file:
+    path: /etc/logstash/
+    state: directory
+    mode: 0755
+
+ - name: copy logstash.yml
+   copy: src=jvm.options dest=/etc/logstash/jvm.options
+
+ - name: Install elasticsearch-plugin ingest-geoip
+   shell: /usr/share/elasticsearch/bin/elasticsearch-plugin -s install ingest-geoip
+   tags:
+   - skip_ansible_lint
+
+ - name: Install elasticsearch-plugin ingest-user-agent
+   shell: /usr/share/elasticsearch/bin/elasticsearch-plugin -s install ingest-user-agent
+   tags:
+   - skip_ansible_lint
+
+ - name: restart elasticsearch
+   service: name=elasticsearch state=restarted enabled=yes
+
+ - name: restart kibana
+   service: name=kibana state=restarted enabled=yes
+
+# - name: restart logstash
+#   service: name=logstash state=restarted enabled=yes
+
+ - name: Install Firewalld
+   yum: name=firewalld state=present
+
+ - name: Firewalld service state
+   systemd: name=firewalld state=started enabled=yes
+
+ - name: firewalld open Elasticsearch
+   firewalld:
+    service: elasticsearch
+    permanent: true
+    immediate: true
+    state: enabled
+
+ - name: firewalld open kibana
+   firewalld:
+    service: kibana
+    permanent: true
+    immediate: true
+    state: enabled
+
+ - name: firewalld open logstash
+   firewalld:
+    port: 9600/udp
+    permanent: true
+    immediate: true
+    state: enabled

@@ -1,0 +1,29 @@
+---
+- name: Filebeat from URL
+  hosts: localhost
+  remote_user: root
+
+  vars:
+    - fbeat_user:  root
+    - fbeat_group: root
+    - filebeat_use_repo: false
+    - filebeat_version: 6.4.0
+
+  pre_tasks:
+    - name: Uninstall previous filebeat version
+      package:
+        name: 'filebeat'
+        state: absent
+
+  roles:
+    - ansible-role-filebeat
+
+  tasks:
+    - name: Check filebeat version
+      command: /usr/share/filebeat/bin/filebeat --version
+      register: r_version
+    
+    - debug:
+        msg: "{{r_version}}"
+
+# vi:ts=2:sw=2:et:ft=yaml

@@ -1,0 +1,37 @@
+---
+
+- name: Filebeat ES Template
+  hosts: all
+  become: yes
+
+  vars:
+    filebeat_version: '6.4.0'
+    filebeat_use_repo: false
+    filebeat_templates: [ templates/filebeat.template.json ]
+    filebeat_config_setup: |
+      setup.template.json.enabled: true
+      setup.template.json.path: "filebeat.template.json"
+      setup.template.json.name: "filebeat"
+
+  roles:
+    - ansible-role-filebeat
+
+  pre_tasks:
+
+    - name: Uninstall previous filebeat version
+      package:
+        name: 'filebeat'
+        state: absent
+
+  tasks:
+
+    - name: Check filebeat ES template
+      stat: path=/etc/filebeat/filebeat.template.json
+      register: f
+
+    - name: Assert that the ES template exists
+      assert:
+        that:
+          - f.stat.exists
+
+# vi:ts=2:sw=2:et:ft=yaml

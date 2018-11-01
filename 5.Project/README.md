@@ -59,3 +59,14 @@ https://github.com/liviuchircu/ansible-role-XtraDB-Cluster
 https://github.com/timorunge/ansible-proxysql
 https://github.com/timorunge/ansible-pmm-client
 https://github.com/torian/ansible-role-filebeat
+
+
+id|active|interval_ms|filename|arg1|arg2|arg3|arg4|arg5|comment
+1|1|3000|/bin/proxysql_galera_checker|--config-file=/etc/proxysql-admin.cnf --writer-is-reader=always --write-hg=10 --read-hg=11 --writer-count=1 --mode=singlewrite  --log=/var/lib/proxysql/otus_proxysql_galera_check.log|||||otus
+
+  tags:
+  - skip_ansible_lint
+
+  
+gluster volume info
+ gluster volume set wordpress network.ping-timeout 5

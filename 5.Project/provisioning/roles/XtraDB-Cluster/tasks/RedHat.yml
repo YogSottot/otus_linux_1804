@@ -1,9 +1,12 @@
 # tasks for Red Hat Familly
 ---
-- name: Disable SELinux
-  selinux:
-    state: disabled
-  when: ansible_selinux.status == 'enabled'
+#- name: Disable SELinux
+#  selinux:
+#    state: disabled
+#  when: ansible_selinux.status == 'enabled'
+
+- include: firewall.yml
+- include: selinux.yml
 
 - name: repository installation
   yum_repository:

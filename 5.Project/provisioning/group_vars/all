@@ -37,7 +37,7 @@ core_update_level: minor
 xtradb_version: 57
 xtradb_root_password: "{{ lookup('password', '/tmp/mysqlpasswordfile_root length=15') }}"
 xtradb_sst_password: "{{ lookup('password', '/tmp/mysqlpasswordfile_sst chars=ascii_letters,digits length=15') }}"
-xtradb_bind_interface: eth1
+xtradb_bind_interface: eth2
 
 xtradb_wsrep_cluster_address: "gcomm://{{ groups[xtradb_nodes_group] | map('extract', hostvars, ['ansible_ssh_host']) | join(',') }}"
 xtradb_master_node: "{{ hostvars[ groups[xtradb_nodes_group][0] ].ansible_ssh_host }}"
@@ -89,3 +89,7 @@ proxysql_password_monitor: "{{ lookup('password', '/tmp/mysqlpasswordfile_proxy_
 #proxysql_nodes_group: proxysql
 
 #proxysql_hostname: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}"
+
+# Kibana auth
+kibana_user: otus
+kibana_password: test

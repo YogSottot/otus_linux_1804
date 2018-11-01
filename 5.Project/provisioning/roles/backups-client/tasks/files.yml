@@ -1,0 +1,68 @@
+---
+- name: Add backup group
+  group:
+   name: "{{ site_user }}"
+
+- name: Add backup user
+  user:
+   name: "{{ site_user }}"
+   group: "{{ site_user }}"
+   home: "{{ backup_home }}"
+
+- name: Make backup dir
+  file:
+   path: "{{ backup_dir }}"
+   state: directory
+   owner: "{{ site_user }}"
+   mode: 0755
+
+- name: copy backup files script
+  copy:
+   src: backup-tool-files.tar.gz
+   dest: "{{ backup_dir }}/backup-tool-files.tar.gz"
+   owner: "{{ site_user }}"
+
+- name: Extract archive
+  unarchive:
+   src: "{{ backup_dir }}/backup-tool-files.tar.gz"
+   dest: "{{ backup_dir }}/"
+   remote_src: yes
+
+- name: Change ownership of backup installation
+  file: path="{{ backup_home }}" owner={{ site_user }} group={{ site_user }} state=directory recurse=yes
+
+- name: copy backup script
+  template:
+   src: config.ini.j2
+   dest: "{{ backup_dir }}/config.ini"
+   owner: "{{ site_user }}"
+
+- name: Install dependency packages for backup
+  yum:
+    name:
+     - epel-release
+    state: present
+
+- name: Install dependency packages for backup
+  yum:
+    name:
+     - certbot
+     - python-requests
+     - python-dateutil
+     - python-pip
+    state: present
+
+- name: Install ftputil
+  pip:
+    name: ftputil
+    extra_args: --user
+  become: yes
+  become_user: "{{ site_user }}"
+
+- name: Add a cron job for backup web
+  cron:
+    user: "{{ site_user }}"
+    name: "backup web"
+    minute: "10"
+    hour: "5"
+    job: "cd /home/{{ site_user }}/backup/ && /usr/bin/python /home/{{ site_user }}/backup/server.py --type=static > /dev/null 2>&1 || true"

@@ -1,0 +1,55 @@
+---
+- name: Override glusterfs_daemon for Ubuntu 14.04.
+  set_fact:
+    glusterfs_daemon: glusterfs-server
+  when:
+    - ansible_distribution == 'Ubuntu'
+    - ansible_distribution_version == "14.04"
+
+# Setup/install tasks.
+- include: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: setup-{{ ansible_distribution }}.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Ensure GlusterFS is started and enabled at boot.
+  service: "name={{ glusterfs_daemon }} state=started enabled=yes"
+
+- name: Ensure Gluster brick and mount directories exist.
+  file: "path={{ item }} state=directory mode=0775"
+  with_items:
+   - "{{ gluster_brick_dir }}"
+   - "{{ gluster_mount_dir }}"
+
+- name: Configure Gluster volume.
+  gluster_volume:
+   state: present
+   name: "{{ gluster_brick_name }}"
+   brick: "{{ gluster_brick_dir }}"
+   replicas: 2
+   cluster: "{{ groups['webservers'] | map('extract', hostvars, ['ansible_ssh_host']) | join(',') }}"
+   host: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}"
+   force: yes
+   options:
+    network.ping-timeout: 5
+  run_once: true
+  when: "'web1' in inventory_hostname"
+  
+- name: Ensure Gluster volume is mounted.
+  mount:
+   name: "{{ gluster_mount_dir }}"
+   src: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}:/{{ gluster_brick_name }}"
+   fstype: glusterfs
+   opts: "defaults,_netdev"
+   state: mounted
+  when: "'web1' in inventory_hostname"
+
+- name: Ensure Gluster volume is mounted.
+  mount:
+   name: "{{ gluster_mount_dir }}"
+   src: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}:/{{ gluster_brick_name }}"
+   fstype: glusterfs
+   opts: "defaults,_netdev"
+   state: present
+  when: "'web2' in inventory_hostname"

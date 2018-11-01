@@ -1,0 +1,31 @@
+# tasks for Red Hat Familly
+---
+- name: Install Firewalld
+  yum: name=firewalld state=present
+
+- name: Firewalld service state
+  systemd: name=firewalld state=started enabled=yes
+
+- name: Firewalld add trusted ip to proxysql zone
+  firewalld:
+   source: "{{ hostvars[ groups['proxysql'][0] ].ansible_ssh_host }}"
+   zone: proxysql
+   state: enabled
+   permanent: true
+   immediate: true
+
+- name: Firewalld add trusted ip to proxysql zone
+  firewalld:
+   source: "{{ hostvars[ groups['proxysql'][1] ].ansible_ssh_host }}"
+   zone: proxysql
+   state: enabled
+   permanent: true
+   immediate: true
+
+- name: firewalld open MySQL client ports
+  firewalld:
+   port: "{{ proxysql_login_admin_port }}/tcp"
+   zone: percona
+   permanent: true
+   immediate: true
+   state: enabled

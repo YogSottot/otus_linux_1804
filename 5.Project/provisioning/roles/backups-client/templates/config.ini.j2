@@ -1,6 +1,6 @@
 [server]
 name = {{ server_name }}
-path = "/home/{{ site_user }}/backup"
+path = /home/{{ site_user }}/backup/
 
 modules =
     backup
@@ -23,7 +23,7 @@ database = {{ wp_db_name }}
 
 
 [file]
-exclude =
+exclude = /cache/
 
 dir =
     /srv/wordpress/

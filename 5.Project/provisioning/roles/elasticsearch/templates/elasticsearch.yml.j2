@@ -52,7 +52,8 @@ path.logs: /var/log/elasticsearch
 #
 # Set the bind address to a specific IP (IPv4 or IPv6):
 #
-network.host: "{{ hostvars[ groups[logger_nodes_group][0] ].ansible_ssh_host }}"
+#network.host: "{{ hostvars[ groups[logger_nodes_group][0] ].ansible_ssh_host }}"
+network.host: "localhost"
 #
 # Set a custom port for HTTP:
 #
@@ -94,3 +95,6 @@ node.max_local_storage_nodes: 1
 # Require explicit names when deleting indices:
 #
 #action.destructive_requires_name: true
+
+#disable all commercial features 
+#searchguard.enterprise_modules_enabled: false

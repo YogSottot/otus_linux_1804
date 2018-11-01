@@ -1,0 +1,99 @@
+---
+- name: Ensure dependencies are installed.
+  yum:
+    name: "centos-release-gluster{{ glusterfs_default_release }}"
+    state: present
+
+- name: Ensure Gluster packages are installed.
+  yum:
+    name:
+      - glusterfs-server
+      - glusterfs-client
+    state: present
+
+- name: Install Firewalld
+  yum: name=firewalld state=present
+
+- name: Firewalld service state
+  systemd: name=firewalld state=started enabled=yes
+
+- name: Firewalld add Gluster zone
+  firewalld:
+   zone: gluster
+   state: present
+   permanent: true
+
+- name: Firewalld service state
+  systemd: name=firewalld state=reloaded enabled=yes
+
+- name: Firewalld add trusted ip to Gluster zone
+  firewalld:
+   source: "{{ hostvars[ groups['webservers'][0] ].ansible_ssh_host }}"
+   zone: gluster
+   state: enabled
+   permanent: true
+   immediate: true
+
+- name: Firewalld add trusted ip to Gluster zone
+  firewalld:
+   source: "{{ hostvars[ groups['webservers'][1] ].ansible_ssh_host }}"
+   zone: gluster
+   state: enabled
+   permanent: true
+   immediate: true
+
+- name: firewalld open Gluster ports
+  firewalld:
+   port: 22/tcp
+   zone: gluster
+   permanent: true
+   immediate: true
+   state: enabled
+
+- name: firewalld open Gluster ports
+  firewalld:
+   port: 111/tcp
+   zone: gluster
+   permanent: true
+   immediate: true
+   state: enabled
+
+- name: firewalld open Gluster ports
+  firewalld:
+   port: 24007/tcp
+   zone: gluster
+   permanent: true
+   immediate: true
+   state: enabled
+
+- name: firewalld open Gluster ports
+  firewalld:
+   port: 24009-24010/tcp
+   zone: gluster
+   permanent: true
+   immediate: true
+   state: enabled
+
+- name: firewalld open Gluster ports
+  firewalld:
+   port: 49152-49153/tcp
+   zone: gluster
+   permanent: true
+   immediate: true
+   state: enabled
+
+- name: firewalld open Gluster ports
+  firewalld:
+   port: 38465-38466/tcp
+   zone: gluster
+   permanent: true
+   immediate: true
+   state: enabled
+
+- name: firewalld open Gluster ports
+  firewalld:
+   port: 111/udp
+   zone: gluster
+   permanent: true
+   immediate: true
+   state: enabled

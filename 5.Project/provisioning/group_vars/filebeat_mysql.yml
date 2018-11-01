@@ -5,7 +5,10 @@ logger_nodes_group: logger
 filebeat_config_output: |
   output:
     elasticsearch:
-      hosts: [ '{{ hostvars[ groups[logger_nodes_group][0] ].ansible_ssh_host }}:9200' ]
+      hosts: [ '{{ hostvars[ groups[logger_nodes_group][0] ].ansible_ssh_host }}:9201' ]
+      protocol: "http"
+      username: "{{ kibana_user }}"
+      password: "{{ kibana_password }}"
 #    logstash:
 #      hosts: [ '{{ hostvars[ groups[logger_nodes_group][0] ].ansible_ssh_host }}:5044' ]
     
@@ -30,7 +33,10 @@ filebeat_config_setup: |
     dashboards.enabled: true
     dashboards.retry.enabled: true
     kibana: 
-     host: "{{ hostvars[ groups[logger_nodes_group][0] ].ansible_ssh_host }}:5601"
+     host: "{{ hostvars[ groups[logger_nodes_group][0] ].ansible_ssh_host }}:80"
+     protocol: "http"
+     username: "{{ kibana_user }}"
+     password: "{{ kibana_password }}"
     
 filebeat_config_config: |
   filebeat.config:

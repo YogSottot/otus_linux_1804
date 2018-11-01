@@ -1,0 +1,45 @@
+# tasks for Red Hat Familly
+---
+- name: Installing selinux dependencies
+  yum: name=policycoreutils-python state=present
+
+- name: Allow Mysql to listen on tcp port 4568
+  seport:
+    ports: 4568
+    proto: tcp
+    setype: mysqld_port_t
+    state: present
+    
+- name: Allow Mysql to listen on tcp port 4444
+  seport:
+    ports: 4444
+    proto: tcp
+    setype: mysqld_port_t
+    state: present
+
+- name: Allow Mysql to listen on tcp port 4567
+  seport:
+    ports: 4567
+    proto: tcp
+    setype: mysqld_port_t
+    state: present
+
+- name: Allow mysqld to use files in /etc/percona-xtradb-cluster
+  sefcontext:
+    target: '/etc/percona-xtradb-cluster\.cnf'
+    setype: mysqld_etc_t
+    state: present
+
+- name: Allow mysqld to use files in /etc/percona-xtradb-cluster
+  sefcontext:
+    target: '/etc/percona-xtradb-cluster\.conf\.d(/.*)?'
+    setype: mysqld_etc_t
+    state: present
+
+- name: Copy te selinuc module
+  copy:
+    src: PXC.te
+    dest: /opt/PXC.te
+
+- name: generate selinux rule for PXC
+   shell: checkmodule -M -m -o /opt/PXC.mod  /opt/PXC.te && semodule_package -o /opt/PXC.pp -m /opt/PXC.mod && semodule -i /opt/PXC.pp

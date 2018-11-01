@@ -50,4 +50,10 @@
     login_password: "{{ xtradb_root_password }}"
     state: present
   with_items: "{{ xtradb_users }}"
+
+- name: Apply new SELinux file context to filesystem
+  command: restorecon -v /etc/percona-xtradb-cluster.cnf
+
+- name: Apply new SELinux file context to filesystem
+  command: -R -v /etc/percona-xtradb-cluster.conf.d/
 ...

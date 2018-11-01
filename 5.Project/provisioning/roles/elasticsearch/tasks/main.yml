@@ -27,14 +27,18 @@
    copy: src=jvm.options dest=/etc/logstash/jvm.options
 
  - name: Install elasticsearch-plugin ingest-geoip
-   shell: /usr/share/elasticsearch/bin/elasticsearch-plugin -s install ingest-geoip
-   tags:
-   - skip_ansible_lint
+   ignore_errors: yes
+   elasticsearch_plugin:
+    name: ingest-geoip
+    state: present
+    force: yes
 
  - name: Install elasticsearch-plugin ingest-user-agent
-   shell: /usr/share/elasticsearch/bin/elasticsearch-plugin -s install ingest-user-agent
-   tags:
-   - skip_ansible_lint
+   ignore_errors: yes
+   elasticsearch_plugin:
+    name: ingest-user-agent
+    state: present
+    force: yes
 
  - name: restart elasticsearch
    service: name=elasticsearch state=restarted enabled=yes
@@ -58,16 +62,16 @@
     immediate: true
     state: enabled
 
- - name: firewalld open kibana
-   firewalld:
-    service: kibana
-    permanent: true
-    immediate: true
-    state: enabled
+# - name: firewalld open kibana
+#   firewalld:
+#    service: kibana
+#    permanent: true
+#    immediate: true
+#    state: enabled
 
- - name: firewalld open logstash
-   firewalld:
-    port: 9600/udp
-    permanent: true
-    immediate: true
-    state: enabled
+# - name: firewalld open logstash
+#   firewalld:
+#    port: 9600/udp
+#    permanent: true
+#    immediate: true
+#    state: enabled

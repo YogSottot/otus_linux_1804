@@ -1,0 +1,94 @@
+# tasks for Red Hat Familly
+---
+- name: Install Firewalld
+  yum: name=firewalld state=present
+
+- name: Firewalld service state
+  systemd: name=firewalld state=started enabled=yes
+
+- name: Firewalld add percona zone
+  firewalld:
+   zone: percona
+   state: present
+   permanent: true
+   immediate: true
+
+- name: Firewalld add trusted ip to percona zone
+  firewalld:
+   source: "{{ hostvars[ groups[xtradb_nodes_group][0] ].ansible_ssh_host }}"
+   zone: percona
+   state: enabled
+   permanent: true
+   immediate: true
+
+- name: Firewalld add trusted ip to percona zone
+  firewalld:
+   source: "{{ hostvars[ groups[xtradb_nodes_group][1] ].ansible_ssh_host }}"
+   zone: percona
+   state: enabled
+   permanent: true
+   immediate: true
+
+- name: Firewalld add trusted ip to percona zone
+  firewalld:
+   source: "{{ hostvars[ groups[xtradb_nodes_group][2] ].ansible_ssh_host }}"
+   zone: percona
+   state: enabled
+   permanent: true
+   immediate: true
+
+- name: Firewalld add trusted ip to percona zone
+  firewalld:
+   source: "{{ hostvars[ groups['proxysql'][0] ].ansible_ssh_host }}"
+   zone: percona
+   state: enabled
+   permanent: true
+   immediate: true
+
+- name: Firewalld add trusted ip to percona zone
+  firewalld:
+   source: "{{ hostvars[ groups['proxysql'][1] ].ansible_ssh_host }}"
+   zone: percona
+   state: enabled
+   permanent: true
+   immediate: true
+
+- name: firewalld open MySQL client ports
+  firewalld:
+   port: 3306/tcp
+   zone: percona
+   permanent: true
+   immediate: true
+   state: enabled
+
+- name: firewalld open SST ports
+  firewalld:
+   port: 4444/tcp
+   zone: percona
+   permanent: true
+   immediate: true
+   state: enabled
+   
+- name: firewalld open write-set replication traffic ports
+  firewalld:
+   port: 4567/tcp
+   zone: percona
+   permanent: true
+   immediate: true
+   state: enabled
+
+- name: firewalld open multicast replication traffic ports
+  firewalld:
+   port: 4567/udp
+   zone: percona
+   permanent: true
+   immediate: true
+   state: enabled
+
+- name: firewalld open Incremental State Transfer ports
+  firewalld:
+   port: 4568/tcp
+   zone: percona
+   permanent: true
+   immediate: true
+   state: enabled

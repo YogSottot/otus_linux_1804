@@ -1,4 +1,6 @@
 ---
+- name: Setup firewall
+  include_tasks: firewall.yml
 
 - name: Gather general variables
   include_vars: main.yml

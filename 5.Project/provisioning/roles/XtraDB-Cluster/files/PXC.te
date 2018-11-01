@@ -1,0 +1,25 @@
+module PXC 1.0;
+ 
+require {
+        type unconfined_t;
+        type mysqld_t;
+        type unconfined_service_t;
+        type tmp_t;
+        type sysctl_net_t;
+        type kernel_t;
+        type mysqld_safe_t;
+        class process { getattr setpgid };
+        class unix_stream_socket connectto;
+        class system module_request;
+        class file { getattr open read write };
+        class dir search;
+}
+ 
+#============= mysqld_t ==============
+ 
+allow mysqld_t kernel_t:system module_request;
+allow mysqld_t self:process { getattr setpgid };
+allow mysqld_t self:unix_stream_socket connectto;
+allow mysqld_t sysctl_net_t:dir search;
+allow mysqld_t sysctl_net_t:file { getattr open read };
+allow mysqld_t tmp_t:file write;

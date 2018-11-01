@@ -1,0 +1,7 @@
+---
+# Gluster configuration.
+gluster_mount_dir: /srv/wordpress
+gluster_brick_dir: /srv/gluster/wordpress
+gluster_brick_name: wordpress
+
+

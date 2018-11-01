@@ -6,38 +6,44 @@
 MACHINES = {
 :balancer1 => {
                :box_name => "centos/7",
-               :public => {:ip => '192.168.0.110', :adapter => 3 },
+               :public => {:ip => '192.168.0.111', :adapter => 3 },
                :net => [
-                        {ip: '10.0.5.10', adapter: 2, netmask: "255.255.255.0"},
+                        {ip: '10.0.5.11', adapter: 2, netmask: "255.255.255.0"},
                        ]
  },
 	
 :balancer2 => {
                :box_name => "centos/7",
-               :public => {:ip => '192.168.0.111', :adapter => 3 },
+               :public => {:ip => '192.168.0.112', :adapter => 3 },
                :net => [
-					   {ip: '10.0.5.11', adapter: 2, netmask: "255.255.255.0"},
+					   {ip: '10.0.5.12', adapter: 2, netmask: "255.255.255.0"},
                        ]
                       
  },
 
 :web1 => {
           :box_name => "centos/7",
-          :public => {:ip => '192.168.0.120', :adapter => 3 },
+          :public => {:ip => '192.168.0.121', :adapter => 3 },
           :net => [
-                  {ip: '10.0.5.20', adapter: 2, netmask: "255.255.255.0"},
+                  {ip: '10.0.5.21', adapter: 2, netmask: "255.255.255.0"},
                   ]
  },
 
 :web2 => {
 		:box_name => "centos/7",
-		:public => {:ip => '192.168.0.121', :adapter => 3 },
+		:public => {:ip => '192.168.0.122', :adapter => 3 },
 		:net => [
-				{ip: '10.0.5.21', adapter: 2, netmask: "255.255.255.0"},
+				{ip: '10.0.5.22', adapter: 2, netmask: "255.255.255.0"},
 				]
  },
 
-	
+:web3 => {
+		:box_name => "centos/7",
+		:public => {:ip => '192.168.0.123', :adapter => 3 },
+		:net => [
+				{ip: '10.0.5.23', adapter: 2, netmask: "255.255.255.0"},
+				]
+ },
 #:clcontrol => {
 #		:box_name => "centos/7",
 #		:public => {:ip => '192.168.0.130', :adapter => 3 },
@@ -97,12 +103,17 @@ Vagrant.configure("2") do |config|
         if boxconfig.key?(:public)
           box.vm.network "public_network", boxconfig[:public]
         end
-
+		# wait until all server is up, then provision
+		#if boxconfig[:box_name] == "log1"
 		config.vm.provision "ansible" do |ansible|
 			ansible.verbose = "vvv"
 			ansible.playbook = "provisioning/playbook.yml"
 			ansible.become = "true"
-			ansible.inventory_path = "provisioning/hosts.bridge"
+			ansible.inventory_path = "provisioning/hosts"
+			# Disable default limits to connect to all the machines
+			#ansible.limit = "all"
+			ansible.verbose = true
+		#end
 		end
 		
 		config.vm.provider "virtualbox" do |v|

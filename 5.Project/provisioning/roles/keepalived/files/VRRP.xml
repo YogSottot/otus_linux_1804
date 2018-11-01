@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+	<short>VRRP</short>
+	<description>Virtual Router Redundancy Protocol</description>
+	<protocol value="vrrp"/>
+	<destination ipv4="224.0.0.18"/>
+</service>

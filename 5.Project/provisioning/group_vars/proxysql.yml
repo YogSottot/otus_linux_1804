@@ -95,6 +95,15 @@ proxysql_proxysql_servers:
   login_user: "{{ proxysql_login_admin_user }}"
   port: 6032
   weight: 0
+ proxysql-srv-3:
+  comment: proxysql-srv-3
+  hostname: "{{ hostvars[ groups[proxysql_nodes_group][2] ].ansible_ssh_host }}"
+  login_host: "{{ proxysql_login_admin_host }}"
+  login_password: "{{ proxysql_login_admin_password }}"
+  login_port: "{{ proxysql_login_admin_port }}"
+  login_user: "{{ proxysql_login_admin_user }}"
+  port: 6032
+  weight: 0
 proxysql_replication_hostgroups:
  Cluster:
   comment: Cluster

@@ -27,23 +27,14 @@
    state: present
    name: "{{ gluster_brick_name }}"
    brick: "{{ gluster_brick_dir }}"
-   replicas: 2
+   replicas: 3
    cluster: "{{ groups['webservers'] | map('extract', hostvars, ['ansible_ssh_host']) | join(',') }}"
    host: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}"
    force: yes
    options:
     network.ping-timeout: 5
   run_once: true
-  when: "'web1' in inventory_hostname"
-  
-- name: Ensure Gluster volume is mounted.
-  mount:
-   name: "{{ gluster_mount_dir }}"
-   src: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}:/{{ gluster_brick_name }}"
-   fstype: glusterfs
-   opts: "defaults,_netdev"
-   state: mounted
-  when: "'web1' in inventory_hostname"
+  ignore_errors: yes
 
 - name: Ensure Gluster volume is mounted.
   mount:
@@ -51,5 +42,4 @@
    src: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}:/{{ gluster_brick_name }}"
    fstype: glusterfs
    opts: "defaults,_netdev"
-   state: present
-  when: "'web2' in inventory_hostname"
+   state: mounted

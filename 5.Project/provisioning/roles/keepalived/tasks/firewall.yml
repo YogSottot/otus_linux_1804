@@ -1,0 +1,44 @@
+---
+- name: Install Firewalld
+  yum: name=firewalld state=present
+
+- name: Firewalld service state
+  systemd: name=firewalld state=restarted enabled=yes
+
+- name: Firewalld add keepalived zone
+  firewalld:
+   zone: keepalived
+   state: present
+   permanent: true
+
+- name: Firewalld service state
+  systemd: name=firewalld state=reloaded enabled=yes
+
+- name: copy service VRRP
+  copy:
+   src: VRRP.xml
+   dest: /etc/firewalld/services/VRRP.xml
+
+- name: Firewalld add trusted ip to keepalived zone
+  firewalld:
+   source: "{{ hostvars[ groups['lblservers'][0] ].ansible_ssh_host }}"
+   zone: keepalived
+   state: enabled
+   permanent: true
+   immediate: true
+
+- name: Firewalld add trusted ip to keepalived zone
+  firewalld:
+   source: "{{ hostvars[ groups['lblservers'][1] ].ansible_ssh_host }}"
+   zone: keepalived
+   state: enabled
+   permanent: true
+   immediate: true
+
+- name: firewalld open Gluster ports
+  firewalld:
+   service: VRRP
+   zone: keepalived
+   permanent: true
+   immediate: true
+   state: enabled

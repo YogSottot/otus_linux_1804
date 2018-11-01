@@ -4,14 +4,16 @@
   yum: name=firewalld state=present
 
 - name: Firewalld service state
-  systemd: name=firewalld state=started enabled=yes
+  systemd: name=firewalld state=restarted enabled=yes
 
 - name: Firewalld add percona zone
   firewalld:
    zone: percona
    state: present
    permanent: true
-   immediate: true
+
+- name: Firewalld service state
+  systemd: name=firewalld state=reloaded enabled=yes
 
 - name: Firewalld add trusted ip to percona zone
   firewalld:
@@ -48,6 +50,14 @@
 - name: Firewalld add trusted ip to percona zone
   firewalld:
    source: "{{ hostvars[ groups['proxysql'][1] ].ansible_ssh_host }}"
+   zone: percona
+   state: enabled
+   permanent: true
+   immediate: true
+
+- name: Firewalld add trusted ip to percona zone
+  firewalld:
+   source: "{{ hostvars[ groups['proxysql'][2] ].ansible_ssh_host }}"
    zone: percona
    state: enabled
    permanent: true

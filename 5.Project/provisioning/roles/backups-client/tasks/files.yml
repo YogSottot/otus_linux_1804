@@ -28,7 +28,7 @@
    dest: "{{ backup_dir }}/"
    remote_src: yes
 
-- name: Change ownership of backup installation
+- name: Change ownership of cache dir
   file: path="{{ backup_home }}" owner={{ site_user }} group={{ site_user }} state=directory recurse=yes
 
 - name: copy backup script

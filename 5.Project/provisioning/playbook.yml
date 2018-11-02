@@ -3,11 +3,35 @@
 - hosts: all
   become: yes
   roles:
+    - selinux_vagrant
 #   - sysctl
 #   - packages
 #   - chrony
 #   - liquidprompt
 #   - fail2ban
+
+- hosts: log1
+  become: true
+  roles:
+ #  - elasticsearch
+#   - elasticsearch-curator
+   #- backups-server
+   - nginx
+
+- hosts: percona-cluster
+  vars_files:
+   - group_vars/filebeat_mysql.yml
+  become: true
+  roles:
+   - XtraDB-Cluster
+#   - filebeat
+  vars:
+   - xtradb_bind_interface: eth2
+
+- hosts: cluster1
+  become: true
+  roles:
+#   - backups-client
 
 - hosts: webservers
   vars_files:
@@ -16,11 +40,11 @@
    - group_vars/filebeat.yml
   become: yes
   roles:
-   - glusterfs
-   #- proxysql
-   #- wordpress
-   #- nginx
-   #- php-fpm
+   #- glusterfs
+   - proxysql
+   - wordpress
+   - nginx
+   - php-fpm
    #- lsyncd
    #- filebeat
 
@@ -43,10 +67,10 @@
   roles:
    - keepalived
   vars:
-   interface: eth1
+   interface: eth2
    virtual_router_id: 1
-   virtual_ipaddress: 10.0.5.81
-   #virtual_ipaddress: 192.168.0.254
+   #virtual_ipaddress: 10.0.5.81
+   virtual_ipaddress: 192.168.0.254
    priority: 101
    secret_passwd: ZcnG9lGUoZeM3nFT
 
@@ -57,37 +81,15 @@
   roles:
    - keepalived
   vars:
-   interface: eth1
+   interface: eth2
    virtual_router_id: 1
-   virtual_ipaddress: 10.0.5.81
-   #virtual_ipaddress: 192.168.0.254
+   #virtual_ipaddress: 10.0.5.81
+   virtual_ipaddress: 192.168.0.254
    priority: 100
    secret_passwd: ZcnG9lGUoZeM3nFT
 
-- hosts: percona-cluster
-  vars_files:
-   - group_vars/filebeat_mysql.yml
-  become: true
-  roles:
-   #- XtraDB-Cluster
- #  - filebeat
-
-- hosts: cluster1
-  become: true
-  roles:
-   - backups-client
-
-- hosts: log1
-  become: true
-  roles:
-   - elasticsearch
-   - elasticsearch-curator
-   - backups-server
-   - nginx
-
-
-- hosts: webservers
-  tasks:
+#- hosts: webservers
+#  tasks:
 #    - debug: var=ansible_all_ipv4_addresses
 #    - debug: var=ansible_default_ipv4.address
 #    - debug: var="groups[xtradb_nodes_group] | map('extract', hostvars, ['ansible_' ~ xtradb_bind_interface, 'ipv4', 'address']) | join(',')"
@@ -96,4 +98,4 @@
 #    - debug: var="hostvars[inventory_hostname]['inventory_hostname']"
 #    - debug: var="hostvars[ groups[xtradb_nodes_group][0] ].ansible_ssh_host"
 #   - debug: var="hostvars[ groups['proxysql'][1] ].ansible_ssh_host"
-   - debug: var="inventory_hostname"
+#   - debug: var="inventory_hostname"

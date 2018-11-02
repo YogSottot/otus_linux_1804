@@ -3,3 +3,13 @@
   yum:
     name: ['epel-release', 'keepalived']
     state: present
+
+- name: Make override dir for service keepalived
+  file:
+   path: /etc/systemd/system/keepalived.service.d
+   state: directory
+
+- name: Enable autorestart of services
+  copy:
+   src: override.conf
+   dest: /etc/systemd/system/keepalived.service.d/override.conf

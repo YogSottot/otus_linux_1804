@@ -109,15 +109,20 @@ Vagrant.configure("2") do |config|
 			ansible.verbose = "vvv"
 			ansible.playbook = "provisioning/playbook.yml"
 			ansible.become = "true"
-			ansible.inventory_path = "provisioning/hosts"
+			ansible.inventory_path = "provisioning/hosts.bridge"
 			# Disable default limits to connect to all the machines
 			#ansible.limit = "all"
 			ansible.verbose = true
 		#end
 		end
-		
+		if boxconfig[:box_name] == "log1"
+		config.vm.provider "virtualbox" do |v|
+			v.memory = 512
+			end
+		else
 		config.vm.provider "virtualbox" do |v|
 			v.memory = 384
+			end
 		end
 
 

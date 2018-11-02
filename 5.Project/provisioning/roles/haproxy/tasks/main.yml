@@ -8,9 +8,21 @@
    name: ['rh-haproxy18-haproxy', 'rh-haproxy18-haproxy-syspaths']
    state: present
 
+- name: Make override dir for service haproxy
+  file:
+   path: /etc/systemd/system/rh-haproxy18-haproxy.d
+   state: directory
+
+- name: Enable autorestart of services
+  copy:
+   src: override.conf
+   dest: /etc/systemd/system/rh-haproxy18-haproxy.d/override.conf
+
 - name: deploy haproxy config
   template: src=haproxy.cfg.j2 dest=/etc/opt/rh/rh-haproxy18/haproxy/haproxy.cfg
   notify: restart haproxy
 
+- include: firewall.yml
+
 - name: Enable haproxy to be started at boot
-  service: name=rh-haproxy18-haproxy enabled=yes state=started
+  service: name=rh-haproxy18-haproxy enabled=yes state=restarted

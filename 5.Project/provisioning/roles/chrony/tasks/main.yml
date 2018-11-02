@@ -1,18 +1,28 @@
 ---
-  - name: install chrony
-    yum:
-     name: ['chrony']
-     state: present
+- name: install chrony
+  yum:
+   name: ['chrony']
+   state: present
 
-  - name: disable ntp
-    ignore_errors: True
-    service:
-     name: ntpd
-     state: stopped
-     enabled: no
+- name: disable ntp
+  ignore_errors: True
+  service:
+   name: ntpd
+   state: stopped
+   enabled: no
 
-  - name: start chronyd
-    service:
-     name: chronyd
-     state: restarted
-     enabled: yes
+- name: Make override dir for service chronyd
+  file:
+   path: /etc/systemd/system/chronyd.service.d
+   state: directory
+
+- name: Enable autorestart of services
+  copy: 
+   src: override.conf
+   dest: /etc/systemd/system/chronyd.service.d/override.conf
+
+- name: start chronyd
+  service:
+   name: chronyd
+   state: restarted
+   enabled: yes

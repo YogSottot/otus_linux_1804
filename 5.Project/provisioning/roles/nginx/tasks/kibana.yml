@@ -21,7 +21,7 @@
   yum: name=firewalld state=present
 
 - name: Firewalld service state
-  service: name=firewalld state=started enabled=yes
+  service: name=firewalld state=restarted enabled=yes
 
 - name: insert firewalld rule for nginx
   firewalld: port=9201/tcp permanent=true state=enabled immediate=yes

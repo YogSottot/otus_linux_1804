@@ -1,0 +1,36 @@
+[Unit]
+Description=High Performance Advanced Proxy for MySQL
+After=network.target
+
+[Service]
+Type=simple
+
+User=proxysql
+Group=proxysql
+PermissionsStartOnly=true
+
+RuntimeDirectory=proxysql
+ExecStart=/usr/bin/proxysql -f  -c /etc/proxysql.cnf
+PIDFile=/var/lib/proxysql/proxysql.pid
+ExecStartPost=/sbin/restorecon -FR /var/lib/proxysql/
+
+SyslogIdentifier=proxysql
+
+Restart=on-failure
+RestartSec=5
+
+UMask=0007
+LimitNOFILE=102400
+LimitCORE=1073741824
+
+ProtectHome=yes
+
+NoNewPrivileges=true
+CapabilityBoundingSet=CAP_SETGID CAP_SETUID CAP_SYS_RESOURCE
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_ALG
+
+ProtectSystem=full
+PrivateDevices=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,4 @@
+# roles/ansible-role-XtraDB-Cluster/tasks/main.yml
+---
+- include: selinux.yml
+

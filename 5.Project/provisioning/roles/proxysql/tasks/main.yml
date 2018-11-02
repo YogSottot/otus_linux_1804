@@ -2,6 +2,12 @@
 - name: Setup firewall
   include_tasks: firewall.yml
 
+- name: Setup selinux
+  include_tasks: selinux.yml
+
+#- name: install systemd unit
+#  include: systemd.yml
+
 - name: Gather general variables
   include_vars: main.yml
 
@@ -23,3 +29,8 @@
 - include_tasks: install.yml
 
 - include_tasks: config.yml
+
+- name: Restore context
+  command: restorecon -RF /var/lib/proxysql
+  tags:
+  - skip_ansible_lint

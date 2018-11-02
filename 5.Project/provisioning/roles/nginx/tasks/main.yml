@@ -10,6 +10,16 @@
   yum: name=nginx state=present update_cache=true
   notify: start nginx
 
+- name: Make override dir for service nginx
+  file:
+   path: /etc/systemd/system/nginx.service.d
+   state: directory
+
+- name: Enable autorestart of services
+  copy:
+   src: override.conf
+   dest: /etc/systemd/system/nginx.service.d/override.conf
+
 - include: web.yml
   when: "'webservers' in group_names"
 

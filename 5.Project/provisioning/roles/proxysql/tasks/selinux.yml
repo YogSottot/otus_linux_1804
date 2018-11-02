@@ -1,0 +1,22 @@
+# tasks for Red Hat Familly
+---
+- name: Installing selinux dependencies
+  yum: name=policycoreutils-python state=present
+
+- name: Allow logrotate to rotate logs
+  sefcontext:
+    target: '/var/lib/proxysql/proxysql_galera_checker\.log'
+    setype: var_log_t
+    state: present
+
+- name: Allow logrotate to rotate logs
+  sefcontext:
+    target: '/var/lib/proxysql/proxysql\.log'
+    setype: var_log_t
+    state: present
+
+- name: Allow logrotate to rotate logs
+  sefcontext:
+    target: '/var/lib/proxysql/proxysql_node_monitor\.log'
+    setype: var_log_t
+    state: present

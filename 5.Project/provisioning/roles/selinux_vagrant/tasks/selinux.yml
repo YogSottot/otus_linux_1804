@@ -1,0 +1,23 @@
+# tasks for Red Hat Familly
+---
+- name: Installing selinux dependencies
+  yum: name=policycoreutils-python state=present
+
+- name: Change owner to root for net-scripts
+  file:
+   dest: /etc/sysconfig/network-scripts/
+   owner: root
+   group: root
+   recurse: yes
+
+- name: Change seuser for network-scripts/ifcfg
+  sefcontext:
+    target: '/etc/sysconfig/network-scripts/ifcfg-eth{.*}'
+    setype: net_conf_t
+    seuser: system_u
+    state: present
+
+- name: Apply SELinux file context to net-scripts
+  command: restorecon -FR /etc/sysconfig/network-scripts/
+  tags:
+  - skip_ansible_lint

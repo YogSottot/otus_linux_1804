@@ -48,6 +48,16 @@
      - perl
     state: present
 
+- name: Make override dir for service proftpd
+  file:
+   path: /etc/systemd/system/proftpd.service.d
+   state: directory
+
+- name: Enable autorestart of services
+  copy:
+   src: override.conf
+   dest: /etc/systemd/system/proftpd.service.d/override.conf
+
 - name: Make proftpd dir
   file:
    path: /etc/proftpd
@@ -70,24 +80,16 @@
   yum: name=firewalld state=present
 
 - name: Firewalld service state
-  service: name=firewalld state=started enabled=yes
-
-# Fix suspected race between firewalld and polkit BZ1436964
-- name: Wait for polkit action to have been created
-  command: pkaction --action-id=org.fedoraproject.FirewallD1.config.info
-  ignore_errors: true
-  register: pkaction
-  changed_when: false
-  until: pkaction.rc == 0
-  retries: 6
-  delay: 10
+  service: name=firewalld state=restarted enabled=yes
 
 - name: firewalld open ftp
   firewalld:
    service: ftp
    permanent: true
-   immediate: true
    state: enabled
+
+- name: Firewalld service state
+  service: name=firewalld state=reloaded enabled=yes
 
 - name: Setup ftp user
   shell: cd /etc/proftpd/ && echo  {{ ftp_backup_password }} | /etc/proftpd/ftpasswd --passwd --name={{ ftp_backup_user }} --uid=1250 --home={{ ftp_backup_dir }} --shell=/sbin/nologin --stdin
@@ -100,4 +102,4 @@
    mode: 0600
 
 - name: Proftpd service state
-  service: name=proftpd state=started enabled=yes
+  service: name=proftpd state=restarted enabled=yes

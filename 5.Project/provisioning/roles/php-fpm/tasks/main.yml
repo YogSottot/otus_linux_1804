@@ -18,6 +18,24 @@
    name: ['php-fpm', 'php-enchant', 'php-IDNA_Convert', 'php-mbstring', 'php-mysql', 'php-PHPMailer', 'php-process', 'php-simplepie', 'php-xml']
    state: present
 
+- name: Make override dir for service php-fpm
+  file:
+   path: /etc/systemd/system/php-fpm.service.d
+   state: directory
+
+- name: Enable autorestart of services
+  copy:
+   src: override.conf
+   dest: /etc/systemd/system/php-fpm.service.d/override.conf
+
+- name: Enable php settings override
+  copy:
+   src: z_custom.ini
+   dest: /etc/php.d/z_custom.ini
+
+- name: Change ownership of backup installation
+  file: path=/var/lib/php/ owner={{ site_user }} group={{ site_user }} state=directory recurse=yes
+
 - name: Disable default pool
   command: mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.disabled creates=/etc/php-fpm.d/www.disabled
   notify: reload php-fpm

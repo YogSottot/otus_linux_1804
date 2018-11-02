@@ -17,7 +17,13 @@
 - name: copy service VRRP
   copy:
    src: VRRP.xml
-   dest: /etc/firewalld/services/VRRP.xml
+   dest: /tmp/VRRP.xml
+
+- name: Add service from file
+  shell: firewall-cmd --permanent --new-service-from-file=/tmp/VRRP.xml
+  ignore_errors: yes
+  tags:
+  - skip_ansible_lint
 
 - name: Firewalld add trusted ip to keepalived zone
   firewalld:
@@ -35,10 +41,12 @@
    permanent: true
    immediate: true
 
-- name: firewalld open Gluster ports
+- name: firewalld activate VRRP service
   firewalld:
    service: VRRP
    zone: keepalived
    permanent: true
-   immediate: true
    state: enabled
+
+- name: Firewalld service state
+  systemd: name=firewalld state=reloaded enabled=yes

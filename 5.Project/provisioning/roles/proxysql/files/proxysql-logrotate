@@ -1,0 +1,9 @@
+
+/var/lib/proxysql/*.log {
+        missingok
+        daily
+        notifempty
+        compress
+        create 0600 proxysql proxysql
+        rotate 15
+}

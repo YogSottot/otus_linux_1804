@@ -17,5 +17,13 @@
     gpgkey: "{{ xtradb_repo_gpgkey }}"
     gpgcheck: "{{ xtradb_repo_gpgcheck }}"
 
+- name: Make override dir for service mysql
+  file:
+   path: /etc/systemd/system/mysql.service.d
+   state: directory
 
+- name: Enable autorestart of services
+  copy:
+   src: override.conf
+   dest: /etc/systemd/system/mysql.service.d/override.conf
 ...

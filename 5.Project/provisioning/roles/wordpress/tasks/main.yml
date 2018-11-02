@@ -78,7 +78,13 @@
   tags:
   - skip_ansible_lint
 
+- name: Set httpd_can_network_connect flag on and keep it persistent across reboots
+  seboolean:
+    name: httpd_can_network_connect_db
+    state: yes
+    persistent: yes
+
 - name: set the SELinux on all the Files
-  command: restorecon -Rv /srv/wordpress
+  command: restorecon -RF /srv/wordpress
   tags:
   - skip_ansible_lint

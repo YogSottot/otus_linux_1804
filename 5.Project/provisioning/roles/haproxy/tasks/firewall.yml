@@ -1,0 +1,21 @@
+---
+- name: Install Firewalld
+  yum: name=firewalld state=present
+
+- name: Firewalld service state
+  systemd: name=firewalld state=restarted enabled=yes
+
+- name: firewalld activate HTTP service
+  firewalld:
+   service: http
+   permanent: true
+   state: enabled
+
+- name: firewalld activate HTTP service
+  firewalld:
+   port: 8080/tcp
+   permanent: true
+   state: enabled
+
+- name: Firewalld service state
+  systemd: name=firewalld state=reloaded enabled=yes

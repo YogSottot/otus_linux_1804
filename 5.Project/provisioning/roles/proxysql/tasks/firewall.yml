@@ -9,7 +9,7 @@
 - name: Firewalld add proxysql zone
   firewalld:
    zone: proxysql
-   state: enabled
+   state: present
    permanent: true
 
 - name: Firewalld service state
@@ -21,7 +21,6 @@
    zone: proxysql
    state: enabled
    permanent: true
-   immediate: true
 
 - name: Firewalld add trusted ip to proxysql zone
   firewalld:
@@ -29,7 +28,6 @@
    zone: proxysql
    state: enabled
    permanent: true
-   immediate: true
 
 - name: Firewalld add trusted ip to proxysql zone
   firewalld:
@@ -37,12 +35,14 @@
    zone: proxysql
    state: enabled
    permanent: true
-   immediate: true
 
 - name: firewalld open MySQL client ports
   firewalld:
    port: "{{ proxysql_login_admin_port }}/tcp"
-   zone: percona
+   zone: proxysql
    permanent: true
-   immediate: true
    state: enabled
+
+- name: Firewalld service state
+  systemd: name=firewalld state=reloaded enabled=yes
+

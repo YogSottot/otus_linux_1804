@@ -1,0 +1,22 @@
+# tasks for Red Hat Familly
+---
+- name: Add group "proxysql"
+  group:
+   name: proxysql
+
+- name: Add the user 'proxysql'
+  user:
+    name: proxysql
+    shell: /sbin/nologin
+    home: /var/lib/proxysql/
+    create_home: /var/lib/proxysql/
+
+- name: Installing systemd unit
+  copy:
+   src: proxysql.service
+   dest: /etc/systemd/system/proxysql.service
+
+- name: Installing syslog config
+  copy:
+   src: proxysql-logrotate
+   dest: /etc/logrotate.d/proxysql-logrotate

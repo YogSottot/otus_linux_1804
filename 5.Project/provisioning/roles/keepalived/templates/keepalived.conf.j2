@@ -1,7 +1,10 @@
 vrrp_script chk_haproxy {
-  script "killall -0 haproxy"
+  script "pkill -0 haproxy"
   interval 2
   weight 2
+  rise 0
+  fall 1
+  init_fail
 }
 
 vrrp_instance VI_1 {

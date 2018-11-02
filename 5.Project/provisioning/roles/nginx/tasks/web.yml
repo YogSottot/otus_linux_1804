@@ -12,14 +12,16 @@
   yum: name=firewalld state=present
 
 - name: Firewalld service state
-  service: name=firewalld state=started enabled=yes
+  service: name=firewalld state=restarted enabled=yes
 
 - name: Firewalld add web zone
   firewalld:
    zone: web
    state: present
    permanent: true
-   immediate: true
+
+- name: Firewalld service state
+  service: name=firewalld state=reloaded enabled=yes
 
 - name: Firewalld add trusted ip to web zone
   firewalld:
@@ -27,7 +29,6 @@
    zone: web
    state: enabled
    permanent: true
-   immediate: true
 
 - name: Firewalld add trusted ip to web zone
   firewalld:
@@ -35,7 +36,6 @@
    zone: web
    state: enabled
    permanent: true
-   immediate: true
 
 - name: insert firewalld rule for nginx
   firewalld:
@@ -43,4 +43,6 @@
    zone: web
    permanent: true
    state: enabled
-   immediate: yes
+
+- name: Firewalld service state
+  service: name=firewalld state=reloaded enabled=yes

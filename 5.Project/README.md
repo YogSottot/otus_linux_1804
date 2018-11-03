@@ -70,9 +70,11 @@
 
 - Развёртывается чистый дистрибутив wordpress. Нужно после установки зайти в админку и указать тестовый домен или виртуальный ip в качестве адреса, иначе будет пытаться редиректить на реальный ip web-узла.  
 
-- Опция   ```network.ping-timeout: 5``` позволяет значительно снизить время лага при падении узла glusterfs.  По умолчанию 60 секунд.
+- Опция   ```network.ping-timeout: 5``` позволяет значительно снизить время лага при падении узла glusterfs.  По умолчанию 60 секунд.  
+
 <details><summary>gluster volume info </summary><p>
 ```bash
+
 [root@web2 vagrant]# gluster volume info 
  
 Volume Name: php
@@ -145,7 +147,6 @@ Task Status of Volume wordpress
 ------------------------------------------------------------------------------
 There are no active volume tasks
 ```
-
 </p></details>
 
 <details><summary>gluster peer status</summary><p>
@@ -162,8 +163,6 @@ Uuid: 4ebe85e0-6f14-4f7d-8fd6-9f4314a0fee2
 State: Peer in Cluster (Connected)
 ```
 </p></details>
-
-
 
 <details><summary>show status like 'wsrep%'</summary><p>
 

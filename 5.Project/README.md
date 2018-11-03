@@ -73,8 +73,8 @@
 - Опция   ```network.ping-timeout: 5``` позволяет значительно снизить время лага при падении узла glusterfs.  По умолчанию 60 секунд.  
 
 <details><summary>gluster volume info </summary><p>
-```bash
 
+```bash
 [root@web2 vagrant]# gluster volume info 
  
 Volume Name: php
@@ -112,7 +112,7 @@ network.ping-timeout: 5
 transport.address-family: inet
 nfs.disable: on
 performance.client-io-threads: off
-
+```
 
 </p></details>
 
@@ -148,6 +148,7 @@ Task Status of Volume wordpress
 ------------------------------------------------------------------------------
 There are no active volume tasks
 ```
+
 </p></details>
 
 <details><summary>gluster peer status</summary><p>
@@ -164,6 +165,7 @@ Hostname: 10.0.5.21
 Uuid: 4ebe85e0-6f14-4f7d-8fd6-9f4314a0fee2
 State: Peer in Cluster (Connected)
 ```
+
 </p></details>
 
 <details><summary>show status like 'wsrep%'</summary><p>

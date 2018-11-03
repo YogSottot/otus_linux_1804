@@ -112,7 +112,8 @@ network.ping-timeout: 5
 transport.address-family: inet
 nfs.disable: on
 performance.client-io-threads: off
-```
+
+
 </p></details>
 
 <details><summary>gluster volume status</summary><p>

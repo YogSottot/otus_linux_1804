@@ -151,7 +151,7 @@ There are no active volume tasks
 </p></details>
 
 <details><summary>gluster peer status</summary><p>
-```
+
 ```bash
 [root@web2 vagrant]# gluster peer status
 Number of Peers: 2

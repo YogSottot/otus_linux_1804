@@ -20,3 +20,8 @@
   copy:
    src: proxysql-logrotate
    dest: /etc/logrotate.d/proxysql-logrotate
+
+- name: Set up new socket path of services
+  copy:
+   src: client.cnf
+   dest: /etc/mysql/conf.d/client.cnf

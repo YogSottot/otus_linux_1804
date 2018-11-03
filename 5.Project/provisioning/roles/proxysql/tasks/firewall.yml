@@ -6,43 +6,42 @@
 - name: Firewalld service state
   systemd: name=firewalld state=restarted enabled=yes
   
-- name: Firewalld add proxysql zone
-  firewalld:
-   zone: proxysql
-   state: present
-   permanent: true
+#- name: Firewalld add proxysql zone
+#  firewalld:
+#   zone: proxysql
+#   state: present
+#   permanent: true
 
-- name: Firewalld service state
-  systemd: name=firewalld state=reloaded enabled=yes
+#- name: Firewalld service state
+#  systemd: name=firewalld state=reloaded enabled=yes
 
-- name: Firewalld add trusted ip to proxysql zone
-  firewalld:
-   source: "{{ hostvars[ groups['proxysql'][0] ].ansible_ssh_host }}"
-   zone: proxysql
-   state: enabled
-   permanent: true
+#- name: Firewalld add trusted ip to proxysql zone
+#  firewalld:
+#   source: "{{ hostvars[ groups['proxysql'][0] ].ansible_ssh_host }}"
+#   zone: proxysql
+#   state: enabled
+#   permanent: true
 
-- name: Firewalld add trusted ip to proxysql zone
-  firewalld:
-   source: "{{ hostvars[ groups['proxysql'][1] ].ansible_ssh_host }}"
-   zone: proxysql
-   state: enabled
-   permanent: true
+#- name: Firewalld add trusted ip to proxysql zone
+#  firewalld:
+#   source: "{{ hostvars[ groups['proxysql'][1] ].ansible_ssh_host }}"
+#   zone: proxysql
+#   state: enabled
+#   permanent: true
 
-- name: Firewalld add trusted ip to proxysql zone
-  firewalld:
-   source: "{{ hostvars[ groups['proxysql'][2] ].ansible_ssh_host }}"
-   zone: proxysql
-   state: enabled
-   permanent: true
+#- name: Firewalld add trusted ip to proxysql zone
+#  firewalld:
+#   source: "{{ hostvars[ groups['proxysql'][2] ].ansible_ssh_host }}"
+#   zone: proxysql
+#   state: enabled
+#   permanent: true
 
-- name: firewalld open MySQL client ports
+- name: firewalld open admin ports
   firewalld:
    port: "{{ proxysql_login_admin_port }}/tcp"
-   zone: proxysql
+   zone: gluster
    permanent: true
    state: enabled
 
 - name: Firewalld service state
   systemd: name=firewalld state=reloaded enabled=yes
-

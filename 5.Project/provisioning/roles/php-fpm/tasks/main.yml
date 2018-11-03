@@ -33,7 +33,12 @@
    src: z_custom.ini
    dest: /etc/php.d/z_custom.ini
 
-- name: Change ownership of backup installation
+- name: Make upload_tmp_dir
+  file:
+   path: /var/lib/php/upload
+   state: directory
+
+- name: Change ownership of php installation
   file: path=/var/lib/php/ owner={{ site_user }} group={{ site_user }} state=directory recurse=yes
 
 - name: Disable default pool

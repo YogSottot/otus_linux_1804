@@ -8,7 +8,7 @@
 - кластеризация и балансировка базы (mysql, postgress- на выбор )  
 
 **Реализации:**  
-- ansible роли для развертывания ( под вагрант / прод)  
+- ansible роли для развертывания  
 - vagrant стенд  
 
 **Что должно быть включено в проект:**  
@@ -26,62 +26,147 @@
 
 2 балансировщика с общим ip (VRRP/failover):  
 - keepalived (реализует VRRP и следит за состоянием сервисов HAProxy / Galera Arbitrator)  
-- HAProxy (проксирование трафика на nginx в web1/web2 и на mysql в db1/db2)  клиенты подклчюаеются к HAProxy по единому виртуальному ip-адресу
+- HAProxy (проксирование трафика на nginx в web1/web2). Пользователи подключаются к сайту через HAProxy по единому виртуальному ip-адресу
 
 3 web-сервера (синхронизация файлов сайта через lsyncd):  
 - nginx  
 - php-fpm  
 - filebeat  
 - GlusterFS (синхронизация файлов сайта и сессий php)
-- ProxySQL-Cluster - обеспечивает прозрачное для веб-приложения разделение чтения/записи на разные узлы кластера. Для предотвращения deadlocks, запись в один момент времени идёт только на один узел, в случае его падения запись автоматически переходит на следующий узел.  
-[в продакшене можно использовать не раньше закрытия этоих багов https://github.com/sysown/proxysql/issues/1745 https://github.com/sysown/proxysql/issues/1039]  
-[Please note that proxysql_galera_checker will be deprecated in 2.0 , with native support for Galera]  
+- ProxySQL-Cluster 
 
-
-3 сервера БД:
-- Percona XtraDB Cluster (Master-Master)
+3 сервера БД:  
+- Percona XtraDB Cluster (Master-Master)  
 - filebeat  
 
-1 сервер для логирования и бэкапов
-- elasticsearch
-- kibana
-- sftp
+1 сервер для логирования и бэкапов:  
+- elasticsearch  
+- kibana  
+- sftp  
 
-https://i.imgur.com/i7OZxnO.png
-https://i.imgur.com/1B5gb5B.png
+**Примечания:**  
+- Изначально предполагалось, что на всех узлах будет активирован selinux enforsing
+	Однако, есть ряд багов, которые не позволяют указывать контекст для FUSE.  
+	[Support SELinux extended attributes on Gluster Volumes](https://github.com/gluster/glusterfs-specs/blob/master/accepted/SELinux-client-support.md)  
+	Поэтому на узлах web, selinux пришлось [отключить](http://stopdisablingselinux.com/). На остальных узлах он включен.  Лог аудита не показывает проблем. ```audit2why < /var/log/audit/audit.log```  
 
-https://www.digitalocean.com/community/tutorials/how-to-share-php-sessions-on-multiple-memcached-servers-on-ubuntu-14-04
+- На узлах настроены разные зоны в firewalld.  
+	- порты на узлах Percona XtraDB Cluster доступны только друг для друга и для proxysql  
+	- интерфейс администрирования proxysql доступен только другим узлам proxysql   
+	- порт http на web-узлах доступен только для узлов-балансировщиков  
+
+- ProxySQL-Cluster - обеспечивает прозрачное для веб-приложения разделение чтения/записи на разные узлы кластера. Для предотвращения deadlocks, запись в один момент времени идёт только на один узел, в случае его падения запись автоматически переходит на следующий узел. [Please note that proxysql_galera_checker will be deprecated in 2.0 , with native support for Galera]  
+
+- Если тестирование будет не в vagrant, то host-файл должен иметь структуру как в том, что здесь размещён. 
+  При этом нужно обязательно поменять:  
+```
+  -   vars:
+       xtradb_bind_interface: eth1
+  -   vars:
+       interface: eth1
+       virtual_ipaddress: 10.0.5.81
+```
+
+- развёртывается чистый дистрибутив wordpress. Нужно после установки зайти в админку и указать тестовый домен или виртуальный ip в качестве адреса, иначе будет пытаться редиректить на реальный ip web-узла.  
+
+- Опция   ```network.ping-timeout: 5``` позволяет значительно снизить время лага при падении узла glusterfs.  По умолчанию 60 секунд.
+<details><summary>gluster volume info </summary><p>
+---
+[root@web2 vagrant]# gluster volume info 
+ 
+Volume Name: php
+Type: Replicate
+Volume ID: 5e95467e-ed46-41c5-b44b-8657e01bcf05
+Status: Started
+Snapshot Count: 0
+Number of Bricks: 1 x 3 = 3
+Transport-type: tcp
+Bricks:
+Brick1: 10.0.5.21:/srv/gluster/php
+Brick2: 10.0.5.22:/srv/gluster/php
+Brick3: 10.0.5.23:/srv/gluster/php
+Options Reconfigured:
+performance.cache-size: 256MB
+network.ping-timeout: 5
+transport.address-family: inet
+nfs.disable: on
+performance.client-io-threads: off
+ 
+Volume Name: wordpress
+Type: Replicate
+Volume ID: cc270d1d-504d-4d4f-8a10-c22bb116d92e
+Status: Started
+Snapshot Count: 0
+Number of Bricks: 1 x 3 = 3
+Transport-type: tcp
+Bricks:
+Brick1: 10.0.5.21:/srv/gluster/wordpress
+Brick2: 10.0.5.22:/srv/gluster/wordpress
+Brick3: 10.0.5.23:/srv/gluster/wordpress
+Options Reconfigured:
+performance.cache-size: 256MB
+network.ping-timeout: 5
+transport.address-family: inet
+nfs.disable: on
+performance.client-io-threads: off
+---
+</p></details>
+
+<details><summary>gluster volume status</summary><p>
+
+---
+ gluster volume status
+Status of volume: php
+Gluster process                             TCP Port  RDMA Port  Online  Pid
+------------------------------------------------------------------------------
+Brick 10.0.5.21:/srv/gluster/php            49153     0          Y       5777 
+Brick 10.0.5.22:/srv/gluster/php            49153     0          Y       7533 
+Brick 10.0.5.23:/srv/gluster/php            49153     0          Y       6016 
+Self-heal Daemon on localhost               N/A       N/A        Y       7556 
+Self-heal Daemon on 10.0.5.23               N/A       N/A        Y       6039 
+Self-heal Daemon on 10.0.5.21               N/A       N/A        Y       5800 
+ 
+Task Status of Volume php
+------------------------------------------------------------------------------
+There are no active volume tasks
+ 
+Status of volume: wordpress
+Gluster process                             TCP Port  RDMA Port  Online  Pid
+------------------------------------------------------------------------------
+Brick 10.0.5.21:/srv/gluster/wordpress      49152     0          Y       5701 
+Brick 10.0.5.22:/srv/gluster/wordpress      49152     0          Y       7457 
+Brick 10.0.5.23:/srv/gluster/wordpress      49152     0          Y       5612 
+Self-heal Daemon on localhost               N/A       N/A        Y       7556 
+Self-heal Daemon on 10.0.5.23               N/A       N/A        Y       6039 
+Self-heal Daemon on 10.0.5.21               N/A       N/A        Y       5800 
+ 
+Task Status of Volume wordpress
+------------------------------------------------------------------------------
+There are no active volume tasks
+---
+
+</p></details>
+
+<details><summary>gluster peer status</summary><p>
+---
+[root@web2 vagrant]# gluster peer status
+Number of Peers: 2
+
+Hostname: 10.0.5.23
+Uuid: c898bc81-1f9f-4941-a608-7d45ab22c91f
+State: Peer in Cluster (Connected)
+
+Hostname: 10.0.5.21
+Uuid: 4ebe85e0-6f14-4f7d-8fd6-9f4314a0fee2
+State: Peer in Cluster (Connected)
+---
+</p></details>
 
 
-https://github.com/116davinder/memcached-cluster-ansible
-https://github.com/geerlingguy/ansible-role-memcached
 
-https://github.com/liviuchircu/ansible-role-XtraDB-Cluster
-https://github.com/timorunge/ansible-proxysql
-https://github.com/timorunge/ansible-pmm-client
-https://github.com/torian/ansible-role-filebeat
+<details><summary>show status like 'wsrep%'</summary><p>
 
-
-id|active|interval_ms|filename|arg1|arg2|arg3|arg4|arg5|comment
-1|1|3000|/bin/proxysql_galera_checker|--config-file=/etc/proxysql-admin.cnf --writer-is-reader=always --write-hg=10 --read-hg=11 --writer-count=1 --mode=singlewrite  --log=/var/lib/proxysql/otus_proxysql_galera_check.log|||||otus
-
-  tags:
-  - skip_ansible_lint
-
-  https://github.com/evrardjp/ansible-keepalived
-gluster volume info
- gluster volume set wordpress network.ping-timeout 5
-
-audit2why < /var/log/audit/audit.log
-
-
-TO DO:
-проверить перкону с selinux
-внести в gluster сессии php - задать session.save_path и upload_tmp_dir
-проверить весь кластер
-
-
-
+---
 mysql> show status like 'wsrep%';
 +----------------------------------+----------------------------------------------------------+
 | Variable_name                    | Value                                                    |
@@ -159,3 +244,34 @@ mysql> show status like 'wsrep%';
 | wsrep_ready                      | ON                                                       |
 +----------------------------------+----------------------------------------------------------+
 71 rows in set (0.19 sec)
+---
+
+</p></details>
+
+![kibana](https://i.imgur.com/i7OZxnO.png)  
+![kibana](https://i.imgur.com/1B5gb5B.png)  
+
+
+**Использованные роли:**  
+https://github.com/liviuchircu/ansible-role-XtraDB-Cluster  
+https://github.com/timorunge/ansible-proxysql  
+https://github.com/torian/ansible-role-filebeat  
+
+
+
+
+TO DO:
+socket proxysql
+galera-script errors
+проверить весь кластер
+
+<details><summary></summary><p>
+---
+---
+</p></details>
+
+id|active|interval_ms|filename|arg1|arg2|arg3|arg4|arg5|comment
+1|1|3000|/bin/proxysql_galera_checker|--config-file=/etc/proxysql-admin.cnf --writer-is-reader=always --write-hg=10 --read-hg=11 --writer-count=1 --mode=singlewrite  --log=/var/lib/proxysql/otus_proxysql_galera_check.log|||||otus
+
+  tags:
+  - skip_ansible_lint

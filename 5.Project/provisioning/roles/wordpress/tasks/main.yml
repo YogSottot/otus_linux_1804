@@ -14,12 +14,14 @@
    url: https://ru.wordpress.org/wordpress-{{ wp_version }}-ru_RU.tar.gz
    dest: /srv/wordpress-{{ wp_version }}.tar.gz
    #checksum: sha256:{{ wp_sha256sum }}
+  when: "'web1' in inventory_hostname"
 
 - name: Extract archive
   unarchive:
     src: /srv/wordpress-{{ wp_version }}.tar.gz
     dest: /srv/
     remote_src: yes
+  when: "'web1' in inventory_hostname"
 
 - name: Fetch random salts for WordPress config
   local_action: command curl https://api.wordpress.org/secret-key/1.1/salt/ warn=no
@@ -27,7 +29,8 @@
   become: no
   tags:
   - skip_ansible_lint
-
+  when: "'web1' in inventory_hostname"
+  
 #- name: Create WordPress database
 #  mysql_db: name={{ wp_db_name }} state=present
 
@@ -36,6 +39,7 @@
 
 - name: Copy WordPress config file
   template: src=wp-config.php dest=/srv/wordpress/
+  when: "'web1' in inventory_hostname"
 
 - name: Change ownership of WordPress installation
   file: path=/srv/wordpress/ owner={{ site_user }} group={{ site_user }} state=directory recurse=yes

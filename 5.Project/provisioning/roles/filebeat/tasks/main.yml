@@ -14,6 +14,16 @@
 - include: template.yml
   tags: filebeat_template
 
+- name: Make override dir for service filebeat
+  file:
+   path: /etc/systemd/system/filebeat.service.d
+   state: directory
+
+- name: Enable autorestart of services
+  copy:
+   src: override.conf
+   dest: /etc/systemd/system/filebeat.service.d/override.conf
+
 - name: Ensure Filebeat is enabled and started at boot
   service:
     name: filebeat

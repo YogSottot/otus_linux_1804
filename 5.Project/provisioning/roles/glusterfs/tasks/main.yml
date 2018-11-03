@@ -21,6 +21,8 @@
   with_items:
    - "{{ gluster_brick_dir }}"
    - "{{ gluster_mount_dir }}"
+   - "{{ gluster_php_mount_dir }}"
+   - "{{ gluster_php_brick_dir }}"
 
 - name: Configure Gluster volume.
   gluster_volume:
@@ -31,10 +33,16 @@
    cluster: "{{ groups['webservers'] | map('extract', hostvars, ['ansible_ssh_host']) | join(',') }}"
    host: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}"
    force: yes
-   options:
-    network.ping-timeout: 5
   run_once: true
   ignore_errors: yes
+  when: "'web3' in inventory_hostname"
+
+- name: tune gluster volume https://github.com/ansible/ansible/issues/29296
+  shell: gluster volume set {{ gluster_brick_name }} network.ping-timeout 5 performance.cache-size 256MB
+  run_once: true
+  when: "'web3' in inventory_hostname"
+  tags:
+  - skip_ansible_lint
 
 - name: Ensure Gluster volume is mounted.
   mount:
@@ -43,3 +51,74 @@
    fstype: glusterfs
    opts: "defaults,_netdev"
    state: mounted
+  when: "'web3' in inventory_hostname"
+
+- name: Ensure Gluster  volume is add to fstab.
+  mount:
+   name: "{{ gluster_mount_dir }}"
+   src: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}:/{{ gluster_brick_name }}"
+   fstype: glusterfs
+   opts: "defaults,_netdev"
+   state: present
+  when: "'web3' not in inventory_hostname"
+
+- name: Configure php-Gluster volume.
+  gluster_volume:
+   state: present
+   name: "{{ gluster_php_brick_name }}"
+   brick: "{{ gluster_php_brick_dir }}"
+   replicas: 3
+   cluster: "{{ groups['webservers'] | map('extract', hostvars, ['ansible_ssh_host']) | join(',') }}"
+   host: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}"
+   force: yes
+  run_once: true
+  ignore_errors: yes
+  when: "'web3' in inventory_hostname"
+
+- name: tune gluster volume https://github.com/ansible/ansible/issues/29296
+  shell: gluster volume set {{ gluster_php_brick_name }} network.ping-timeout 5 performance.cache-size 256MB
+  run_once: true
+  when: "'web3' in inventory_hostname"
+  tags:
+  - skip_ansible_lint
+
+- name: Ensure Gluster php-volume is mounted.
+  mount:
+   name: "{{ gluster_php_mount_dir }}"
+   src: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}:/{{ gluster_php_brick_name }}"
+   fstype: glusterfs
+   opts: "defaults,_netdev"
+   state: mounted
+  when: "'web3' in inventory_hostname"
+
+- name: Ensure Gluster php-volume is add to fstab
+  mount:
+   name: "{{ gluster_php_mount_dir }}"
+   src: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}:/{{ gluster_php_brick_name }}"
+   fstype: glusterfs
+   opts: "defaults,_netdev"
+   state: present
+  when: "'web3' not in inventory_hostname"
+
+- name: mount volume on web2
+  command: mount -a
+  args:
+    warn: no
+  delegate_to: web2
+  when: "'web3' in inventory_hostname"
+  tags:
+  - skip_ansible_lint
+
+- name: mount volume on web1
+  command: mount -a
+  args:
+    warn: no
+  delegate_to: web1
+  when: "'web3' in inventory_hostname"
+  tags:
+  - skip_ansible_lint
+
+- name: Restore secontext for bricks
+  command: restorecon -RF /srv/gluster/
+  tags:
+  - skip_ansible_lint

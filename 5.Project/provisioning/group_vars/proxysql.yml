@@ -22,7 +22,7 @@ proxysql_global_variables_kv:
  admin-cluster_username: "{{ proxysql_cluster_username }}"
  admin-cluster_password: "{{ proxysql_cluster_password }}"
  mysql-default_charset: "{{ xtradb_character_set_server }}"
- mysql-interfaces: 127.0.0.1:3306
+ mysql-interfaces: 127.0.0.1:3306;/var/run/proxysql.sock
  mysql-max_connections: 8192
  mysql-monitor_username: "{{ proxysql_username_monitor }}"
  mysql-monitor_password: "{{ proxysql_password_monitor }}"

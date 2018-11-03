@@ -11,6 +11,28 @@
       - glusterfs-client
     state: present
 
+- name: Set nis_enabled flag on and keep it persistent across reboots
+  seboolean:
+    name: nis_enabled
+    state: yes
+    persistent: yes
+
+- name: Set sefcontext for bricks
+  sefcontext:
+    target: '/srv/gluster(/.*)?'
+    setype: glusterd_brick_t
+    state: present
+
+- name: Make override dir for service glusterd
+  file:
+   path: /etc/systemd/system/glusterd.service.d
+   state: directory
+
+- name: Enable autorestart of services
+  copy:
+   src: override.conf
+   dest: /etc/systemd/system/glusterd.service.d/override.conf
+
 - name: Install Firewalld
   yum: name=firewalld state=present
 

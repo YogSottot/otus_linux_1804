@@ -28,7 +28,7 @@
 - keepalived (реализует VRRP и следит за состоянием сервисов HAProxy / Galera Arbitrator)  
 - HAProxy (проксирование трафика на nginx в web1/web2). Пользователи подключаются к сайту через HAProxy по единому виртуальному ip-адресу
 
-3 web-сервера (синхронизация файлов сайта через lsyncd):  
+3 web-сервера:  
 - nginx  
 - php-fpm  
 - filebeat  
@@ -42,22 +42,23 @@
 1 сервер для логирования и бэкапов:  
 - elasticsearch  
 - kibana  
-- sftp  
+- ftp  
 
 **Примечания:**  
-- Изначально предполагалось, что на всех узлах будет активирован selinux enforsing
+- Изначально предполагалось, что на всех узлах будет активирован selinux enforsing.  
 	Однако, есть ряд багов, которые не позволяют указывать контекст для FUSE.  
 	[Support SELinux extended attributes on Gluster Volumes](https://github.com/gluster/glusterfs-specs/blob/master/accepted/SELinux-client-support.md)  
-	Поэтому на узлах web, selinux пришлось [отключить](http://stopdisablingselinux.com/). На остальных узлах он включен.  Лог аудита не показывает проблем. ```audit2why < /var/log/audit/audit.log```  
+	Поэтому на web-узлах, selinux пришлось [отключить](http://stopdisablingselinux.com/). На остальных узлах он включен.  Лог аудита не показывает проблем. ```audit2why < /var/log/audit/audit.log```  
 
 - На узлах настроены разные зоны в firewalld.  
 	- порты на узлах Percona XtraDB Cluster доступны только друг для друга и для proxysql  
 	- интерфейс администрирования proxysql доступен только другим узлам proxysql   
+	- порты необходимые для работы glusterfs открыты только для других узлов glusterfs  
 	- порт http на web-узлах доступен только для узлов-балансировщиков  
 
-- ProxySQL-Cluster - обеспечивает прозрачное для веб-приложения разделение чтения/записи на разные узлы кластера. Для предотвращения deadlocks, запись в один момент времени идёт только на один узел, в случае его падения запись автоматически переходит на следующий узел. [Please note that proxysql_galera_checker will be deprecated in 2.0 , with native support for Galera]  
+- ProxySQL-Cluster - обеспечивает прозрачное (для веб-приложения) разделение чтения/записи на разные узлы кластера. Для предотвращения deadlocks, запись, в один момент времени, идёт только на один узел. В случае его падения, запись автоматически переходит на следующий узел. [Please note that proxysql_galera_checker will be deprecated in 2.0, with native support for Galera]  
 
-- Если тестирование будет не в vagrant, то host-файл должен иметь структуру как в том, что здесь размещён. 
+- Если тестирование будет не в vagrant, то host-файл должен иметь структуру по предоставленному образцу.  
   При этом нужно обязательно поменять:  
 ```
   -   vars:
@@ -67,7 +68,7 @@
        virtual_ipaddress: 10.0.5.81
 ```
 
-- развёртывается чистый дистрибутив wordpress. Нужно после установки зайти в админку и указать тестовый домен или виртуальный ip в качестве адреса, иначе будет пытаться редиректить на реальный ip web-узла.  
+- Развёртывается чистый дистрибутив wordpress. Нужно после установки зайти в админку и указать тестовый домен или виртуальный ip в качестве адреса, иначе будет пытаться редиректить на реальный ip web-узла.  
 
 - Опция   ```network.ping-timeout: 5``` позволяет значительно снизить время лага при падении узла glusterfs.  По умолчанию 60 секунд.
 <details><summary>gluster volume info </summary><p>
@@ -166,7 +167,7 @@ State: Peer in Cluster (Connected)
 
 <details><summary>show status like 'wsrep%'</summary><p>
 
----
+```bash
 mysql> show status like 'wsrep%';
 +----------------------------------+----------------------------------------------------------+
 | Variable_name                    | Value                                                    |
@@ -244,7 +245,7 @@ mysql> show status like 'wsrep%';
 | wsrep_ready                      | ON                                                       |
 +----------------------------------+----------------------------------------------------------+
 71 rows in set (0.19 sec)
----
+```
 
 </p></details>
 
@@ -261,9 +262,9 @@ https://github.com/torian/ansible-role-filebeat
 
 
 TO DO:
-socket proxysql
-galera-script errors
-проверить весь кластер
+socket proxysql  
+galera-script errors  
+проверить весь кластер  
 
 <details><summary></summary><p>
 ---

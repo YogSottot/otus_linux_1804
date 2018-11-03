@@ -1,0 +1,10 @@
+---
+- name: Fix admin password
+  shell: /usr/bin/find /usr/share/proxysql/tools/proxysql_galera_checker.sh -type f -print0 | xargs -0 sed -i 's/PROXYSQL_PASSWORD\=\"admin\"/PROXYSQL_PASSWORD\=\"{{ proxysql_login_admin_password }}\"/g'
+  tags:
+  - skip_ansible_lint
+
+- name: Fix admin host
+  shell: /usr/bin/find /usr/share/proxysql/tools/proxysql_galera_checker.sh -type f -print0 | xargs -0 sed -i 's/PROXYSQL_HOSTNAME\=\"localhost\"/PROXYSQL_HOSTNAME\=\"127\.0\.0\.1\"/g' 
+  tags:
+  - skip_ansible_lint

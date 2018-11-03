@@ -82,9 +82,33 @@
   tags:
   - skip_ansible_lint
 
-- name: Set httpd_can_network_connect flag on and keep it persistent across reboots
+#- name: Set httpd_can_network_connect flag on and keep it persistent across reboots
+#  seboolean:
+#    name: httpd_can_network_connect_db
+#    state: yes
+#    persistent: yes
+
+- name: Set httpd_use_fusefs flag on and keep it persistent across reboots
   seboolean:
-    name: httpd_can_network_connect_db
+    name: httpd_use_fusefs
+    state: yes
+    persistent: yes
+
+- name: Set daemons_enable_cluster_mode flag on and keep it persistent across reboots
+  seboolean:
+    name: daemons_enable_cluster_mode
+    state: yes
+    persistent: yes
+
+- name: Set httpd_can_sendmail flag on and keep it persistent across reboots
+  seboolean:
+    name: httpd_can_sendmail
+    state: yes
+    persistent: yes
+
+- name: Set httpd_setrlimit flag on and keep it persistent across reboots
+  seboolean:
+    name: httpd_setrlimit
     state: yes
     persistent: yes
 

@@ -1,0 +1,47 @@
+
+module glusterfs 1.0;
+
+require {
+        type postfix_etc_t;
+        type postfix_master_t;
+        type postfix_public_t;
+        type postfix_spool_t;
+        type user_home_dir_t;
+        type ephemeral_port_t;
+        type glusterd_t;
+        type httpd_t;
+        type fusefs_t;
+        class process setrlimit;
+        class unix_stream_socket connectto;
+        class tcp_socket name_bind;
+        class file { create getattr open read rename setattr unlink write };
+        class sock_file { getattr write };
+        class dir { add_name create read remove_name setattr write };
+}
+
+#============= glusterd_t ==============
+
+#!!!! This avc is allowed in the current policy
+allow glusterd_t ephemeral_port_t:tcp_socket name_bind;
+
+#============= httpd_t ==============
+
+#!!!! This avc is allowed in the current policy
+allow httpd_t fusefs_t:dir { add_name create read remove_name setattr write };
+
+#!!!! This avc is allowed in the current policy
+allow httpd_t fusefs_t:file { create getattr open read setattr unlink write };
+allow httpd_t postfix_etc_t:file { getattr open read };
+
+#!!!! This avc is allowed in the current policy
+allow httpd_t postfix_master_t:unix_stream_socket connectto;
+allow httpd_t postfix_public_t:sock_file { getattr write };
+allow httpd_t postfix_spool_t:dir { add_name remove_name write };
+allow httpd_t postfix_spool_t:file { create rename setattr };
+
+#!!!! This avc is allowed in the current policy
+allow httpd_t postfix_spool_t:file { getattr open read write };
+
+#!!!! This avc can be allowed using the boolean 'httpd_setrlimit'
+allow httpd_t self:process setrlimit;
+allow httpd_t user_home_dir_t:dir { add_name create write };

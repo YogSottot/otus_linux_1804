@@ -28,6 +28,8 @@
 
 - include_tasks: install.yml
 
+- include_tasks: fix_galera_checker.yml
+
 - include_tasks: config.yml
 
 - name: Restore context

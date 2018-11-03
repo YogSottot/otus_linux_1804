@@ -23,6 +23,15 @@
     setype: glusterd_brick_t
     state: present
 
+#- name: Copy te selinuc module
+#  copy:
+#    src: glusterfs.te
+#    dest: /opt/glusterfs.te
+
+#- name: generate selinux rule for glusterfs
+#  shell: checkmodule -M -m -o /opt/glusterfs.mod  /opt/glusterfs.te && semodule_package -o /opt/glusterfs.pp -m /opt/glusterfs.mod && semodule -i /opt/glusterfs.pp
+
+
 - name: Make override dir for service glusterd
   file:
    path: /etc/systemd/system/glusterd.service.d

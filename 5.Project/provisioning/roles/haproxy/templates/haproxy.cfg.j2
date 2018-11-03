@@ -85,7 +85,7 @@ frontend main
 
 backend app-main
     balance leastconn                                   #Balance algorithm
-    cookie PHPSESSID prefix nocache 					#Sticky sessions
+ #   cookie PHPSESSID prefix nocache 					#Sticky sessions
 {% for host in groups['webservers'] %}
     server {{ host }} {{ hostvars[host]['ansible_ssh_host'] }}:{{ port }} check
 {% endfor %}

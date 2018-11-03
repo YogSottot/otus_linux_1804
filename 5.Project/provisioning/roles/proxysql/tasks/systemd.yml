@@ -23,5 +23,5 @@
 
 - name: Set up new socket path of services
   copy:
-   src: client.cnf
-   dest: /etc/mysql/conf.d/client.cnf
+   src: z_client.cnf
+   dest: /etc/mysql/conf.d/z_client.cnf

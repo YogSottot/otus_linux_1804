@@ -40,7 +40,7 @@
    - group_vars/filebeat.yml
   become: yes
   roles:
- #  - glusterfs
+   - glusterfs
    - proxysql
    - wordpress
    - nginx

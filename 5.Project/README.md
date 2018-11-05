@@ -321,7 +321,7 @@ https://github.com/geerlingguy/ansible-role-glusterfs
 https://github.com/neb0t/vagrant-ansible-haproxy-keepalived  
 https://github.com/ansible/ansible-examples/tree/master/wordpress-nginx  
 
-**Использованная документация:**
+**Использованная документация:**  
 https://www.percona.com/doc/percona-xtradb-cluster/LATEST/index.html  
 https://github.com/sysown/proxysql/wiki  
 https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/sect-security-enhanced_linux-troubleshooting-fixing_problems#sect-Security-Enhanced_Linux-Fixing_Problems-Linux_Permissions  

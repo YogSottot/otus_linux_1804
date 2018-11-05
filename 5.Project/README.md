@@ -86,13 +86,14 @@ Mon Nov  5 11:32:13 MSK 2018 --> Checking READ server 2:10.0.5.33:3306, current 
 Mon Nov  5 11:32:13 MSK 2018 server 2:10.0.5.33:3306 is already ONLINE
 Mon Nov  5 11:32:13 MSK 2018 --> Checking READ server 2:10.0.5.31:3306, current status ONLINE, wsrep_local_state 4
 Mon Nov  5 11:32:13 MSK 2018 server 2:10.0.5.31:3306 is already ONLINE
-
+```
 </p></details>
 
 - Создано 3 узла Glusterfs для избежания split-brain. При падении двух узлов, оставшийся не будет обслуживать клиентов.
 
 - Если тестирование будет не в vagrant, то host-файл должен иметь структуру по предоставленному образцу.  
   При этом нужно обязательно поменять:  
+
 ```
   -   vars:
        xtradb_bind_interface: eth1
@@ -115,7 +116,7 @@ Mon Nov  5 11:32:13 MSK 2018 server 2:10.0.5.31:3306 is already ONLINE
 
 - Опция   ```network.ping-timeout: 5``` позволяет значительно снизить время лага при падении узла glusterfs.  По умолчанию 60 секунд.  
 
-<details><summary>gluster volume info </summary><p>
+<details><summary>gluster volume info (нажать, чтобы открыть)</summary><p>
 
 ```bash
 [root@web2 vagrant]# gluster volume info 
@@ -297,9 +298,10 @@ mysql> show status like 'wsrep%';
 
 - kiabana и elastic закрыты через basic http auth. Логин / Пароль от kibana по умолчанию (otus / test).  
 
+<details><summary>kiabana (нажать, чтобы открыть)</summary><p>
 ![kibana](https://i.imgur.com/i7OZxnO.png)  
 ![kibana](https://i.imgur.com/xjQtnPr.png)  
-
+</p></details>
 
 **Использованные роли:**  
 https://github.com/liviuchircu/ansible-role-XtraDB-Cluster  

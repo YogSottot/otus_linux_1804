@@ -55,6 +55,8 @@
 
 - name: generate selinux rule for proftpd
   shell: checkmodule -M -m -o /opt/proftpdse.mod  /opt/proftpdse.te && semodule_package -o /opt/proftpdse.pp -m /opt/proftpdse.mod && semodule -i /opt/proftpdse.pp
+  tags:
+  - skip_ansible_lint
 
 - name: Make override dir for service proftpd
   file:

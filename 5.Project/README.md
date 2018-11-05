@@ -21,7 +21,7 @@
 
 **Выполнение:**  
 
-- Схема:
+- Схема (нажать, чтобы увидеть в полном размере):
 ![schema](https://raw.githubusercontent.com/YogSottot/otus_linux_1804/master/5.Project/Networkchart_cluster.svg?sanitize=true)
 
 2 балансировщика с общим ip (VRRP/failover):  

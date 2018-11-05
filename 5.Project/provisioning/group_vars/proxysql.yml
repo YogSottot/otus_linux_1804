@@ -39,7 +39,7 @@ proxysql_backend_servers:
   login_user: "{{ proxysql_login_admin_user }}"
   max_connections: 200
   status: ONLINE
-  weight: 1000000
+  weight: 1000
  mysql-srv1-hg2:
   comment: mysql-srv1-hg2
   hostgroup: 2
@@ -50,7 +50,7 @@ proxysql_backend_servers:
   login_user: "{{ proxysql_login_admin_user }}"
   max_connections: 200
   status: ONLINE
-  weight: 500
+  weight: 1000
   read_only: 0
  mysql-srv2-hg2:
   comment: mysql-srv2-hg2

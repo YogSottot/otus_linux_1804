@@ -8,8 +8,14 @@
     owner: root
     src: "{{ proxysql_proxysql_cnf_template }}"
 
+#- name: Ensure that ProxySQL is running
+#  service:
+#    enabled: "{{ proxysql_service_enabled_state | default('yes') }}"
+#    name: proxysql
+#    state: "{{ proxysql_service_state | default('started') }}"
+
 - name: Ensure that ProxySQL is running
-  service:
+  systemd:
     enabled: "{{ proxysql_service_enabled_state | default('yes') }}"
     name: proxysql
     state: "{{ proxysql_service_state | default('started') }}"
@@ -21,22 +27,22 @@
     timeout: 60
   when: proxysql_service_enabled
 
-- include_tasks: config/proxysql_backend_servers.yml
-  when: proxysql_backend_servers
+#- include_tasks: config/proxysql_backend_servers.yml
+#  when: proxysql_backend_servers
 
-- include_tasks: config/proxysql_global_variables.yml
-  when: >
-        proxysql_global_variables and
-        proxysql_global_variables_kv
+#- include_tasks: config/proxysql_global_variables.yml
+#  when: >
+#        proxysql_global_variables and
+#        proxysql_global_variables_kv
 
-- include_tasks: config/proxysql_mysql_users.yml
-  when: proxysql_mysql_users
+#- include_tasks: config/proxysql_mysql_users.yml
+#  when: proxysql_mysql_users
 
-- include_tasks: config/proxysql_proxysql_servers.yml
-  when: proxysql_proxysql_servers
+#- include_tasks: config/proxysql_proxysql_servers.yml
+#  when: proxysql_proxysql_servers
 
-- include_tasks: config/proxysql_query_rules.yml
-  when: proxysql_query_rules
+#- include_tasks: config/proxysql_query_rules.yml
+#  when: proxysql_query_rules
 
-- include_tasks: config/proxysql_replication_hostgroups.yml
-  when: proxysql_replication_hostgroups
+#- include_tasks: config/proxysql_replication_hostgroups.yml
+#  when: proxysql_replication_hostgroups

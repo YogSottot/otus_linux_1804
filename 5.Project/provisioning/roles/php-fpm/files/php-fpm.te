@@ -1,0 +1,22 @@
+
+module php-fpm 1.0;
+
+require {
+        type httpd_t;
+        type initrc_t;
+        type user_home_dir_t;
+        type hugetlbfs_t;
+        class unix_stream_socket connectto;
+        class dir { add_name create write };
+        class file execute;
+
+}
+
+#============= httpd_t ==============
+allow httpd_t hugetlbfs_t:file execute;
+
+#!!!! This avc is allowed in the current policy
+allow httpd_t initrc_t:unix_stream_socket connectto;
+
+#!!!! This avc is allowed in the current policy
+allow httpd_t user_home_dir_t:dir { add_name create write };

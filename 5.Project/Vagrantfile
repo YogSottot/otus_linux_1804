@@ -4,42 +4,42 @@
 # vim: set ft=ruby :
 
 MACHINES = {
-:balancer1 => {
+:"balancer1.tld" => {
                :box_name => "centos/7",
-               :public => {:ip => '192.168.0.111', :adapter => 3 },
+#               :public => {:ip => '192.168.0.111', :adapter => 3 },
                :net => [
                         {ip: '10.0.5.11', adapter: 2, netmask: "255.255.255.0"},
                        ]
  },
 	
-:balancer2 => {
+:"balancer2.tld" => {
                :box_name => "centos/7",
-               :public => {:ip => '192.168.0.112', :adapter => 3 },
+#               :public => {:ip => '192.168.0.112', :adapter => 3 },
                :net => [
 					   {ip: '10.0.5.12', adapter: 2, netmask: "255.255.255.0"},
                        ]
                       
  },
 
-:web1 => {
+:"web1.tld" => {
           :box_name => "centos/7",
-          :public => {:ip => '192.168.0.121', :adapter => 3 },
+#          :public => {:ip => '192.168.0.121', :adapter => 3 },
           :net => [
                   {ip: '10.0.5.21', adapter: 2, netmask: "255.255.255.0"},
                   ]
  },
 
-:web2 => {
+:"web2.tld" => {
 		:box_name => "centos/7",
-		:public => {:ip => '192.168.0.122', :adapter => 3 },
+#		:public => {:ip => '192.168.0.122', :adapter => 3 },
 		:net => [
 				{ip: '10.0.5.22', adapter: 2, netmask: "255.255.255.0"},
 				]
  },
 
-:web3 => {
+:"web3.tld" => {
 		:box_name => "centos/7",
-		:public => {:ip => '192.168.0.123', :adapter => 3 },
+#		:public => {:ip => '192.168.0.123', :adapter => 3 },
 		:net => [
 				{ip: '10.0.5.23', adapter: 2, netmask: "255.255.255.0"},
 				]
@@ -52,33 +52,33 @@ MACHINES = {
 #				]
 # },
 
-:cluster1 => {
+:"cluster1.tld" => {
 		:box_name => "centos/7",
-		:public => {:ip => '192.168.0.131', :adapter => 3 },
+#		:public => {:ip => '192.168.0.131', :adapter => 3 },
 		:net => [
 				{ip: '10.0.5.31', adapter: 2, netmask: "255.255.255.0"},
 				]
  },
 
-:cluster2 => {
+:"cluster2.tld" => {
 		:box_name => "centos/7",
-		:public => {:ip => '192.168.0.132', :adapter => 3 },
+#		:public => {:ip => '192.168.0.132', :adapter => 3 },
 		:net => [
 				{ip: '10.0.5.32', adapter: 2, netmask: "255.255.255.0"},
 				]
  },
 
-:cluster3 => {
+:"cluster3.tld" => {
 		:box_name => "centos/7",
-		:public => {:ip => '192.168.0.133', :adapter => 3 },
+#		:public => {:ip => '192.168.0.133', :adapter => 3 },
 		:net => [
 				{ip: '10.0.5.33', adapter: 2, netmask: "255.255.255.0"},
 				]
  },
 
-:log1 => {
+:"log1.tld" => {
 		:box_name => "centos/7",
-		:public => {:ip => '192.168.0.141', :adapter => 3 },
+#		:public => {:ip => '192.168.0.141', :adapter => 3 },
 		:net => [
 				{ip: '10.0.5.41', adapter: 2, netmask: "255.255.255.0"},
 				]
@@ -104,24 +104,24 @@ Vagrant.configure("2") do |config|
           box.vm.network "public_network", boxconfig[:public]
         end
 		# wait until all server is up, then provision
-		#if boxconfig[:box_name] == "log1"
+		if boxconfig[:box_name] == "log1"
 		config.vm.provision "ansible" do |ansible|
 			ansible.verbose = "vvv"
 			ansible.playbook = "provisioning/playbook.yml"
 			ansible.become = "true"
 			ansible.inventory_path = "provisioning/hosts"
 			# Disable default limits to connect to all the machines
-			#ansible.limit = "all"
+			ansible.limit = "all"
 			ansible.verbose = true
 		#end
 		end
-		if boxconfig[:box_name] == "log1"
+		if boxconfig[:box_name] == "log1.tld"
 		config.vm.provider "virtualbox" do |v|
-			v.memory = 512
+			v.memory = 1024
 			end
 		else
 		config.vm.provider "virtualbox" do |v|
-			v.memory = 384
+			v.memory = 512
 			end
 		end
 

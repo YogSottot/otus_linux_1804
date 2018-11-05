@@ -1,0 +1,61 @@
+# tasks for Red Hat Familly
+---
+- name: Installing selinux dependencies
+  yum: name=policycoreutils-python state=present
+
+- name: Copy te selinux module
+  copy:
+    src: php-fpm.te
+    dest: /opt/php-fpm.te
+
+- name: generate selinux rule for php-fpm.te
+  shell: checkmodule -M -m -o /opt/php-fpm.mod  /opt/php-fpm.te && semodule_package -o /opt/php-fpm.pp -m /opt/php-fpm.mod && semodule -i /opt/php-fpm.pp
+  tags:
+  - skip_ansible_lint
+
+- name: Copy te selinux module
+  copy:
+    src: sendmail_fuse.te
+    dest: /opt/sendmail_fuse.te
+
+- name: generate selinux rule for sendmail_fuse.te
+  shell: checkmodule -M -m -o /opt/sendmail_fuse.mod  /opt/sendmail_fuse.te && semodule_package -o /opt/sendmail_fuse.pp -m /opt/sendmail_fuse.mod && semodule -i /opt/sendmail_fuse.pp
+  tags:
+  - skip_ansible_lint
+
+#- name: Set httpd_can_network_connect flag on and keep it persistent across reboots
+#  seboolean:
+#    name: httpd_can_network_connect_db
+#    state: yes
+#    persistent: yes
+
+- name: Set httpd_use_fusefs flag on and keep it persistent across reboots
+  seboolean:
+    name: httpd_use_fusefs
+    state: yes
+    persistent: yes
+
+- name: Set daemons_enable_cluster_mode flag on and keep it persistent across reboots
+  seboolean:
+    name: daemons_enable_cluster_mode
+    state: yes
+    persistent: yes
+
+- name: Set httpd_can_sendmail flag on and keep it persistent across reboots
+  seboolean:
+    name: httpd_can_sendmail
+    state: yes
+    persistent: yes
+
+- name: Set httpd_setrlimit flag on and keep it persistent across reboots
+  seboolean:
+    name: httpd_setrlimit
+    state: yes
+    persistent: yes
+
+- name: Set httpd_execmem flag on and keep it persistent across reboots
+  seboolean:
+    name: httpd_execmem
+    state: yes
+    persistent: yes
+

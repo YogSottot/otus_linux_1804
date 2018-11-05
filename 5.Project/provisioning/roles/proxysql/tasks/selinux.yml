@@ -20,3 +20,9 @@
     target: '/var/lib/proxysql/proxysql_node_monitor\.log'
     setype: var_log_t
     state: present
+
+- name: Allow logrotate to rotate logs
+  sefcontext:
+    target: '/var/run/proxysql.sock'
+    setype: httpd_var_run_t
+    state: present

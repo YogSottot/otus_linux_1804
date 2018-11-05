@@ -1,0 +1,11 @@
+# tasks for Red Hat Familly
+---
+- name: Installing syslog config
+  copy:
+   src: proxysql-logrotate
+   dest: /etc/logrotate.d/proxysql-logrotate
+
+- name: Set up new socket path of services
+  copy:
+   src: z_client.cnf
+   dest: /etc/my.cnf.d/z_client.cnf

@@ -3,19 +3,18 @@
 - hosts: all
   become: yes
   roles:
-    - selinux_vagrant
-#   - sysctl
-#   - packages
-#   - chrony
-#   - liquidprompt
-#   - fail2ban
+   - selinux_vagrant
+   - sysctl
+   - packages
+   - chrony
+   - liquidprompt
 
-- hosts: log1
+- hosts: log1.tld
   become: true
   roles:
- #  - elasticsearch
-#   - elasticsearch-curator
-   #- backups-server
+   - elasticsearch
+   - elasticsearch-curator
+   - backups-server
    - nginx
 
 - hosts: percona-cluster
@@ -24,14 +23,14 @@
   become: true
   roles:
    - XtraDB-Cluster
-#   - filebeat
+   - filebeat
   vars:
    xtradb_bind_interface: eth1
 
-- hosts: cluster1
+- hosts: cluster3.tld
   become: true
   roles:
-#   - backups-client
+   - backups-client
 
 - hosts: webservers
   vars_files:
@@ -41,17 +40,16 @@
   become: yes
   roles:
    - glusterfs
-   - proxysql
    - wordpress
    - nginx
    - php-fpm
-   #- lsyncd
-   #- filebeat
+   - proxysql
+   - filebeat
 
-- hosts: web1
+- hosts: web2.tld
   become: yes
   roles:
-#   - backups-client
+   - backups-client
 
 - hosts: lblservers
   user: root

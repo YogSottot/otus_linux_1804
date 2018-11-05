@@ -1,0 +1,12 @@
+
+module sendmail_fuse 1.0;
+
+require {
+        type system_mail_t;
+        type fusefs_t;
+        class file write;
+}
+
+#============= system_mail_t ==============
+
+allow system_mail_t fusefs_t:file write;

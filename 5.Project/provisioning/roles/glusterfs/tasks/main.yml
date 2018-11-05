@@ -15,6 +15,8 @@
 
 - name: Ensure GlusterFS is started and enabled at boot.
   service: "name={{ glusterfs_daemon }} state=started enabled=yes"
+- name: Copy hosts
+  template: src=hosts.j2 dest=/etc/hosts
 
 - name: Ensure Gluster brick and mount directories exist.
   file: "path={{ item }} state=directory mode=0775"
@@ -34,13 +36,13 @@
    host: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}"
    force: yes
   run_once: true
-  ignore_errors: yes
-  when: "'web3' in inventory_hostname"
+ # ignore_errors: yes
+#  when: "'web3.tld' in inventory_hostname"
 
 - name: tune gluster volume https://github.com/ansible/ansible/issues/29296
   shell: gluster volume set {{ gluster_brick_name }} network.ping-timeout 5 performance.cache-size 256MB
   run_once: true
-  when: "'web3' in inventory_hostname"
+#  when: "'web3.tld' in inventory_hostname"
   tags:
   - skip_ansible_lint
 
@@ -51,7 +53,7 @@
    fstype: glusterfs
    opts: "defaults,_netdev"
    state: mounted
-  when: "'web3' in inventory_hostname"
+#  when: "'web3.tld' in inventory_hostname"
 
 - name: Ensure Gluster  volume is add to fstab.
   mount:
@@ -60,7 +62,7 @@
    fstype: glusterfs
    opts: "defaults,_netdev"
    state: present
-  when: "'web3' not in inventory_hostname"
+  when: "'web4.tld' in inventory_hostname"
 
 - name: Configure php-Gluster volume.
   gluster_volume:
@@ -72,13 +74,13 @@
    host: "{{ hostvars[inventory_hostname]['ansible_ssh_host'] }}"
    force: yes
   run_once: true
-  ignore_errors: yes
-  when: "'web3' in inventory_hostname"
+ # ignore_errors: yes
+  #when: "'web3.tld' in inventory_hostname"
 
 - name: tune gluster volume https://github.com/ansible/ansible/issues/29296
   shell: gluster volume set {{ gluster_php_brick_name }} network.ping-timeout 5 performance.cache-size 256MB
   run_once: true
-  when: "'web3' in inventory_hostname"
+  #when: "'web3.tld' in inventory_hostname"
   tags:
   - skip_ansible_lint
 
@@ -89,7 +91,7 @@
    fstype: glusterfs
    opts: "defaults,_netdev"
    state: mounted
-  when: "'web3' in inventory_hostname"
+  #when: "'web3.tld' in inventory_hostname"
 
 - name: Ensure Gluster php-volume is add to fstab
   mount:
@@ -98,14 +100,14 @@
    fstype: glusterfs
    opts: "defaults,_netdev"
    state: present
-  when: "'web3' not in inventory_hostname"
+  when: "'web4.tld' in inventory_hostname"
 
 - name: mount volume on web2
   command: mount -a
   args:
     warn: no
-  delegate_to: web2
-  when: "'web3' in inventory_hostname"
+  delegate_to: web2.tld
+  when: "'web4.tld' in inventory_hostname"
   tags:
   - skip_ansible_lint
 
@@ -113,8 +115,8 @@
   command: mount -a
   args:
     warn: no
-  delegate_to: web1
-  when: "'web3' in inventory_hostname"
+  delegate_to: web1.tld
+  when: "'web4.tld' in inventory_hostname"
   tags:
   - skip_ansible_lint
 

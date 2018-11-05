@@ -1,0 +1,15 @@
+
+module sshd 1.0;
+
+require {
+        type unconfined_t;
+        type sshd_net_t;
+        type kernel_t;
+        class process { dyntransition transition };
+        class service { start status };
+}
+
+#============= kernel_t ==============
+allow kernel_t self:service { start status };
+allow kernel_t sshd_net_t:process dyntransition;
+allow kernel_t unconfined_t:process { dyntransition transition };

@@ -15,7 +15,7 @@
 
 - name: Install php-fpm and deps
   yum:
-   name: ['php-fpm', 'php-enchant', 'php-IDNA_Convert', 'php-mbstring', 'php-mysql', 'php-PHPMailer', 'php-process', 'php-simplepie', 'php-xml']
+   name: ['php-fpm', 'php-enchant', 'php-IDNA_Convert', 'php-mbstring', 'php-mysql', 'php-PHPMailer', 'php-process', 'php-simplepie', 'php-xml', 'php-opcache']
    state: present
 
 - name: Make override dir for service php-fpm
@@ -41,6 +41,9 @@
 - name: Change ownership of php installation
   file: path=/var/lib/php/ owner={{ site_user }} group={{ site_user }} state=directory recurse=yes
 
+- name: selinux
+  include: selinux.yml
+
 - name: Disable default pool
   command: mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.disabled creates=/etc/php-fpm.d/www.disabled
   notify: reload php-fpm
@@ -48,6 +51,11 @@
 - name: Copy php-fpm configuration
   template: src=wordpress.conf dest=/etc/php-fpm.d/
   notify: reload php-fpm
+
+- name: setup hostname
+  shell: echo 127.0.0.1 {{server_hostname}} >> /etc/hosts
+  tags:
+  - skip_ansible_lint
 
 - name: php-fpm service state
   service: name=php-fpm state=started enabled=yes

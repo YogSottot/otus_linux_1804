@@ -20,14 +20,14 @@
 
 - name: Make backup dir
   file:
-   path: "{{ ftp_backup_dir }}/cluster3"
+   path: "{{ ftp_backup_dir }}/cluster3.tld"
    state: directory
    owner: "{{ ftp_backup_user }}"
    mode: 0755
 
 - name: Make backup dir
   file:
-   path: "{{ ftp_backup_dir }}/web2"
+   path: "{{ ftp_backup_dir }}/web2.tld"
    state: directory
    owner: "{{ ftp_backup_user }}"
    mode: 0755
@@ -47,6 +47,14 @@
      - proftpd
      - perl
     state: present
+
+- name: Copy te selinuc module
+  copy:
+    src: proftpdse.te
+    dest: /opt/proftpdse.te
+
+- name: generate selinux rule for proftpd
+  shell: checkmodule -M -m -o /opt/proftpdse.mod  /opt/proftpdse.te && semodule_package -o /opt/proftpdse.pp -m /opt/proftpdse.mod && semodule -i /opt/proftpdse.pp
 
 - name: Make override dir for service proftpd
   file:

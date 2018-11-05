@@ -28,11 +28,18 @@
 
 - include_tasks: install.yml
 
+- include_tasks: logrotate.yml
+
 - include_tasks: fix_galera_checker.yml
 
 - include_tasks: config.yml
 
 - name: Restore context
   command: restorecon -RF /var/lib/proxysql
+  tags:
+  - skip_ansible_lint
+
+- name: Restore context
+  command: restorecon -RF /var/run/proxysql.sock
   tags:
   - skip_ansible_lint

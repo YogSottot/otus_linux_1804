@@ -17,7 +17,7 @@
    state: directory
 
 - name: Enable autorestart of services
-  copy: 
+  copy:
    src: override.conf
    dest: /etc/systemd/system/chronyd.service.d/override.conf
 

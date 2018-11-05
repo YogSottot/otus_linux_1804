@@ -1,0 +1,8 @@
+---
+# playbook.yml file.
+- hosts: all
+  become: yes
+  tasks:
+  - name: fix se
+    shell: "/usr/bin/dd if=/dev/zero of=/swapfile bs=1M count=1024 && /usr/sbin/mkswap /swapfile && /usr/sbin/swapon /swapfile && echo /swapfile none swap sw 0 0 >> /etc/fstab && /usr/bin/find /etc/ssh/sshd_config -type f -print0 | xargs -0 sed -i 's/PasswordAuthentication/#PasswordAuthentication/g'  && /usr/bin/find /etc/default/grub -type f -print0 | xargs -0 sed -i 's/selinux=0/ /g' && grub2-mkconfig -o /boot/grub2/grub.cfg  && touch /.autorelabel && reboot"
+

@@ -32,3 +32,15 @@
    permanent: true
    immediate: true
    state: enabled
+
+- name: Set httpd_can_network_connect flag on and keep it persistent across reboots
+  seboolean:
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes
+
+- name: Set nis_enabled flag on and keep it persistent across reboots
+  seboolean:
+    name: nis_enabled
+    state: yes
+    persistent: yes

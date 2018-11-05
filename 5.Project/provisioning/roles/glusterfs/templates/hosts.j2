@@ -1,0 +1,5 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+{{ hostvars[ groups['webservers'][0] ].ansible_ssh_host }} web1.tld
+{{ hostvars[ groups['webservers'][1] ].ansible_ssh_host }} web2.tld
+{{ hostvars[ groups['webservers'][2] ].ansible_ssh_host }} web3.tld

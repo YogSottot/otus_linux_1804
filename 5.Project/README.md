@@ -299,10 +299,13 @@ mysql> show status like 'wsrep%';
 - kiabana и elastic закрыты через basic http auth. Логин / Пароль от kibana по умолчанию (otus / test).  
 
 <details><summary>kiabana (нажать, чтобы открыть)</summary><p>
+
 ![kibana](https://i.imgur.com/i7OZxnO.png)  
 ![kibana](https://i.imgur.com/xjQtnPr.png)  
-</p></details>
 
+</p></details>
+  
+  
 **Использованные роли:**  
 https://github.com/liviuchircu/ansible-role-XtraDB-Cluster  
 https://github.com/timorunge/ansible-proxysql  

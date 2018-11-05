@@ -57,11 +57,13 @@
 
 - Используется Percona XtraDB Cluster с синхронной Master-Master репликацией (Galera).  
 	- При корректном отключении до 2-х узлов (systemctl stop mysql) оставшийся узел останется в синхронизированном состоянии и продолжит обслуживать клиентов.  
-	- При аварийном завершении одного узла (pkill -9 mysql), оставшиеся два узла будут в синхронизированном состоянии и продолжат обслуживать клиентов.   - При аварийном завершении двух узлов, оставшийся будет в non-primary state и не будет обслуживать клиентов. При восстановлении работы упавших узлов, синхронизация произойдёт автоматически.  
+	- При аварийном завершении одного узла (pkill -9 mysql), оставшиеся два узла будут в синхронизированном состоянии и продолжат обслуживать клиентов.  
+	- При аварийном завершении двух узлов, оставшийся будет в non-primary state и не будет обслуживать клиентов. При восстановлении работы упавших узлов, синхронизация произойдёт автоматически.  
 
-- ProxySQL-Cluster - обеспечивает прозрачное (для веб-приложения) разделение чтения/записи на разные узлы кластера. Для предотвращения deadlocks, запись, в один момент времени, идёт только на один узел. В случае его падения, запись автоматически переходит на следующий узел. [Please note that proxysql_galera_checker will be deprecated in 2.0, with native support for Galera]  
+- ProxySQL-Cluster - обеспечивает прозрачное (для веб-приложения) разделение чтения/записи на разные узлы кластера. Для предотвращения deadlocks, запись, в один момент времени, идёт только на один узел. В случае его падения, запись автоматически переходит на следующий узел.  
+[Please note that proxysql_galera_checker will be deprecated in 2.0, with native support for Galera]  
 
-<details><summary>proxysql_galera_checker.sh SUMMARY</summary><p>
+<details><summary>proxysql_galera_checker.sh SUMMARY (нажать, чтобы открыть)</summary><p>
 
 ```bash
 Mon Nov  5 11:32:12 MSK 2018 ###### proxysql_galera_checker.sh SUMMARY ######
@@ -101,7 +103,7 @@ Mon Nov  5 11:32:13 MSK 2018 server 2:10.0.5.31:3306 is already ONLINE
 
 - Развёртывается чистый дистрибутив wordpress. После запуска кластера, по адресу виртуального ip попадёте на стадию установки пароля и логина администратора wordpress. Проверены: загрузка файлов в медиабиблиотеку, создание новых записей, установка плагинов.
 
-<details><summary>wordpress</summary><p>
+<details><summary>wordpress (нажать, чтобы открыть)</summary><p>
 
 ![wordpress](https://i.imgur.com/hkSU4ug.png)  
 
@@ -157,7 +159,7 @@ performance.client-io-threads: off
 
 </p></details>
 
-<details><summary>gluster volume status</summary><p>
+<details><summary>gluster volume status (нажать, чтобы открыть)</summary><p>
 
 ```bash
  gluster volume status
@@ -192,7 +194,7 @@ There are no active volume tasks
 
 </p></details>
 
-<details><summary>gluster peer status</summary><p>
+<details><summary>gluster peer status (нажать, чтобы открыть)</summary><p>
 
 ```bash
 [root@web2 vagrant]# gluster peer status
@@ -209,7 +211,7 @@ State: Peer in Cluster (Connected)
 
 </p></details>
 
-<details><summary>show status like 'wsrep%'</summary><p>
+<details><summary>show status like 'wsrep%' (нажать, чтобы открыть)</summary><p>
 
 ```bash
 mysql> show status like 'wsrep%';

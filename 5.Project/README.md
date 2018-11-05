@@ -45,6 +45,23 @@
 - ftp  
 
 **Примечания:**  
+- Если тестирование будет не в vagrant, то host-файл должен иметь структуру по предоставленному образцу.  
+  При этом нужно обязательно поменять:  
+
+```
+  -   vars:
+       xtradb_bind_interface: eth1
+  -   vars:
+       interface: eth1
+       virtual_ipaddress: 10.0.5.81
+```
+
+- Тестирование в vagrant нужно проводить такой командой (если запускать как обычно, то gluster не соберётся): 
+```bash
+vagrant up --no-provision
+ansible-playbook provisioning/playbook.yml
+```
+
 - На всех узлах активирован selinux enforsing targeted. Работе кластера он не препятствует (добавлены правила и модули).  
 	Однако, есть ряд багов, которые не позволяют указывать контекст для файловых систем смонтированных через FUSE.  
 	[Support SELinux extended attributes on Gluster Volumes](https://github.com/gluster/glusterfs-specs/blob/master/accepted/SELinux-client-support.md)  
@@ -90,17 +107,6 @@ Mon Nov  5 11:32:13 MSK 2018 server 2:10.0.5.31:3306 is already ONLINE
 </p></details>
 
 - Создано 3 узла Glusterfs для избежания split-brain. При падении двух узлов, оставшийся не будет обслуживать клиентов.
-
-- Если тестирование будет не в vagrant, то host-файл должен иметь структуру по предоставленному образцу.  
-  При этом нужно обязательно поменять:  
-
-```
-  -   vars:
-       xtradb_bind_interface: eth1
-  -   vars:
-       interface: eth1
-       virtual_ipaddress: 10.0.5.81
-```
 
 - Развёртывается чистый дистрибутив wordpress. После запуска кластера, по адресу виртуального ip попадёте на стадию установки пароля и логина администратора wordpress. Проверены: загрузка файлов в медиабиблиотеку, создание новых записей, установка плагинов.
 

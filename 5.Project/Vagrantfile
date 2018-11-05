@@ -106,14 +106,13 @@ Vagrant.configure("2") do |config|
 		# wait until all server is up, then provision
 		if boxconfig[:box_name] == "log1"
 		config.vm.provision "ansible" do |ansible|
-			ansible.verbose = "vvv"
+			#ansible.verbose = "vvv"
 			ansible.playbook = "provisioning/playbook.yml"
 			ansible.become = "true"
 			ansible.inventory_path = "provisioning/hosts"
 			# Disable default limits to connect to all the machines
 			ansible.limit = "all"
-			ansible.verbose = true
-		#end
+		 end
 		end
 		if boxconfig[:box_name] == "log1.tld"
 		config.vm.provider "virtualbox" do |v|

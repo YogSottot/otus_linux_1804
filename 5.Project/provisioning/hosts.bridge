@@ -1,33 +1,30 @@
 [webservers]
-web1.tld  ansible_ssh_host=192.168.0.121 ansible_ssh_private_key_file=.vagrant/machines/web1/virtualbox/private_key
-web2.tld  ansible_ssh_host=192.168.0.122 ansible_ssh_private_key_file=.vagrant/machines/web2/virtualbox/private_key
-web3.tld  ansible_ssh_host=192.168.0.123 ansible_ssh_private_key_file=.vagrant/machines/web2/virtualbox/private_key
+web1.tld  ansible_ssh_host=192.168.0.121 ansible_ssh_private_key_file=.vagrant/machines/web1.tld/virtualbox/private_key
+web2.tld  ansible_ssh_host=192.168.0.122 ansible_ssh_private_key_file=.vagrant/machines/web2.tld/virtualbox/private_key
+web3.tld  ansible_ssh_host=192.168.0.123 ansible_ssh_private_key_file=.vagrant/machines/web3.tld/virtualbox/private_key
 
 [lblservers]
-balancer1.tld  ansible_ssh_host=192.168.0.111 ansible_ssh_private_key_file=.vagrant/machines/balancer1/virtualbox/private_key
-balancer2.tld  ansible_ssh_host=192.168.0.112 ansible_ssh_private_key_file=.vagrant/machines/balancer2/virtualbox/private_key
+balancer1.tld  ansible_ssh_host=192.168.0.111 ansible_ssh_private_key_file=.vagrant/machines/balancer1.tld/virtualbox/private_key
+balancer2.tld  ansible_ssh_host=192.168.0.112 ansible_ssh_private_key_file=.vagrant/machines/balancer2.tld/virtualbox/private_key
 
 [keepalived_master]
-balancer1.tld  ansible_ssh_host=192.168.0.111 ansible_ssh_private_key_file=.vagrant/machines/balancer1/virtualbox/private_key
+balancer1.tld  ansible_ssh_host=192.168.0.111 ansible_ssh_private_key_file=.vagrant/machines/balancer1.tld/virtualbox/private_key
 
 [keepalived_backup]
-balancer2.tld  ansible_ssh_host=192.168.0.112 ansible_ssh_private_key_file=.vagrant/machines/balancer1/virtualbox/private_key
-
-[percona-control]
-clcontrol ansible_ssh_host=192.168.0.130 ansible_ssh_private_key_file=.vagrant/machines/clcontrol/virtualbox/private_key
+balancer2.tld  ansible_ssh_host=192.168.0.112 ansible_ssh_private_key_file=.vagrant/machines/balancer2.tld/virtualbox/private_key
 
 [percona-cluster]
-cluster1.tld ansible_ssh_host=192.168.0.131 ansible_ssh_private_key_file=.vagrant/machines/cluster1/virtualbox/private_key
-cluster2.tld ansible_ssh_host=192.168.0.132 ansible_ssh_private_key_file=.vagrant/machines/cluster2/virtualbox/private_key
-cluster3.tld ansible_ssh_host=192.168.0.133 ansible_ssh_private_key_file=.vagrant/machines/cluster3/virtualbox/private_key
+cluster1.tld ansible_ssh_host=192.168.0.131 ansible_ssh_private_key_file=.vagrant/machines/cluster1.tld/virtualbox/private_key
+cluster2.tld ansible_ssh_host=192.168.0.132 ansible_ssh_private_key_file=.vagrant/machines/cluster2.tld/virtualbox/private_key
+cluster3.tld ansible_ssh_host=192.168.0.133 ansible_ssh_private_key_file=.vagrant/machines/cluster3.tld/virtualbox/private_key
 
 [logger]
-log1.tld ansible_ssh_host=192.168.0.141 ansible_ssh_private_key_file=.vagrant/machines/cluster3/virtualbox/private_key
+log1.tld ansible_ssh_host=192.168.0.141 ansible_ssh_private_key_file=.vagrant/machines/log1.tld/virtualbox/private_key
 
 [proxysql]
-web1.tld  ansible_ssh_host=192.168.0.121 ansible_ssh_private_key_file=.vagrant/machines/web1/virtualbox/private_key
-web2.tld  ansible_ssh_host=192.168.0.122 ansible_ssh_private_key_file=.vagrant/machines/web2/virtualbox/private_key
-web3.tld  ansible_ssh_host=192.168.0.123 ansible_ssh_private_key_file=.vagrant/machines/web2/virtualbox/private_key
+web1.tld  ansible_ssh_host=192.168.0.121 ansible_ssh_private_key_file=.vagrant/machines/web1.tld/virtualbox/private_key
+web2.tld  ansible_ssh_host=192.168.0.122 ansible_ssh_private_key_file=.vagrant/machines/web2.tld/virtualbox/private_key
+web3.tld  ansible_ssh_host=192.168.0.123 ansible_ssh_private_key_file=.vagrant/machines/web3.tld/virtualbox/private_key
 
 [backup]
-log1.tld ansible_ssh_host=192.168.0.141 ansible_ssh_private_key_file=.vagrant/machines/cluster3/virtualbox/private_key
+log1.tld ansible_ssh_host=192.168.0.141 ansible_ssh_private_key_file=.vagrant/machines/log1.tld/virtualbox/private_key

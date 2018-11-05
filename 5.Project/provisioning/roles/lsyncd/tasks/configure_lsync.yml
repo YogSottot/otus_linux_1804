@@ -34,68 +34,24 @@
    - "{{groups['webservers']}}"
   tags:
    - ssh
-# start block that needed only because web2 don't started when web1 is up in vagrant
-  when: inventory_hostname == "web2"
-
-- name: fetch public ssh key web1
-  become: yes
-  become_user: "{{ site_user }}"
-  fetch:
-   src: ~/.ssh/id_rsa.pub
-   dest: /tmp/id_rsa.pub
-   flat: yes
-  when: inventory_hostname == "web1"
-
-- name: fetch public ssh key web1
-  become: yes
-  become_user: "{{ site_user }}"
-  copy:
-   src: /tmp/id_rsa.pub
-   dest: ~/.ssh/id_rsa_web1.pub
-  when: inventory_hostname == "web2"
-
-- name: fetch web1 public ssh key
-  shell: cat ~/.ssh/id_rsa_web1.pub
-  become: yes
-  become_user: "{{ site_user }}"
-  register: ssh_keys_web1
-  tags:
-   - ssh
-   - skip_ansible_lint
-  when: inventory_hostname == "web2"
-
-- name: deploy keys on all servers
-  authorized_key: user="{{ site_user }}" key="{{ item[0] }}"
-  become: yes
-  become_user: "{{ site_user }}"
-  with_nested:
-   - "{{ ssh_keys_web1.stdout }}"
-   - "{{groups['webservers']}}"
-  tags:
-   - ssh
-  when: inventory_hostname == "web2"
-# end block that needed only because web2 don't started when web1 is up in vagrant
 
 - name: check host in ssh known_hosts on backend
   shell: ssh-keyscan -H -T 10 {{ hostvars[host]['ansible_ssh_host'][1] }} >> /etc/ssh/ssh_known_hosts
-  delegate_to: web1
-  when: inventory_hostname == "web2"
+  when: inventory_hostname == "web1.tld"
   tags:
    - ssh
    - skip_ansible_lint
 
 - name: check host in ssh known_hosts on balancer
   shell: ssh-keyscan -H -T 10 {{ hostvars[host]['ansible_ssh_host'][0] }} >> /etc/ssh/ssh_known_hosts
-  when: inventory_hostname == "web2"
+  when: inventory_hostname == "web2.tld"
   tags:
    - ssh
    - skip_ansible_lint
 
 - name: restart service lsyncd
-  service: name=lsyncd-web1 state=restarted enabled=yes
-  delegate_to: web1
-  when: inventory_hostname == "web2"
-
+  service: name=lsyncd-{{ inventory_hostname }} state=restarted enabled=yes
+  
 # configure inotify watches options
 - name: update sysctl.conf for max_user_watches
   sysctl:

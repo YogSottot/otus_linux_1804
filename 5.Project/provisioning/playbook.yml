@@ -85,15 +85,3 @@
    #virtual_ipaddress: 192.168.0.254
    priority: 100
    secret_passwd: ZcnG9lGUoZeM3nFT
-
-#- hosts: webservers
-#  tasks:
-#    - debug: var=ansible_all_ipv4_addresses
-#    - debug: var=ansible_default_ipv4.address
-#    - debug: var="groups[xtradb_nodes_group] | map('extract', hostvars, ['ansible_' ~ xtradb_bind_interface, 'ipv4', 'address']) | join(',')"
-#    - debug: var="groups[xtradb_nodes_group] | map('extract', hostvars, ['ansible_ssh_host']) | join(',')"
-#    - debug: var="hostvars[inventory_hostname]['ansible_ssh_host']"
-#    - debug: var="hostvars[inventory_hostname]['inventory_hostname']"
-#    - debug: var="hostvars[ groups[xtradb_nodes_group][0] ].ansible_ssh_host"
-#   - debug: var="hostvars[ groups['proxysql'][1] ].ansible_ssh_host"
-#   - debug: var="inventory_hostname"

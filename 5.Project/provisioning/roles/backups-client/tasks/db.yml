@@ -41,6 +41,12 @@
 - name: Install dependency packages for backup
   yum:
     name:
+     - epel-release
+    state: present
+
+- name: Install dependency packages for backup
+  yum:
+    name:
      - certbot
      - python-requests
      - python-dateutil

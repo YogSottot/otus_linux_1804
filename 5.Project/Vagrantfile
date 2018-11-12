@@ -116,7 +116,7 @@ Vagrant.configure("2") do |config|
 		end
 		if boxconfig[:box_name] == "log1.tld"
 		config.vm.provider "virtualbox" do |v|
-			v.memory = 1024
+			v.memory = 2048
 			end
 		else
 		config.vm.provider "virtualbox" do |v|

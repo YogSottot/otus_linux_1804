@@ -10,7 +10,7 @@
    - liquidprompt
 
 - hosts: log1.tld
-  become: true
+  become: yes
   roles:
    - elasticsearch
    - elasticsearch-curator
@@ -20,7 +20,7 @@
 - hosts: percona-cluster
   vars_files:
    - group_vars/filebeat_mysql.yml
-  become: true
+  become: yes
   roles:
    - XtraDB-Cluster
    - filebeat
@@ -28,7 +28,7 @@
    xtradb_bind_interface: eth1
 
 - hosts: cluster3.tld
-  become: true
+  become: yes
   roles:
    - backups-client
 
@@ -52,16 +52,12 @@
    - backups-client
 
 - hosts: lblservers
-  user: root
-  become: true
-  become_user: root
+  become: yes
   roles:
    - haproxy
 
 - hosts: keepalived_master
-  user: root
-  become: true
-  become_user: root
+  become: yes
   roles:
    - keepalived
   vars:
@@ -73,9 +69,7 @@
    secret_passwd: ZcnG9lGUoZeM3nFT
 
 - hosts: keepalived_backup
-  user: root
-  become: true
-  become_user: root
+  become: yes
   roles:
    - keepalived
   vars:
